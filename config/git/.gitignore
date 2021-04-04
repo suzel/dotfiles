@@ -1,0 +1,43 @@
+### Mac
+._*
+.apdisk
+.AppleDB
+.AppleDesktop
+.AppleDouble
+.com.apple.timemachine.donotpresent
+.DS_Store
+.DocumentRevisions-V100
+.fseventsd
+.LSOverride
+.Spotlight-V100
+.Trashes
+.TemporaryItems
+.VolumeIcon.icns
+Network Trash Folder
+Temporary Items
+
+### Packages
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+### Logs
+*.log
+
+### Python
+*.pyc
+
+### Node
+node_modules
+
+### VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
