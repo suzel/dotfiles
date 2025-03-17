@@ -1,4 +1,4 @@
-### Mac
+# Mac
 ._*
 .apdisk
 .AppleDB
@@ -16,7 +16,7 @@
 Network Trash Folder
 Temporary Items
 
-### Packages
+# Packages
 *.7z
 *.dmg
 *.gz
@@ -26,16 +26,16 @@ Temporary Items
 *.tar
 *.zip
 
-### Logs
+# Logs
 *.log
 
-### Python
+# Python
 *.pyc
 
-### Node
+# Node
 node_modules
 
-### VSCode
+# VSCode
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json

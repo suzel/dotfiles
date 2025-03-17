@@ -1,51 +1,69 @@
-# Path
-export PATH="/usr/local/sbin:$PATH"
+# Navigation
+alias ~="cd ~"
+alias ..="cd .."
+alias ...="cd ../../"
+alias dl="cd ~/Downloads"
+alias dt="cd ~/Desktop"
+alias p="cd ~/Projects"
 
-# Java
-# export JAVA_HOME=/Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home
+# Shortcuts
+alias c="clear"
+alias h="history"
+alias rr="rm -rf"
+alias f="open -a Finder ./"
+alias reload=". ~/.zshrc"
+alias top="top -o cpu"
+alias numFiles="echo $(ls -1 | wc -l)"
+alias path="echo -e ${PATH//:/\\n}"
+alias grep="grep --color"
+alias today="date +'%m-%d-%Y'"
+alias aliases="alias | sed 's/=.*//'"
+alias functions="declare -f | grep '^[a-z].* ()' | sed 's/{$//'"
+alias paths="echo -e ${PATH//:/\\n}"
+alias count="find . -type f | wc -l"
 
-# Maven
-# export M2_HOME=/usr/local/Cellar/maven/3.6.3_1/libexec
-# export M2=${M2_HOME}/bin
-# export PATH=${PATH}:${M2_HOME}/bin
+# System
+alias cleanupDS="find . -type f -name '*.DS_Store' -ls -delete"
+alias edit="subl"
+alias emptytrash="sudo rm -rfv /Volumes/*/.Trashes; sudo rm -rfv ~/.Trash; sudo rm -rfv /private/var/log/asl/*.asl"
+alias flushDNS="dscacheutil -flushcache && killall -HUP mDNSResponder"
+alias logoff="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
+alias update="sudo softwareupdate -i -a; brew update; brew upgrade; npm i npm -g; npm up -g"
+alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
+alias localip="ipconfig getifaddr en0"
+alias path="echo -e ${PATH//:/\\n}"
+alias ic="cd ~/Library/Mobile\ Documents/com~apple~CloudDocs"
+alias gen_pwd="LC_ALL=C tr -dc '[:alnum:]' < /dev/urandom | head -c 20 | pbcopy"
 
-# Gradle
-# export GRADLE_HOME=/usr/local/opt/gradle/libexec
-# export PATH=$GRADLE_HOME/bin:$PATH
+# Git
+alias clone="git clone $1"
+alias pull="git pull origin master"
+alias push="git pull origin master && git push origin master"
+alias gi="git add -A && git commit -m"
+alias gm="git push origin master"
 
-# Android
-# export ANDROID_SDK_ROOT=/usr/local/share/android-sdk
-# export ANDROID_NDK_HOME=/usr/local/share/android-ndk
-# export PATH=$ANDROID_SDK_ROOT/emulator:$PATH:$ANDROID_SDK_ROOT/platform-tools:$ANDROID_SDK_ROOT/build-tools/$(ls $ANDROID_SDK_ROOT/build-tools | sort | tail -1)
+# NPM
+alias ni="pnpm install"
+alias nr="pnpm run"
+alias dev="pnpm run dev"
+alias build="pnpm run build"
 
-# Dart
-# export DART_HOME=/usr/local/opt/dart/libexec
-# export PATH="${DART_HOME}:${PATH}"
+# Docker
+alias docker_stop='docker stop $(docker ps -a -q)'
+alias docker_remove='docker rm $(docker ps -a -q)'
 
-# Flutter
-# export PATH="$PATH:${HOME}/.flutter/bin"
+# Serve a directory on a given port
+servedir() {
+  # Allow myself to change the port ($1)
+  python -m SimpleHTTPServer "$1"
+}
 
-# Nvm
-# export NVM_DIR="$HOME/.nvm"
-# [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"
-# [ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && . "/usr/local/opt/nvm/etc/bash_completion.d/nvm"
+# Scrape images with wget
+scrapeimages() {
+  wget -nd -H -p -A jpg,jpeg,png,gif -e robots=off $1
+}
 
-# Go Development
-# export GOPATH="${HOME}/.go"
-# export GOROOT="/usr/local/opt/go/libexec"
-# export PATH="$PATH:${GOPATH}/bin:${GOROOT}/bin"
-
-# Scripts
-# export PATH="$PATH:${HOME}/scripts"
-
-# Hygen
-# export HYGEN_TMPLS="${HOME}/Projects/hygen-templates"
-
-# GCloud
-# The next line updates PATH for the Google Cloud SDK.
-# source "/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"
-
-# The next lines enables bash completion in Zsh for gcloud.
-# autoload -U compinit compdef
-# compinit
-# source "/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc"
+# Remove audio from video
+removeaudio() {
+  ffmpeg -i $1 -vcodec copy -an $2
+}
