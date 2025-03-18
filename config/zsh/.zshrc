@@ -42,19 +42,19 @@ alias push="git pull origin master && git push origin master"
 alias gi="git add -A && git commit -m"
 alias gm="git push origin master"
 
-# NPM
+# PNPM
 alias ni="pnpm install"
 alias nr="pnpm run"
 alias dev="pnpm run dev"
 alias build="pnpm run build"
+alias pupdate="pnpm upgrade --latest"
 
 # Docker
-alias docker_stop='docker stop $(docker ps -a -q)'
-alias docker_remove='docker rm $(docker ps -a -q)'
+alias docker_stop='docker stop $(docker ps -q)'
+alias docker_remove='docker rm -f $(docker ps -aq)'
 
 # Serve a directory on a given port
 servedir() {
-  # Allow myself to change the port ($1)
   python -m SimpleHTTPServer "$1"
 }
 
