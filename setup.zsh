@@ -15,6 +15,7 @@ hash git &> /dev/null || xcode-select --install
 echo -e "\033[0;32mInstalling dotfiles...\033[0m"
 git clone $REPO_URL $REPO_PATH
 [ ! -d $REPO_PATH ] && { echo -e "\033[0;31mError downloading dotfiles! \033[0m"; exit 1 }
+cd $REPO_PATH
 
 # Install Homebrew
 if ! command -v brew &>/dev/null; then
