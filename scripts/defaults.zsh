@@ -2,9 +2,6 @@
 
 # Update OS Settings
 
-# Ask for the administrator password upfront (keeps sudo session active)
-sudo -v
-
 # Enable automatic software updates on macOS
 softwareupdate --schedule on
 
