@@ -74,7 +74,3 @@ cask "ngrok"
 brew "pnpm"
 brew "python"
 cask "visual-studio-code"
-
-# Setup Scripts
-system "zsh ./scripts/create.zsh"
-system "zsh ./scripts/defaults.zsh"

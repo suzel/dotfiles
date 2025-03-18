@@ -1,5 +1,5 @@
 # Path
-export PATH="/usr/local/sbin:$PATH"
+export PATH="/opt/homebrew/bin:$PATH"
 
 # Scripts
-export PATH="$PATH:${HOME}/Scripts"
+export PATH="${HOME}/Scripts:$PATH"
