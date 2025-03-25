@@ -1,3 +1,7 @@
+# Path
+export PATH="/opt/homebrew/bin:$PATH"
+export PATH="${HOME}/Scripts:$PATH"
+
 # Navigation
 alias ~="cd ~"
 alias ..="cd .."
