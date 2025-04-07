@@ -27,9 +27,9 @@ fi
 # Install Homebrew Packages
 echo -e "\033[0;32mInstalling Homebrew packages...\033[0m"
 brew bundle --file=./config/brew/Brewfile --cleanup
-brew autoupdate start
-brew analytics off
 brew cleanup -s
+brew analytics off
+brew autoupdate start --upgrade --cleanup --quiet
 
 # Create directories
 echo -e "\033[0;32mCreating directories...\033[0m"
