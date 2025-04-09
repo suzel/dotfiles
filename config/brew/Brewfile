@@ -45,6 +45,7 @@ brew "zsh-completions"
 
 # Apps
 cask "appcleaner"
+cask "ghostty"
 cask "iterm2"
 cask "obsidian"
 cask "onyx"
