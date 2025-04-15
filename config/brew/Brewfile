@@ -32,6 +32,7 @@ cask "raycast"
 cask "rectangle"
 
 # CLI
+brew "ffmpeg"
 brew "mas"
 brew "jq"
 brew "rclone"
