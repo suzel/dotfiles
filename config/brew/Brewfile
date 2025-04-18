@@ -83,3 +83,9 @@ brew "python"
 brew "rust"
 brew "uv"
 cask "visual-studio-code"
+
+# App Store Apps
+mas "Xcode", id: "497799835"
+mas "Keynote", id: "409183694"
+mas "Numbers", id: "409203825"
+mas "Pages", id: "409201541"
