@@ -1,7 +1,6 @@
 # Mac
 ._*
 .apdisk
-.AppleDB
 .AppleDesktop
 .AppleDouble
 .com.apple.timemachine.donotpresent
@@ -13,7 +12,6 @@
 .Trashes
 .TemporaryItems
 .VolumeIcon.icns
-Network Trash Folder
 Temporary Items
 
 # Packages
@@ -30,9 +28,10 @@ Temporary Items
 *.log
 
 # Python
-*.pyc
+__pycache__/
+*.py[cod]
 
-# Node
+# Node.js
 node_modules
 
 # VSCode
