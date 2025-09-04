@@ -16,3 +16,6 @@ defaults write NSGlobalDomain _HIHideMenuBar -bool true
 
 # Enable auto-hide for the macOS Dock (toolbar)
 defaults write com.apple.dock autohide -bool true
+
+killall SystemUIServer
+killall Dock

@@ -1,7 +1,5 @@
 # Taps
 tap "homebrew/autoupdate"
-tap "homebrew/bundle"
-tap "homebrew/services"
 tap "oven-sh/bun"
 
 # Quick Look Plugins
@@ -25,10 +23,8 @@ cask "font-monaspace"
 cask "font-source-code-pro"
 
 # Accessibility
-cask "apptivate"
 cask "betterdisplay"
 cask "monitorcontrol"
-cask "raycast"
 cask "rectangle"
 
 # CLI
@@ -50,9 +46,7 @@ cask "ghostty"
 cask "iterm2"
 cask "obsidian"
 cask "onyx"
-cask "skype"
 cask "sublime-text"
-cask "tabby"
 cask "the-unarchiver"
 cask "warp"
 
@@ -60,7 +54,6 @@ cask "warp"
 cask "brave-browser"
 cask "google-chrome"
 cask "firefox"
-cask "microsoft-edge"
 
 # Media
 cask "vlc"
@@ -68,7 +61,6 @@ cask "vlc"
 # Development
 brew "awscli"
 brew "bun"
-cask "cursor"
 cask "docker"
 brew "deno"
 brew "git"
@@ -85,7 +77,7 @@ brew "uv"
 cask "visual-studio-code"
 
 # App Store Apps
-mas "Xcode", id: "497799835"
-mas "Keynote", id: "409183694"
-mas "Numbers", id: "409203825"
-mas "Pages", id: "409201541"
+mas "Xcode", id: 497799835
+mas "Keynote", id: 409183694
+mas "Numbers", id: 409203825
+mas "Pages", id: 409201541

@@ -9,45 +9,66 @@ REPO_URL="https://github.com/suzel/dotfiles.git"
 REPO_PATH="$HOME/.dotfiles"
 
 # Install Xcode Command Line Tools
-hash git &> /dev/null || xcode-select --install
+print -P "%F{green}Checking Xcode Command Line Tools...%f"
+if ! command -v git &>/dev/null; then
+  print -P "%F{red}Git not found! Please install Xcode Command Line Tools before running this script.%f"
+  exit 1
+fi
 
 # Install dotfiles
-echo -e "\033[0;32mInstalling dotfiles...\033[0m"
-git clone $REPO_URL $REPO_PATH
-[ ! -d $REPO_PATH ] && { echo -e "\033[0;31mError downloading dotfiles! \033[0m"; exit 1 }
-cd $REPO_PATH
+print -P "%F{green}Installing dotfiles...%f"
+if [[ -d "$REPO_PATH" ]]; then
+  print -P "%F{yellow}Dotfiles directory already exists. Pulling latest changes...%f"
+  cd "$REPO_PATH"
+  git pull origin main || { print -P "%F{red}Error updating dotfiles!%f"; exit 1 }
+else
+  if ! git clone "$REPO_URL" "$REPO_PATH"; then
+      print -P "%F{red}Error downloading dotfiles!%f"
+      exit 1
+  fi
+  cd "$REPO_PATH"
+fi
 
 # Install Homebrew
 if ! command -v brew &>/dev/null; then
-  echo -e "\033[0;32mInstalling Homebrew...\033[0m"
+  print -P "%F{green}Installing Homebrew...%f"
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-  eval "$(/opt/homebrew/bin/brew shellenv)"
+
+  # Platform-aware brew path
+  if [[ -d "/opt/homebrew/bin" ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+  else
+    eval "$(/usr/local/bin/brew shellenv)"
+  fi
 fi
 
 # Install Homebrew Packages
-echo -e "\033[0;32mInstalling Homebrew packages...\033[0m"
+print -P "%F{green}Installing Homebrew packages...%f"
 brew bundle --file=./config/brew/Brewfile --cleanup
-brew cleanup -s
-brew analytics off
 brew autoupdate start --upgrade --cleanup --quiet
+brew analytics off
+brew cleanup -s
 
 # Create directories
-echo -e "\033[0;32mCreating directories...\033[0m"
-mkdir -p ~/Scripts/
-mkdir -p ~/Projects/
+print -P "%F{green}Creating directories...%f"
+mkdir -p ~/scripts/
+mkdir -p ~/projects/
 
 # Copy script files
-echo -e "\033[0;32mCopying script files...\033[0m"
-cp -r ./scripts/*.zsh ~/Scripts/
+print -P "%F{green}Copying script files...%f"
+cp -r ./scripts/*.zsh ~/scripts/
 
 # Update config files
-echo -e "\033[0;32mUpdating config files...\033[0m"
+print -P "%F{green}Updating config files...%f"
 cp -r ./config/zsh/. ~/
 cp -r ./config/git/. ~/
 
-# Update OSX Settings
-echo -e "\033[0;32mUpdating OSX settings...\033[0m"
+# Update macOS Settings
+print -P "%F{green}Updating macOS settings...%f"
 zsh ./scripts/defaults.zsh
 
-echo -e "\033[0;32mCompleted!\033[0m"
-( sleep 1; rm -rf $REPO_PATH ) & exit
+# Cleanup
+rm -rf "$REPO_PATH"
+
+print -P "%F{green}Completed!%f"
+exit
