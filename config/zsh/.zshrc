@@ -1,4 +1,4 @@
-# Path
+# PATH
 export PATH="/opt/homebrew/bin:$PATH"
 export PATH="/opt/homebrew/sbin:$PATH"
 export PATH="/usr/local/go/bin:$PATH"
@@ -15,17 +15,14 @@ alias p="cd ~/Projects"
 # Shortcuts
 alias c="clear"
 alias h="history"
-alias rr="rm -rf"
 alias f="open -a Finder ./"
 alias reload=". ~/.zshrc"
 alias top="top -o cpu"
-alias numFiles="echo $(ls -1 | wc -l)"
+alias numFiles='find . -maxdepth 1 -type f | wc -l'
 alias path="echo -e ${PATH//:/\\n}"
-alias grep="grep --color"
 alias today="date +'%m-%d-%Y'"
 alias aliases="alias | sed 's/=.*//'"
-alias functions="declare -f | grep '^[a-z].* ()' | sed 's/{$//'"
-alias paths="echo -e ${PATH//:/\\n}"
+alias functions="declare -F"
 alias count="find . -type f | wc -l"
 
 # System
@@ -37,14 +34,15 @@ alias logoff="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resou
 alias update="sudo softwareupdate -i -a; brew update; brew upgrade; npm i npm -g; npm up -g"
 alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
 alias localip="ipconfig getifaddr en0"
-alias path="echo -e ${PATH//:/\\n}"
 alias ic="cd ~/Library/Mobile\ Documents/com~apple~CloudDocs"
 alias gen_pwd="LC_ALL=C tr -dc '[:alnum:]' < /dev/urandom | head -c 20 | pbcopy"
 
 # Git
-alias clone="git clone $1"
+function clone {
+  git clone "$1"
+}
 alias pull="git pull origin master"
-alias push="git pull origin master && git push origin master"
+alias push="git push origin master"
 alias gi="git add -A && git commit -m"
 alias gm="git push origin master"
 
@@ -59,17 +57,20 @@ alias pupdate="pnpm upgrade --latest"
 alias docker_stop='docker stop $(docker ps -q)'
 alias docker_remove='docker rm -f $(docker ps -aq)'
 
-# Serve a directory on a given port
+# Serve a directory on a given port (Python 3)
 servedir() {
-  python -m SimpleHTTPServer "$1"
+  local port="${1:-8000}"
+  python3 -m http.server "$port"
 }
 
 # Scrape images with wget
 scrapeimages() {
-  wget -nd -H -p -A jpg,jpeg,png,gif -e robots=off $1
+  wget -nd -H -p -A jpg,jpeg,png,gif -e robots=off "$1"
 }
 
 # Remove audio from video
 removeaudio() {
-  ffmpeg -i $1 -vcodec copy -an $2
+  local input="$1"
+  local output="${2:-output.mp4}"
+  ffmpeg -i "$input" -vcodec copy -an "$output"
 }
