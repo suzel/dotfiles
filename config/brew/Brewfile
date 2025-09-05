@@ -6,8 +6,6 @@ tap "oven-sh/bun"
 cask "provisionql"
 cask "suspicious-package"
 cask "syntax-highlight"
-cask "qlmarkdown"
-cask "quicklook-pat"
 cask "quicklook-json"
 cask "quicklookase"
 cask "qlvideo"
@@ -42,8 +40,6 @@ brew "zsh-completions"
 
 # Apps
 cask "appcleaner"
-cask "ghostty"
-cask "iterm2"
 cask "obsidian"
 cask "onyx"
 cask "sublime-text"
@@ -54,9 +50,6 @@ cask "warp"
 cask "brave-browser"
 cask "google-chrome"
 cask "firefox"
-
-# Media
-cask "vlc"
 
 # Development
 brew "awscli"
