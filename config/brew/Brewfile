@@ -28,6 +28,7 @@ cask "rectangle"
 # CLI
 brew "ffmpeg"
 brew "mas"
+brew "mole"
 brew "jq"
 brew "rclone"
 brew "tree"
