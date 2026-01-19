@@ -22,6 +22,7 @@ cask "font-source-code-pro"
 
 # Accessibility
 cask "betterdisplay"
+brew "bleunlock"
 cask "monitorcontrol"
 cask "rectangle"
 
@@ -31,6 +32,7 @@ brew "mas"
 brew "mole"
 brew "jq"
 brew "rclone"
+brew "ripgrep"
 brew "tree"
 brew "wget"
 brew "xz"
