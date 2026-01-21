@@ -32,20 +32,20 @@ alias ic="cd ~/Library/Mobile\ Documents/com~apple~CloudDocs"
 alias gen_pwd="LC_ALL=C tr -dc '[:alnum:]' < /dev/urandom | head -c 20 | pbcopy"
 
 # Git
-function clone {
-  git clone "$1"
-}
 alias pull="git pull origin master"
 alias push="git push origin master"
 alias gi="git add -A && git commit -m"
 alias gm="git push origin master"
+function clone {
+  git clone "$1"
+}
 
 # PNPM
-alias ni="pnpm install"
-alias nr="pnpm run"
-alias dev="pnpm run dev"
-alias build="pnpm run build"
-alias pupdate="pnpm upgrade --latest"
+alias pni="pnpm install"
+alias pnr="pnpm run"
+alias pnd="pnpm run dev"
+alias pnb="pnpm run build"
+alias pnup="pnpm upgrade --latest"
 
 # Docker
 alias docker_stop='docker stop $(docker ps -q)'

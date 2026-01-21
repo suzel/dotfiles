@@ -3,7 +3,9 @@
 [![Platform][platform-image]][platform-url]
 [![MIT License][license-image]][license-url]
 
-## Installation
+My personal dotfiles and macOS setup scripts.
+
+## Full macOS Setup (New Machine)
 
 ```zsh
 curl -sSL https://git.io/suzel-dotfiles | zsh -s
