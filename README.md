@@ -3,10 +3,9 @@
 [![Platform][platform-image]][platform-url]
 [![MIT License][license-image]][license-url]
 
-My personal dotfiles and macOS setup scripts.
+Personal macOS configuration files and setup scripts. Automates everything from shell config to system preferences.
 
 > [!WARNING]
-> **Personal Dotfiles**
 >
 > This repo is configured entirely based on my personal preferences. Instead of using it directly:
 >
