@@ -5,7 +5,16 @@
 
 My personal dotfiles and macOS setup scripts.
 
-## Full macOS Setup (New Machine)
+> [!WARNING]
+> **Personal Dotfiles**
+>
+> This repo is configured entirely based on my personal preferences. Instead of using it directly:
+>
+> - Fork it and customize it to your needs
+> - Read the scripts before running them
+> - Understand which settings will be changed
+
+## Installation
 
 ```zsh
 curl -sSL https://git.io/suzel-dotfiles | zsh -s
