@@ -33,4 +33,4 @@ export SCRIPTS_DIR="$HOME/Scripts"
 export ICLOUD_DIR="$HOME/Library/Mobile Documents/com~apple~CloudDocs"
 
 # Starship config path
-export STARSHIP_CONFIG="$XDG_CONFIG_HOME/starship/starship.toml"
+# export STARSHIP_CONFIG="$XDG_CONFIG_HOME/starship/starship.toml"

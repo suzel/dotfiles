@@ -1,9 +1,5 @@
-[user]
-	name = Sukru Uzel
-	email = sukru.uzel@gmail.com
-
-[github]
-	user = suzel
+[includeIf "hasconfig:remote.*.url:**/suzel/**"]
+	path = ~/.config/git/config.local
 
 [format]
 	pretty = oneline
@@ -12,16 +8,38 @@
 	ui = true
 
 [core]
-	autocrl = input
-	editor = subl
+	autocrlf = input
+	editor = code --wait
+	fsmonitor = true
+	untrackedCache = true
 	whitespace = fix,-indent-with-non-tab,trailing-space
-	excludesfile = ~/.gitignore
+	excludesfile = ~/.config/git/ignore
 
 [push]
 	default = simple
 
+[pull]
+	rebase = true
+
+[fetch]
+	prune = true
+	pruneTags = true
+	fsckobjects = true
+
+[rebase]
+	autoSquash = true
+	autostash = true
+	updateRefs = true
+
+[rerere]
+	enabled = true
+	autoupdate = true
+
+[init]
+	defaultBranch = main
+
 [credential]
-  helper = osxkeychain
+	helper = osxkeychain
 
 [alias]
 	a = add --all
@@ -45,11 +63,10 @@
 	ob = checkout -b
 	pr = prune -v
 	ps = push
-	psf = push -f
+	psf = push --force-with-lease --force-if-includes
 	psu = push -u
 	pso = push origin
 	pl = pull
-	plu = pull -u
 	plo = pull origin
 	rb = rebase
 	re = reset
@@ -65,13 +82,39 @@
 	wr = show -p --no-color
 
 [merge]
+	conflictstyle = zdiff3
 	tool = vscode
 
 [mergetool "vscode"]
-	cmd = code --wait $MERGED
+	cmd = code --wait --merge $REMOTE $LOCAL $BASE $MERGED
 
 [diff]
+	algorithm = histogram
+	colorMoved = plain
+	mnemonicPrefix = true
+	renames = true
 	tool = vscode
 
 [difftool "vscode"]
 	cmd = code --wait --diff $LOCAL $REMOTE
+
+[commit]
+	verbose = true
+
+[tag]
+	sort = version:refname
+
+[branch]
+	sort = -committerdate
+
+[log]
+	date = iso
+
+[help]
+	autocorrect = prompt
+
+[transfer]
+	fsckobjects = true
+
+[receive]
+	fsckObjects = true
