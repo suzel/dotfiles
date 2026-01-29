@@ -1,17 +1,10 @@
-### Mac
+# macOS
 ._*
-.AppleDesktop
-.AppleDouble
-.com.apple.timemachine.donotpresent
 .DS_Store
-.DocumentRevisions-V100
-.fseventsd
 .Spotlight-V100
 .Trashes
 
-### VSCode
+# VSCode
 .vscode/*
-!.vscode/settings.json
 !.vscode/tasks.json
-!.vscode/launch.json
 !.vscode/extensions.json

@@ -1,70 +1,40 @@
+# Terminal
+export TERM=xterm-256color
+
+# General Options
+# setopt correct no_clobber extended_glob interactive_comments
+setopt no_clobber extended_glob interactive_comments
+
+# History
+HISTFILE="$ZDOTDIR/.zsh_history"
+HISTSIZE=10000
+SAVEHIST=$HISTSIZE
+setopt append_history inc_append_history share_history
+setopt hist_ignore_all_dups hist_ignore_space hist_reduce_blanks hist_verify
+
 # Navigation
-alias ~="cd ~"
-alias ..="cd .."
-alias ...="cd ../../"
-alias dl="cd ~/Downloads"
-alias dt="cd ~/Desktop"
-alias p="cd ~/Projects"
+setopt auto_cd auto_pushd pushd_ignore_dups cdable_vars
 
-# Shortcuts
-alias c="clear"
-alias h="history"
-alias f="open -a Finder ./"
-alias reload=". ~/.zshrc"
-alias top="top -o cpu"
-alias numFiles='find . -maxdepth 1 -type f | wc -l'
-alias path="echo -e ${PATH//:/\\n}"
-alias today="date +'%m-%d-%Y'"
-alias aliases="alias | sed 's/=.*//'"
-alias functions="declare -F"
-alias count="find . -type f | wc -l"
+# Completion
+setopt auto_list auto_menu always_to_end
+FPATH="/opt/homebrew/share/zsh-completions:$FPATH"
+autoload -Uz compinit
+[[ -n $ZDOTDIR/.zcompdump(#qN.mh+24) ]] && compinit || compinit -C
+zstyle ':completion:*' menu select
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+zstyle ':completion:*:descriptions' format '%B%d%b'
+zstyle ':completion:*:warnings' format 'No matches: %d'
 
-# System
-alias cleanupDS="find . -type f -name '*.DS_Store' -ls -delete"
-alias edit="subl"
-alias emptytrash="sudo rm -rfv /Volumes/*/.Trashes; sudo rm -rfv ~/.Trash; sudo rm -rfv /private/var/log/asl/*.asl"
-alias flushDNS="dscacheutil -flushcache && killall -HUP mDNSResponder"
-alias logoff="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
-alias update="sudo softwareupdate -i -a; brew update; brew upgrade; npm i npm -g; npm up -g"
-alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
-alias localip="ipconfig getifaddr en0"
-alias ic="cd ~/Library/Mobile\ Documents/com~apple~CloudDocs"
-alias gen_pwd="LC_ALL=C tr -dc '[:alnum:]' < /dev/urandom | head -c 20 | pbcopy"
+# Keybindings
+bindkey '^[[A' history-beginning-search-backward
+bindkey '^[[B' history-beginning-search-forward
 
-# Git
-alias pull="git pull origin master"
-alias push="git push origin master"
-alias gi="git add -A && git commit -m"
-alias gm="git push origin master"
-function clone {
-  git clone "$1"
-}
+# Plugins
+source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
-# PNPM
-alias pni="pnpm install"
-alias pnr="pnpm run"
-alias pnd="pnpm run dev"
-alias pnb="pnpm run build"
-alias pnup="pnpm upgrade --latest"
+# Aliases & Functions
+[[ -f "$ZDOTDIR/.zsh_aliases" ]] && source "$ZDOTDIR/.zsh_aliases"
+[[ -f "$ZDOTDIR/.zsh_functions" ]] && source "$ZDOTDIR/.zsh_functions"
 
-# Docker
-alias docker_stop='docker stop $(docker ps -q)'
-alias docker_remove='docker rm -f $(docker ps -aq)'
-
-# Serve a directory on a given port (Python 3)
-servedir() {
-  local port="${1:-8000}"
-  python3 -m http.server "$port"
-}
-
-# Scrape images with wget
-scrapeimages() {
-  wget -nd -H -p -A jpg,jpeg,png,gif -e robots=off "$1"
-}
-
-# Remove audio from video
-removeaudio() {
-  local input="$1"
-  local output="${2:-output.mp4}"
-  ffmpeg -i "$input" -vcodec copy -an "$output"
-}
+# Starship
+eval "$(/opt/homebrew/bin/starship init zsh)"

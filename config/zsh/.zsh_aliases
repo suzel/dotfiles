@@ -1,0 +1,71 @@
+# Navigation
+alias ..='cd ..'
+alias ...='cd ../../'
+alias dl='cd ~/Downloads'
+alias dt='cd ~/Desktop'
+alias p='cd $PROJECTS_DIR'
+alias cds='cd $SCRIPTS_DIR'
+alias ic='cd $ICLOUD_DIR'
+alias icf='open $ICLOUD_DIR'
+alias ls='eza'
+alias ll='eza -la --icons --git'
+alias lt='eza -laT --icons --git -L 2'
+
+# Shortcuts
+alias c='clear'
+alias h='history'
+alias f='open -a Finder ./'
+alias cat='bat --paging=never'
+alias reload='. ~/.zshenv && . $ZDOTDIR/.zshrc'
+alias top='top -o cpu'
+alias numFiles='find . -maxdepth 1 -type f | wc -l'
+alias path="echo -e ${PATH//:/\\n}"
+alias today="date +'%m-%d-%Y'"
+alias aliases="alias | sed 's/=.*//'"
+alias functions='declare -F'
+alias count='find . -type f | wc -l'
+
+# System
+alias edit='code'
+alias flushDNS='sudo dscacheutil -flushcache && sudo killall -HUP mDNSResponder'
+alias ip='dig +short TXT o-o.myaddr.l.google.com @8.8.8.8 | tr -d "\""'
+alias localip='ipconfig getifaddr en0'
+alias ping='ping -c 5'
+alias ports='lsof -i -P -n | grep LISTEN'
+alias gen_pwd="LC_ALL=C tr -dc '[:alnum:]' < /dev/urandom | head -c 20 | pbcopy"
+alias tre="tree -aC -I '.git|node_modules' --dirsfirst . | less -FRNX"
+alias wget='wget -c'
+
+# Quick Edit
+alias zshrc='${EDITOR:-code} $ZDOTDIR/.zshrc'
+alias aliasedit='${EDITOR:-code} $ZDOTDIR/.zsh_aliases'
+
+# Brew
+alias bup='brew update && brew upgrade && brew cleanup'
+alias bout='brew outdated'
+alias bclean='brew cleanup -s && brew autoremove'
+
+# Docker
+alias docker_stop='docker ps -q | xargs docker stop'
+alias docker_remove='docker ps -aq | xargs docker rm -f'
+alias docker_clean='docker system prune -af'
+
+# PNPM
+alias pni='pnpm install'
+alias pna='pnpm add'
+alias pnad='pnpm add -D'
+alias pns='pnpm start'
+alias pnr='pnpm run'
+alias pnd='pnpm run dev'
+alias pnb='pnpm run build'
+alias pnup='pnpm upgrade --latest'
+
+# Claude
+alias cc='claude'
+alias ccd='claude --dangerously-skip-permissions'
+alias ccr='claude --resume'
+alias ccc='claude --continue'
+alias glmcode='claude --settings ~/.claude/settings-glm.json'
+
+# Scripts
+alias csk='zsh $SCRIPTS_DIR/create-sveltekit.zsh'

@@ -1,20 +1,14 @@
-# Mac
+# macOS
 ._*
-.apdisk
-.AppleDesktop
-.AppleDouble
 .com.apple.timemachine.donotpresent
-.DS_Store
 .DocumentRevisions-V100
+.DS_Store
 .fseventsd
-.LSOverride
 .Spotlight-V100
-.Trashes
 .TemporaryItems
-.VolumeIcon.icns
-Temporary Items
+.Trashes
 
-# Packages
+# Archives
 *.7z
 *.dmg
 *.gz
@@ -26,13 +20,27 @@ Temporary Items
 
 # Logs
 *.log
+*.log.*
+logs/
+
+# Certificates
+*.key
+*.p12
+*.pem
 
 # Python
 __pycache__/
 *.py[cod]
+.venv/
 
 # Node.js
-node_modules
+.npm/
+.pnpm-store/
+node_modules/
+
+# Environment
+.env
+.env.*
 
 # VSCode
 .vscode/*
@@ -40,3 +48,4 @@ node_modules
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+!.vscode/*.code-snippets
