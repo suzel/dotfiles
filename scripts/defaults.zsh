@@ -7,6 +7,10 @@
 # Designed to be idempotent (safe to run multiple times).
 # =============================================================================
 
+# defaults write com.apple.dock persistent-apps -array-add '{ "tile-type" = "spacer-tile"; }'
+# defaults write com.apple.dock persistent-apps -array-add '{ "tile-type" = "small-spacer-tile"; }'
+# killall Dock
+
 # Close System Settings to prevent it from overriding changes
 osascript -e 'tell application "System Settings" to quit' 2>/dev/null
 
