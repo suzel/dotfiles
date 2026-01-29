@@ -1,0 +1,65 @@
+# Use zsh as the default shell
+shell-integration = "zsh"
+shell-integration-features = no-cursor,sudo,title
+
+# Font setup for icons and readability
+font-family = "Monaspace Krypton Var SemiWide Bold"
+font-size = 14
+font-feature = +liga
+font-feature = +calt
+font-feature = +dlig
+font-family = Noto Color Emoji
+font-family = Noto Sans CJK JP
+
+# Theme
+theme = light:Github Light Default,dark:Github Dark Default
+background-blur = 10
+background-opacity = 0.95
+
+# Cursor preferences
+cursor-style = block
+cursor-style-blink = false
+
+# Window size and padding
+window-save-state = always
+window-padding-x = 16
+window-padding-y = 16
+window-width = 100
+window-height = 40
+window-padding-balance = true
+window-padding-color = background
+window-theme = system
+
+# Minimal macOS titlebar for cleaner appearance
+macos-titlebar-style = transparent
+macos-titlebar-proxy-icon = hidden
+
+working-directory = home
+confirm-close-surface = false
+
+# Mouse
+mouse-hide-while-typing = true
+scrollback-limit = 1000000
+
+# Split management
+keybind = ctrl+shift+z=toggle_split_zoom
+keybind = ctrl+shift+equal=equalize_splits
+
+# Font adjustment
+keybind = ctrl+plus=increase_font_size:1
+keybind = ctrl+minus=decrease_font_size:1
+keybind = ctrl+0=reset_font_size
+
+# Clipboard protection
+clipboard-read = allow
+clipboard-write = allow
+clipboard-paste-protection = true
+
+# Claude Code support
+keybind = shift+enter=text:\n
+macos-option-as-alt = left
+
+# Custom shaders
+# custom-shader-animation = false
+# https://github.com/0xhckr/ghostty-shaders
+# custom-shader = /path/to/shader.glsl
