@@ -131,8 +131,6 @@
     "ZDOTDIR": "${env:HOME}/.config/zsh"
   },
 
-  // Window
-
   // Workbench
   "workbench.activityBar.location": "top",
   "workbench.colorTheme": "cursor midnight theme",

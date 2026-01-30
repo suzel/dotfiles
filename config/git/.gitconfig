@@ -17,6 +17,7 @@
 
 [push]
 	default = simple
+	autoSetupRemote = true
 
 [pull]
 	rebase = true
@@ -80,6 +81,12 @@
 	w = show
 	wp = show -p
 	wr = show -p --no-color
+	# Utility aliases
+	amend = commit --amend
+	unstage = reset HEAD --
+	undo = reset --soft HEAD^
+	stash-all = stash push --include-untracked
+	up = "!git switch $(git symbolic-ref refs/remotes/origin/HEAD --short | sed 's|origin/||') && git pull --prune"
 
 [merge]
 	conflictstyle = zdiff3
@@ -91,6 +98,7 @@
 [diff]
 	algorithm = histogram
 	colorMoved = plain
+	colorMovedWS = allow-indentation-change
 	mnemonicPrefix = true
 	renames = true
 	tool = vscode
@@ -118,3 +126,9 @@
 
 [receive]
 	fsckObjects = true
+
+[status]
+	showUntrackedFiles = all
+
+[advice]
+	detachedHead = false
