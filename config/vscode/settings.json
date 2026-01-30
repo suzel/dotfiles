@@ -1,5 +1,5 @@
 {
-  // BreadCrumbs
+  // Breadcrumbs
   "breadcrumbs.enabled": false,
 
   // Claude Code
@@ -9,7 +9,6 @@
   "claudeCode.selectedModel": "opus",
 
   // Copilot
-  "chat.agent.enabled": true,
   "chat.commandCenter.enabled": false,
 
   // Editor
@@ -17,22 +16,16 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "always",
     "source.organizeImports": "always",
-    "source.sortImports": "always",
+    "source.sortImports": "always"
   },
   "editor.cursorBlinking": "phase",
-  "editor.cursorWidth": 1,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.fontFamily": "JetBrains Mono",
   "editor.fontWeight": "450",
   "editor.fontLigatures": true,
-  "editor.fontSize": 14,
-  "editor.fontVariations": false,
   "editor.formatOnPaste": true,
   "editor.formatOnSave": true,
-  "editor.formatOnSaveMode": "file",
-  "editor.guides.bracketPairs": false,
   "editor.guides.indentation": false,
-  "editor.inlineSuggest.enabled": true,
   "editor.inlineSuggest.suppressSuggestions": true,
   "editor.letterSpacing": 0.3,
   "editor.lineHeight": 1.6,
@@ -40,7 +33,6 @@
   "editor.minimap.enabled": false,
   "editor.mouseWheelZoom": true,
   "editor.renderLineHighlight": "none",
-  "editor.renderWhitespace": "none",
   "editor.scrollbar.horizontal": "hidden",
   "editor.scrollbar.vertical": "hidden",
   "editor.semanticHighlighting.enabled": false,
@@ -58,7 +50,7 @@
     "*.ts": "${capture}.js",
     ".env": ".env*",
     "package.json": "package-lock.json, pnpm-lock.yaml",
-    "tsconfig.json": "tsconfig.*.json",
+    "tsconfig.json": "tsconfig.*.json"
   },
 
   // Files
@@ -66,39 +58,37 @@
     "**/.DS_Store": true,
     "**/.git": true,
     "**/node_modules": true,
-    "**/package-lock.json": true,
+    "**/package-lock.json": true
   },
   "files.associations": {
     "*.css": "tailwindcss",
-    ".env*": "dotenv",
+    ".env*": "dotenv"
   },
   "[html, javascript, typescript, json, jsonc]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[markdown]": {
     "diffEditor.ignoreTrimWhitespace": false,
     "editor.defaultFormatter": "DavidAnson.vscode-markdownlint",
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
-      "source.fixAll.markdownlint": "explicit",
+      "source.fixAll.markdownlint": "explicit"
     },
     "editor.quickSuggestions": {
       "comments": "off",
       "other": "off",
-      "strings": "off",
+      "strings": "off"
     },
     "editor.unicodeHighlight.ambiguousCharacters": true,
     "editor.unicodeHighlight.invisibleCharacters": false,
-    "editor.wordWrap": "on",
+    "editor.wordWrap": "on"
   },
-  "javascript.suggest.autoImports": true,
   "javascript.updateImportsOnFileMove.enabled": "always",
   "svelte.enable-ts-plugin": true,
   "typescript.preferences.preferTypeOnlyAutoImports": true,
-  "typescript.suggest.autoImports": true,
   "typescript.updateImportsOnFileMove.enabled": "always",
   "[svelte]": {
-    "editor.defaultFormatter": "svelte.svelte-vscode",
+    "editor.defaultFormatter": "svelte.svelte-vscode"
   },
 
   // Git
@@ -114,31 +104,18 @@
   // Security
   "security.promptForLocalFileProtocolHandling": false,
 
-  // Spell
-  // "cSpell.enabled": false,
-  // "cSpell.language": "en,tr",
-  // "cSpell.ignorePaths": [
-  //   "**/node_modules",
-  //   "**/node_modules/**",
-  //   "node_modules/**",
-  //   "vscode-extension",
-  //   ".git",
-  // ],
+  // Snippet Manger
+  "snippetstudio.alwaysShowProjectSnippetFiles": true,
 
   // Tasks
   "task.allowAutomaticTasks": "on",
 
   // Terminal
-  // [[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"
-  "terminal.integrated.shellIntegration.enabled": true,
   "terminal.integrated.cursorBlinking": true,
   "terminal.integrated.cursorStyle": "line",
   "terminal.integrated.fontFamily": "JetBrainsMono Nerd Font",
-  "terminal.integrated.fontSize": 16,
+  "terminal.integrated.fontSize": 17,
   "terminal.integrated.fontLigatures.enabled": true,
-  "terminal.integrated.suggest.enabled": true,
-  "terminal.integrated.defaultProfile.osx": "zsh",
-  "terminal.integrated.shellIntegration.decorationsEnabled": "both",
   "terminal.integrated.suggest.suggestOnTriggerCharacters": true,
   "terminal.integrated.shellIntegration.showCommandGuide": true,
   "terminal.integrated.shellIntegration.history": 100,
@@ -147,28 +124,24 @@
   "terminal.integrated.profiles.osx": {
     "zsh": {
       "path": "/bin/zsh",
-      "args": ["-l"],
-    },
+      "args": ["-l"]
+    }
   },
   "terminal.integrated.env.osx": {
-    "ZDOTDIR": "${env:HOME}/.config/zsh",
+    "ZDOTDIR": "${env:HOME}/.config/zsh"
   },
 
   // Window
-  "window.zoomPerWindow": false,
 
   // Workbench
-  "workbench.fontAliasing": "auto",
   "workbench.activityBar.location": "top",
   "workbench.colorTheme": "cursor midnight theme",
   "workbench.colorCustomizations": {
     "focusBorder": "#00000000",
-    "notebook.focusedCellBorder": "#00000000",
+    "notebook.focusedCellBorder": "#00000000"
   },
   "workbench.editor.editorActionsLocation": "titleBar",
   "workbench.editor.empty.hint": "hidden",
-  "workbench.editor.enablePreviewFromCodeNavigation": true,
-  "workbench.editor.enablePreviewFromQuickOpen": true,
   "workbench.editor.labelFormat": "short",
   "workbench.editor.preferHistoryBasedLanguageDetection": true,
   "workbench.editor.revealIfOpen": true,
@@ -180,10 +153,5 @@
 
   // Others
   "telemetry.telemetryLevel": "off",
-  "update.showReleaseNotes": false,
-  "[toml]": {
-    "editor.defaultFormatter": "tamasfe.even-better-toml",
-  },
-  "workbench.editor.showTabs": "single",
-  "window.zoomLevel": 2,
+  "update.showReleaseNotes": false
 }

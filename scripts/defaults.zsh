@@ -119,6 +119,9 @@ defaults write com.apple.dock expose-group-apps -bool false
 # Enable Dark Mode
 defaults write NSGlobalDomain AppleInterfaceStyle -string "Dark"
 
+# Force 24-hour time format
+sudo defaults write /Library/Preferences/.GlobalPreferences AppleICUForce24HourTime -bool true
+
 # Light font smoothing (for non-retina external monitors)
 defaults -currentHost write -g AppleFontSmoothing -int 1
 
@@ -306,7 +309,7 @@ sudo pmset -b sleep 15
 # =============================================================================
 
 # Show contact info on login screen (in case of lost/stolen device)
-LOGIN_TEXT=$(echo 'U3VrcnUgVXplbCAtIEdTTTogKzkwIDUwNSA1MDMgNTEgMDY=' \
+LOGIN_TEXT=$(echo 'Q29udGFjdDogc3VrcnUudXplbEBnbWFpbC5jb20=' \
     | base64 --decode)
 sudo defaults write /Library/Preferences/com.apple.loginwindow \
     LoginwindowText -string "$LOGIN_TEXT"
