@@ -121,10 +121,6 @@ defaults write com.apple.dock expose-group-apps -bool false
 # Enable Dark Mode
 defaults write NSGlobalDomain AppleInterfaceStyle -string "Dark"
 
-# Force 24-hour time format
-sudo defaults write /Library/Preferences/.GlobalPreferences \
-    AppleICUForce24HourTime -bool true
-
 # Light font smoothing (for non-retina external monitors)
 defaults -currentHost write -g AppleFontSmoothing -int 1
 
@@ -285,37 +281,12 @@ defaults write com.apple.terminal ShowWorkingDirectoryInTitle -bool true
 # Open new tabs in the same working directory
 defaults write com.apple.terminal NewTabWorkingDirectoryBehavior -int 1
 
-# Suppress "Last login" message
-touch "${HOME}/.hushlogin"
-
 # Set font and font size for Pro profile
 osascript -e '
 tell application "Terminal"
     set font name of settings set "Pro" to "JetBrainsMono Nerd Font"
     set font size of settings set "Pro" to 16
 end tell'
-
-# =============================================================================
-# Power Management
-# =============================================================================
-
-# On charger: never sleep
-sudo pmset -c displaysleep 0
-sudo pmset -c sleep 0
-
-# On battery: sleep after 15 minutes
-sudo pmset -b displaysleep 15
-sudo pmset -b sleep 15
-
-# =============================================================================
-# Login Window
-# =============================================================================
-
-# Show contact info on login screen (in case of lost/stolen device)
-LOGIN_TEXT=$(echo 'Q29udGFjdDogc3VrcnUudXplbEBnbWFpbC5jb20=' \
-    | base64 --decode)
-sudo defaults write /Library/Preferences/com.apple.loginwindow \
-    LoginwindowText -string "$LOGIN_TEXT"
 
 # =============================================================================
 # Restart affected services

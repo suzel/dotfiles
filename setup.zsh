@@ -90,7 +90,7 @@ success "Script files copied."
 # Update macOS Settings
 info "Updating macOS settings..."
 zsh ./scripts/defaults.zsh
-zsh ./scripts/security.zsh
+# zsh ./scripts/security.zsh
 success "macOS settings updated."
 
 # Cleanup
