@@ -5,7 +5,7 @@ set -euo pipefail
 # Ask for the administrator password upfront
 sudo -v
 
-# Log Functions with Colors
+# Log Functions
 info() { echo "\033[0;34mℹ️  $*\033[0m"; }
 warn() { echo "\033[0;33m⚠️  $*\033[0m"; }
 error() { echo "\033[0;31m❌ $*\033[0m"; }
@@ -59,6 +59,7 @@ fi
 # Install Homebrew Packages
 info "Installing Homebrew packages..."
 brew bundle --file=./config/brew/Brewfile
+brew autoupdate delete 2>/dev/null
 brew autoupdate start --upgrade --cleanup --quiet
 brew analytics off
 brew cleanup -s

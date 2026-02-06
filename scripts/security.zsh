@@ -8,6 +8,12 @@
 # Requires: sudo credentials (handled by parent setup.zsh)
 # =============================================================================
 
+# Log Functions
+info() { echo "\033[0;34mℹ️  $*\033[0m"; }
+warn() { echo "\033[0;33m⚠️  $*\033[0m"; }
+error() { echo "\033[0;31m❌ $*\033[0m"; }
+success() { echo "\033[0;32m✅ $*\033[0m"; }
+
 # Close System Settings to prevent it from overriding changes
 osascript -e 'tell application "System Settings" to quit' 2>/dev/null
 
@@ -74,9 +80,9 @@ defaults write com.apple.security.revocation \
 # =============================================================================
 
 if ! fdesetup status | grep -q "FileVault is On"; then
-  echo "WARNING: FileVault is NOT enabled. Enable it via:"
-  echo "  System Settings > Privacy & Security > FileVault"
-  echo "  Or run: sudo fdesetup enable"
+  warn "FileVault is NOT enabled. Enable it via:"
+  warn "  System Settings > Privacy & Security > FileVault"
+  warn "  Or run: sudo fdesetup enable"
 fi
 
 # =============================================================================
@@ -190,4 +196,4 @@ defaults write com.apple.Siri UserHasDeclinedEnable -bool true
 killall SystemUIServer 2>/dev/null
 killall Finder 2>/dev/null
 
-echo "macOS security defaults applied successfully."
+success "macOS security defaults applied successfully."
