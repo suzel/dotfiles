@@ -17,7 +17,7 @@ setopt auto_cd auto_pushd pushd_ignore_dups cdable_vars
 
 # Completion
 setopt auto_list auto_menu always_to_end
-FPATH="/opt/homebrew/share/zsh-completions:$FPATH"
+FPATH="/opt/homebrew/share/zsh/site-functions:/opt/homebrew/share/zsh-completions:$FPATH"
 autoload -Uz compinit
 [[ -n $ZDOTDIR/.zcompdump(#qN.mh+24) ]] && compinit || compinit -C
 zstyle ':completion:*' menu select
@@ -31,10 +31,8 @@ bindkey '^[[B' history-beginning-search-forward
 
 # Plugins
 source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+eval "$(/opt/homebrew/bin/starship init zsh)"
 
 # Aliases & Functions
 [[ -f "$ZDOTDIR/.zsh_aliases" ]] && source "$ZDOTDIR/.zsh_aliases"
 [[ -f "$ZDOTDIR/.zsh_functions" ]] && source "$ZDOTDIR/.zsh_functions"
-
-# Starship
-eval "$(/opt/homebrew/bin/starship init zsh)"

@@ -28,16 +28,20 @@ sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setallowsignedapp on
 # =============================================================================
 
 # Disable built-in Apache HTTP server
-sudo launchctl unload -w /System/Library/LaunchDaemons/org.apache.httpd.plist 2>/dev/null
+httpd_plist="/System/Library/LaunchDaemons/org.apache.httpd.plist"
+sudo launchctl unload -w "$httpd_plist" 2>/dev/null
 
 # Disable TFTP server
-sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.tftpd.plist 2>/dev/null
+tftpd_plist="/System/Library/LaunchDaemons/com.apple.tftpd.plist"
+sudo launchctl unload -w "$tftpd_plist" 2>/dev/null
 
 # Disable FTP server
-sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.ftpd.plist 2>/dev/null
+ftpd_plist="/System/Library/LaunchDaemons/com.apple.ftpd.plist"
+sudo launchctl unload -w "$ftpd_plist" 2>/dev/null
 
 # Disable NFS server
-sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.nfsd.plist 2>/dev/null
+nfsd_plist="/System/Library/LaunchDaemons/com.apple.nfsd.plist"
+sudo launchctl unload -w "$nfsd_plist" 2>/dev/null
 
 # Disable mDNS multicast advertisements (Bonjour)
 sudo defaults write /Library/Preferences/com.apple.mDNSResponder.plist \
@@ -97,10 +101,9 @@ softwareupdate --schedule on
 # Screen Lock
 # =============================================================================
 
+# Require password immediately after sleep or screen saver
 defaults write com.apple.screensaver askForPassword -int 1
 defaults write com.apple.screensaver askForPasswordDelay -int 0
-defaults -currentHost write com.apple.screensaver idleTime -int 300
-sudo pmset -a displaysleep 10
 
 # =============================================================================
 # Remote Access

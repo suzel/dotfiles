@@ -21,7 +21,6 @@ cask "maccy"
 cask "monitorcontrol"
 cask "rectangle"
 cask "stats"
-cask "suspicious-package"
 
 # CLI
 brew "bat"

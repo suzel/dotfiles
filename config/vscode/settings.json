@@ -9,6 +9,7 @@
   "claudeCode.selectedModel": "opus",
 
   // Copilot
+  "chat.agentsControl.enabled": false,
   "chat.commandCenter.enabled": false,
 
   // Editor
@@ -20,7 +21,7 @@
   },
   "editor.cursorBlinking": "phase",
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.fontFamily": "JetBrains Mono",
+  "editor.fontFamily": "Monaspace Neon",
   "editor.fontWeight": "450",
   "editor.fontLigatures": true,
   "editor.formatOnPaste": true,
@@ -104,7 +105,7 @@
   // Security
   "security.promptForLocalFileProtocolHandling": false,
 
-  // Snippet Manger
+  // Snippet Manager
   "snippetstudio.alwaysShowProjectSnippetFiles": true,
 
   // Tasks
@@ -114,7 +115,6 @@
   "terminal.integrated.cursorBlinking": true,
   "terminal.integrated.cursorStyle": "line",
   "terminal.integrated.fontFamily": "JetBrainsMono Nerd Font",
-  "terminal.integrated.fontSize": 17,
   "terminal.integrated.fontLigatures.enabled": true,
   "terminal.integrated.suggest.suggestOnTriggerCharacters": true,
   "terminal.integrated.shellIntegration.showCommandGuide": true,
@@ -148,6 +148,9 @@
   "workbench.settings.editor": "json",
   "workbench.startupEditor": "none",
   "workbench.tree.enableStickyScroll": false,
+
+  // Window
+  "window.commandCenter": false,
 
   // Others
   "telemetry.telemetryLevel": "off",

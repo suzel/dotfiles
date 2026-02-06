@@ -7,8 +7,12 @@
 # Designed to be idempotent (safe to run multiple times).
 # =============================================================================
 
-# defaults write com.apple.dock persistent-apps -array-add '{ "tile-type" = "spacer-tile"; }'
-# defaults write com.apple.dock persistent-apps -array-add '{ "tile-type" = "small-spacer-tile"; }'
+# Add spacer tile to Dock:
+# defaults write com.apple.dock persistent-apps \
+#     -array-add '{ "tile-type" = "spacer-tile"; }'
+# Add small spacer tile to Dock:
+# defaults write com.apple.dock persistent-apps \
+#     -array-add '{ "tile-type" = "small-spacer-tile"; }'
 # killall Dock
 
 # Close System Settings to prevent it from overriding changes
@@ -120,7 +124,8 @@ defaults write com.apple.dock expose-group-apps -bool false
 defaults write NSGlobalDomain AppleInterfaceStyle -string "Dark"
 
 # Force 24-hour time format
-sudo defaults write /Library/Preferences/.GlobalPreferences AppleICUForce24HourTime -bool true
+sudo defaults write /Library/Preferences/.GlobalPreferences \
+    AppleICUForce24HourTime -bool true
 
 # Light font smoothing (for non-retina external monitors)
 defaults -currentHost write -g AppleFontSmoothing -int 1

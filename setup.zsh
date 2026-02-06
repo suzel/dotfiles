@@ -1,74 +1,95 @@
 #!/usr/bin/env zsh
 
-set -e
+set -euo pipefail
 
 # Ask for the administrator password upfront
 sudo -v
 
-REPO_URL="https://github.com/suzel/dotfiles.git"
-REPO_PATH="$HOME/.dotfiles"
+# Log Functions with Colors
+info() { echo "\033[0;34mℹ️  $*\033[0m"; }
+warn() { echo "\033[0;33m⚠️  $*\033[0m"; }
+error() { echo "\033[0;31m❌ $*\033[0m"; }
+success() { echo "\033[0;32m✅ $*\033[0m"; }
+
+# Trap errors and display the line number
+trap 'error "Error occurred at line $LINENO"; exit 1' ERR
+
+# Parameters
+readonly REPO_URL="https://github.com/suzel/dotfiles.git"
+readonly REPO_PATH="$HOME/.dotfiles"
+readonly BREW_URL="https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh"
 
 # Install Xcode Command Line Tools
-print -P "%F{green}Checking Xcode Command Line Tools...%f"
-if ! command -v git &>/dev/null; then
-  print -P "%F{red}Git not found! Please install Xcode Command Line Tools before running this script.%f"
-  exit 1
+if ! xcode-select -p &>/dev/null; then
+  info "Installing Xcode Command Line Tools..."
+  xcode-select --install
+  until xcode-select -p &>/dev/null; do
+    sleep 5
+  done
+  success "Xcode Command Line Tools installed."
+else
+  success "Xcode Command Line Tools already installed."
 fi
 
 # Install dotfiles
-print -P "%F{green}Installing dotfiles...%f"
 if [[ -d "$REPO_PATH" ]]; then
-  print -P "%F{yellow}Dotfiles directory already exists. Pulling latest changes...%f"
+  warn "Dotfiles directory already exists. Pulling latest changes..."
   cd "$REPO_PATH"
-  git pull origin main || { print -P "%F{red}Error updating dotfiles!%f"; exit 1 }
+  git pull origin main || { error "Error updating dotfiles!"; exit 1 }
 else
+  info "Installing dotfiles..."
   if ! git clone "$REPO_URL" "$REPO_PATH"; then
-      print -P "%F{red}Error downloading dotfiles!%f"
-      exit 1
+    error "Error downloading dotfiles!"
+    exit 1
   fi
   cd "$REPO_PATH"
 fi
 
 # Install Homebrew
 if ! command -v brew &>/dev/null; then
-  print -P "%F{green}Installing Homebrew...%f"
-  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  info "Installing Homebrew..."
+  /bin/bash -c "$(curl -fsSL $BREW_URL)"
 
-  # Platform-aware brew path
-  if [[ -d "/opt/homebrew/bin" ]]; then
-    eval "$(/opt/homebrew/bin/brew shellenv)"
-  else
-    eval "$(/usr/local/bin/brew shellenv)"
-  fi
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+  success "Homebrew installed."
+else
+  success "Homebrew already installed."
 fi
 
 # Install Homebrew Packages
-print -P "%F{green}Installing Homebrew packages...%f"
-brew bundle --file=./config/brew/Brewfile --cleanup
+info "Installing Homebrew packages..."
+brew bundle --file=./config/brew/Brewfile
 brew autoupdate start --upgrade --cleanup --quiet
 brew analytics off
 brew cleanup -s
+success "Homebrew packages installed."
+
+# Update config files
+info "Updating config files..."
+cp -r ./config/zsh/ ~/.config/zsh/
+mv ~/.config/zsh/.zshenv ~/.zshenv
+source ~/.zshenv
+cp -r ./config/git/ ~/.config/git/
+cp -r ./config/ghostty/ ~/.config/ghostty/
+cp ./config/vscode/argv.json ~/.vscode/argv.json
+cp ./config/vscode/{settings,keybindings}.json ~/Library/Application\ Support/Code/User/
+cp ./config/starship/starship.toml ~/.config/starship.toml
+success "Config files updated."
 
 # Create directories
-print -P "%F{green}Creating directories...%f"
-mkdir -p ~/scripts/
-mkdir -p ~/projects/
+info "Creating directories..."
+mkdir -p $SCRIPTS_DIR $PROJECTS_DIR
 
 # Copy script files
-print -P "%F{green}Copying script files...%f"
-cp -r ./scripts/*.zsh ~/scripts/
-
-# Update config files
-print -P "%F{green}Updating config files...%f"
-cp -r ./config/zsh/. ~/
-cp -r ./config/git/. ~/
+info "Copying script files..."
+cp -r ./scripts/*.zsh $SCRIPTS_DIR
 
 # Update macOS Settings
-print -P "%F{green}Updating macOS settings...%f"
+info "Updating macOS settings..."
 zsh ./scripts/defaults.zsh
+zsh ./scripts/security.zsh
 
 # Cleanup
 rm -rf "$REPO_PATH"
 
-print -P "%F{green}Completed!%f"
-exit
+success "Completed!"

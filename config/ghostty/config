@@ -1,15 +1,13 @@
 # Use zsh as the default shell
-shell-integration = "zsh"
+shell-integration = zsh
 shell-integration-features = no-cursor,sudo,title
 
 # Font setup for icons and readability
-font-family = "Monaspace Krypton Var SemiWide Bold"
+font-family = JetBrains Mono
 font-size = 14
 font-feature = +liga
 font-feature = +calt
 font-feature = +dlig
-font-family = Noto Color Emoji
-font-family = Noto Sans CJK JP
 
 # Theme
 theme = light:Github Light Default,dark:Github Dark Default
@@ -18,7 +16,7 @@ background-opacity = 0.95
 
 # Cursor preferences
 cursor-style = block
-cursor-style-blink = false
+cursor-style-blink = true
 
 # Window size and padding
 window-save-state = always
