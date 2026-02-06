@@ -58,11 +58,10 @@ fi
 
 # Install Homebrew Packages
 info "Installing Homebrew packages..."
-brew bundle --file=./config/brew/Brewfile
-brew autoupdate delete 2>/dev/null
-brew autoupdate start --upgrade --cleanup --quiet 2>/dev/null
-brew analytics off
+brew bundle --file=./config/brew/Brewfile -q
 brew cleanup --prune=all -q
+brew autoupdate start --upgrade --cleanup -q
+brew analytics off
 success "Homebrew packages installed."
 
 # Update config files
