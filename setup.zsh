@@ -15,8 +15,8 @@ success() { echo "\033[0;32m✅ $*\033[0m"; }
 trap 'error "Error occurred at line $LINENO"; exit 1' ERR
 
 # Parameters
-readonly REPO_URL="https://github.com/suzel/dotfiles.git"
 readonly REPO_PATH="$HOME/.dotfiles"
+readonly REPO_URL="https://github.com/suzel/dotfiles.git"
 readonly BREW_URL="https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh"
 
 # Install Xcode Command Line Tools
