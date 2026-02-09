@@ -35,7 +35,7 @@ fi
 if [[ -d "$REPO_PATH" ]]; then
   warn "Dotfiles directory already exists. Pulling latest changes..."
   cd "$REPO_PATH"
-  git pull -q origin main || { error "Error updating dotfiles!"; exit 1 }
+  git pull -q origin main || { error "Error updating dotfiles!"; exit 1; }
 else
   info "Installing dotfiles..."
   if ! git clone -q "$REPO_URL" "$REPO_PATH"; then
@@ -60,7 +60,6 @@ fi
 info "Installing Homebrew packages..."
 brew bundle --file=./config/brew/Brewfile -q
 brew cleanup --prune=all -q
-brew autoupdate start --upgrade --cleanup -q
 brew analytics off
 success "Homebrew packages installed."
 
@@ -89,7 +88,6 @@ success "Script files copied."
 # Update macOS Settings
 info "Updating macOS settings..."
 zsh ./scripts/defaults.zsh
-# zsh ./scripts/security.zsh
 success "macOS settings updated."
 
 # Cleanup
