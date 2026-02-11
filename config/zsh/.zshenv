@@ -19,17 +19,7 @@ export SCRIPTS_DIR="$HOME/Scripts"
 export HYGEN_TMPLS="$PROJECTS_DIR/hygen/_templates"
 
 # Homebrew
+export HOMEBREW_PREFIX="/opt/homebrew"
 export HOMEBREW_NO_ENV_HINTS=1
+fpath=("/opt/homebrew/share/zsh/site-functions" "/opt/homebrew/share/zsh-completions" $fpath)
 
-# PATH
-typeset -U path
-path=(
-  "/opt/homebrew/bin"
-  "/opt/homebrew/sbin"
-  "$HOME/.local/bin"
-  "$HOME/.bun/bin"
-  "$HOME/Scripts"
-  "$HOME/Library/pnpm"
-  "/usr/local/go/bin"
-  $path
-)

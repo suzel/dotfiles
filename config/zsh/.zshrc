@@ -1,8 +1,17 @@
-# Terminal
-export TERM=xterm-256color
+# PATH
+typeset -U path
+path=(
+  "/opt/homebrew/bin"
+  "/opt/homebrew/sbin"
+  "$HOME/.local/bin"
+  "$HOME/.bun/bin"
+  "$HOME/Scripts"
+  "$HOME/Library/pnpm"
+  "/usr/local/go/bin"
+  $path
+)
 
 # General Options
-# setopt correct no_clobber extended_glob interactive_comments
 setopt no_clobber extended_glob interactive_comments
 
 # History
@@ -17,7 +26,6 @@ setopt auto_cd auto_pushd pushd_ignore_dups cdable_vars
 
 # Completion
 setopt auto_list auto_menu always_to_end
-FPATH="/opt/homebrew/share/zsh/site-functions:/opt/homebrew/share/zsh-completions:$FPATH"
 autoload -Uz compinit
 [[ -n $ZDOTDIR/.zcompdump(#qN.mh+24) ]] && compinit || compinit -C
 zstyle ':completion:*' menu select

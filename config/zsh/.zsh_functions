@@ -29,7 +29,7 @@ extract() {
 
 # Initialize a new Node.js project with common settings
 node-init() {
-  npm init -y
+  pnpm init
   printf '.DS_Store\nnode_modules\n.env\ncoverage\ndist\n' > .gitignore
   mkdir -p src
   touch src/index.js
