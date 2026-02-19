@@ -7,7 +7,7 @@ path=(
   "$HOME/.bun/bin"
   "$HOME/Scripts"
   "$HOME/Library/pnpm"
-  "/usr/local/go/bin"
+  "$GOBIN"
   $path
 )
 

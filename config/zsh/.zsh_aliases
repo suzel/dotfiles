@@ -65,7 +65,3 @@ alias cc='claude'
 alias ccd='claude --dangerously-skip-permissions'
 alias ccr='claude --resume'
 alias ccc='claude --continue'
-alias glmcode='claude --settings ~/.claude/settings-glm.json'
-
-# Scripts
-alias csk='zsh $SCRIPTS_DIR/create-sveltekit.zsh'

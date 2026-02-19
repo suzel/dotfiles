@@ -23,3 +23,6 @@ export HOMEBREW_PREFIX="/opt/homebrew"
 export HOMEBREW_NO_ENV_HINTS=1
 fpath=("/opt/homebrew/share/zsh/site-functions" "/opt/homebrew/share/zsh-completions" $fpath)
 
+# Go
+export GOPATH="$HOME/go"
+export GOBIN="$GOPATH/bin"
