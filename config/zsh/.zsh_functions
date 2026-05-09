@@ -26,12 +26,3 @@ extract() {
     *) echo "Unknown archive format";;
   esac
 }
-
-# Initialize a new Node.js project with common settings
-node-init() {
-  pnpm init
-  printf '.DS_Store\nnode_modules\n.env\ncoverage\ndist\n' > .gitignore
-  mkdir -p src
-  touch src/index.js
-  echo "Project initialized in $(pwd)"
-}

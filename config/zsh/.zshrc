@@ -3,10 +3,14 @@ typeset -U path
 path=(
   "/opt/homebrew/bin"
   "/opt/homebrew/sbin"
+  "/opt/homebrew/share/zsh-completions"
+  "/opt/homebrew/share/zsh/site-functions"
   "$HOME/.local/bin"
   "$HOME/.bun/bin"
-  "$HOME/Scripts"
+  "$HOME/.cargo/bin"
+  "$HOME/go/bin"
   "$HOME/Library/pnpm"
+  "$HOME/Scripts"
   "$GOBIN"
   $path
 )

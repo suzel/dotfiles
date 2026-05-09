@@ -57,6 +57,10 @@ clipboard-paste-protection = true
 keybind = shift+enter=text:\n
 macos-option-as-alt = left
 
+# Custom icon
+macos-icon = custom
+macos-custom-icon = ~/.config/ghostty/ayu-dark.icns
+
 # Custom shaders
 # custom-shader-animation = false
 # https://github.com/0xhckr/ghostty-shaders

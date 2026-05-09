@@ -70,6 +70,8 @@ mv ~/.config/zsh/.zshenv ~/.zshenv
 source ~/.zshenv
 cp -r ./config/git/ ~/.config/git/
 cp -r ./config/ghostty/ ~/.config/ghostty/
+# curl -L -o ~/.config/ghostty/ayu-dark.icns 
+# https://github.com/jasonlong/ghostty-theme-icons/raw/main/icons/ayu-dark/ayu-dark.icns
 cp ./config/vscode/argv.json ~/.vscode/argv.json
 cp ./config/vscode/{settings,keybindings}.json ~/Library/Application\ Support/Code/User/
 cp ./config/starship/starship.toml ~/.config/starship.toml
