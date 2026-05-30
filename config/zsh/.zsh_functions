@@ -26,3 +26,15 @@ extract() {
     *) echo "Unknown archive format";;
   esac
 }
+
+# Clone the template locally (optional branch, default: dev) and run setup.zsh
+new-svelte() {
+  local name="$1"
+  local branch="${2:-dev}"
+  [[ -z "$name" ]] && { echo "Usage: new-svelte <project-name> [branch]"; return 1; }
+
+  gh repo clone suzel/sveltekit-project "$name" -- --depth=1 --branch "$branch" -q || return 1
+  rm -rf "$name/.git"
+  cd "$name" || return 1
+  ./setup.zsh && rm -f setup.zsh
+}
