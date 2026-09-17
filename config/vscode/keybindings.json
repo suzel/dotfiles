@@ -3,68 +3,68 @@
   {
     "key": "cmd+d",
     "command": "editor.action.copyLinesDownAction",
-    "when": "editorTextFocus && !editorReadonly",
+    "when": "editorTextFocus && !editorReadonly"
   },
   {
     "key": "shift+alt+down",
     "command": "-editor.action.copyLinesDownAction",
-    "when": "editorTextFocus && !editorReadonly",
+    "when": "editorTextFocus && !editorReadonly"
   },
   {
     "key": "cmd+shift+l",
     "command": "editor.action.format",
-    "when": "editorTextFocus && !editorReadonly",
+    "when": "editorTextFocus && !editorReadonly"
   },
   {
     "key": "ctrl+shift+i",
     "command": "editor.action.sourceAction",
     "args": {
       "kind": "source.addMissingImports",
-      "apply": "first",
-    },
+      "apply": "first"
+    }
   },
   {
     "key": "ctrl+shift+up",
-    "command": "editor.action.fontZoomIn",
+    "command": "editor.action.fontZoomIn"
   },
   {
     "key": "ctrl+shift+down",
-    "command": "editor.action.fontZoomOut",
+    "command": "editor.action.fontZoomOut"
   },
   {
     "key": "f18",
-    "command": "workbench.view.extension.tomjs-snippets-manager",
+    "command": "workbench.view.extension.tomjs-snippets-manager"
   },
   {
     "key": "ctrl+alt+b",
     "command": "simpleBrowser.show",
-    "args": "http://localhost:3000",
+    "args": "http://localhost:3000"
   },
   {
     "key": "shift+enter",
     "command": "workbench.action.terminal.sendSequence",
     "args": {
-      "text": "\\\r\n",
+      "text": "\\\r\n"
     },
-    "when": "terminalFocus",
+    "when": "terminalFocus"
   },
   {
     "key": "enter",
     "command": "markdown.showPreviewToSide",
-    "when": "resourceExtname == .md && explorerViewletVisible && filesExplorerFocus",
+    "when": "resourceExtname == .md && explorerViewletVisible && filesExplorerFocus"
   },
   {
     "key": "cmd+numpad2",
     "command": "workbench.action.terminal.fontZoomIn",
-    "when": "terminalProcessSupported",
+    "when": "terminalProcessSupported"
   },
   {
     "key": "cmd+numpad3",
     "command": "workbench.action.terminal.fontZoomOut",
-    "when": "terminalProcessSupported",
+    "when": "terminalProcessSupported"
   },
   {
     "key": "ctrl+shift+delete",
-    "command": "editor.action.fontZoomReset",
-  },
+    "command": "editor.action.fontZoomReset"
+  }
 ]
