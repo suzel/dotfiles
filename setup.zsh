@@ -35,7 +35,10 @@ fi
 if [[ -d "$REPO_PATH" ]]; then
   warn "Dotfiles directory already exists. Pulling latest changes..."
   cd "$REPO_PATH"
-  git pull -q origin main || { error "Error updating dotfiles!"; exit 1; }
+  git pull -q origin main || {
+    error "Error updating dotfiles!"
+    exit 1
+  }
 else
   info "Installing dotfiles..."
   if ! git clone -q "$REPO_URL" "$REPO_PATH"; then
@@ -69,8 +72,9 @@ cp -r ./config/zsh/ ~/.config/zsh/
 mv ~/.config/zsh/.zshenv ~/.zshenv
 source ~/.zshenv
 cp -r ./config/git/ ~/.config/git/
+cp ./config/git/.gitignore ~/.config/git/ignore
 cp -r ./config/ghostty/ ~/.config/ghostty/
-# curl -L -o ~/.config/ghostty/ayu-dark.icns 
+# curl -L -o ~/.config/ghostty/ayu-dark.icns
 # https://github.com/jasonlong/ghostty-theme-icons/raw/main/icons/ayu-dark/ayu-dark.icns
 cp ./config/vscode/argv.json ~/.vscode/argv.json
 cp ./config/vscode/{settings,keybindings}.json ~/Library/Application\ Support/Code/User/

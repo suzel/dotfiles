@@ -10,7 +10,8 @@ success() { echo "\033[0;32m✅ $*\033[0m"; }
 # Helper Functions
 installed() { [[ -n $(pnpm pkg get "devDependencies[\"$1\"]") ]]; }
 envset() { pnpm dlx -s @dotenvx/dotenvx set "$1" "$2" --plain -q -f "${3:-.env,.env.example}"; }
-vsext() { ID=$1 yq -i -oj '.recommendations |= (. + [strenv(ID)] | unique)' .vscode/extensions.json; }
+vsext() { IDS="$*" yq -i -oj '.recommendations |= (. + (strenv(IDS) | split(" ")) | unique)' .vscode/extensions.json; }
+vscopy() { sed '/^[[:space:]]*\/\//d' ~/Library/Application\ Support/Code/User/$1 | yq -oj "$2" >.vscode/$1; }
 
 # Checks
 installed @sveltejs/kit || {
@@ -21,8 +22,8 @@ installed @sveltejs/kit || {
 # Update package meta
 pnpm pkg set \
   version="0.0.1" \
-  description="${$(pnpm pkg get description):-$name Project}" \
-  homepage="https://github.com/suzel/sveltekit-project#readme" \
+  description="${$(pnpm pkg get description | perl -pe 's/^./\u$&/'):-${(C)$(pnpm pkg get name)//[-_]/ }}" \
+  homepage="https://github.com/suzel/$(pnpm pkg get name)#readme" \
   author.name="$(git config user.name || echo '')" \
   author.email="$(git config user.email || echo '')" \
   type="module" \
@@ -46,7 +47,8 @@ mkdir -p \
 
 # Project Files
 node --version | cut -d 'v' -f 2 >.node-version
-touch src/{hooks.client.ts,service-workers.ts}
+touch src/{hooks.client,service-workers}.ts
+touch src/lib/components/layout/{Header,Footer,GoogleAnalytics}.svelte
 
 # Build scripts allowlist
 echo "allowBuilds:
@@ -132,7 +134,9 @@ fi
 pnpm add -D -s --loglevel warn husky lint-staged
 pnpm exec husky
 echo 'pnpm lint-staged' >.husky/pre-commit
-echo 'pnpm lint && pnpm check && pnpm test' >.husky/pre-push
+prepush='pnpm lint && pnpm check'
+installed vitest && prepush+=' && pnpm test'
+echo "$prepush" >.husky/pre-push
 echo "/** @type {import('lint-staged').Configuration} */
 export default {
   '*.{js,ts,svelte}': ['eslint --fix', 'prettier --write'],
@@ -154,15 +158,29 @@ if installed tailwindcss; then
   vsext bradlc.vscode-tailwindcss
 fi
 
-# pnpm dlx shadcn-svelte@latest init -o \
+# pnpm dlx shadcn-svelte@latest init --reinstall \
+#   --preset bIkeymG \
 #   --skip-preflight \
+#   --css src/lib/styles/shadcn.css \
+#   --components-alias '#lib/components' \
+#   --lib-alias '#lib' \
+#   --utils-alias '#lib/utils' \
+#   --hooks-alias '#lib/hooks' \
+#   --ui-alias '#lib/components/ui'
+
+# touch src/lib/styles/shadcn.css
+# pnpm dlx shadcn-svelte@latest init \
+#   --cwd . \
+#   --preset bIkeymG \
 #   --base-color neutral \
 #   --css src/lib/styles/shadcn.css \
-#   --components-alias '$lib/components' \
-#   --lib-alias '$lib' \
-#   --utils-alias '$lib/utils' \
-#   --hooks-alias '$lib/hooks' \
-#   --ui-alias '$lib/components/ui'
+#   --lib-alias '#lib' \
+#   --components-alias '#lib/components' \
+#   --ui-alias '#lib/components/ui' \
+#   --utils-alias '#lib/utils' \
+#   --hooks-alias '#lib/hooks' \
+#   --reinstall \
+#   --skip-preflight
 
 # Web files
 # npx @vite-pwa/assets-generator@latest --preset minimal-2023 static/img/favicons/favicon.svg
@@ -178,7 +196,6 @@ pnpm pkg set \
 
 # Database
 if installed drizzle-kit; then
-  echo "/drizzle/" >>.prettierignore
   pnpm pkg set \
     'scripts["db:studio"]'="(sleep 2 && open https://local.drizzle.studio) & drizzle-kit studio" \
     'scripts["db:push"]'="drizzle-kit push --force"
@@ -226,15 +243,18 @@ if installed @sveltejs/adapter-cloudflare; then
 fi
 
 # Claude
+# TODO: claude init ?
+# TODO: CLAUDE.md template ?
 if [[ -d .claude ]]; then
   [[ -f AGENTS.md ]] && mv AGENTS.md .claude/CLAUDE.md
-  # /.claude/skills/
-  touch .claude/settings.json
-  # .mcp.json — miras alınan ve user scope MCP sunucularını projeye sabitle
+  installed prettier && echo "/.claude/skills/" >>.prettierignore
+  yq -oj '
+    del(.hooks, .extraKnownMarketplaces, .permissions, .modelSettings) |
+    .enabledPlugins |= with_entries(select(.key == ("*typescript*", "*svelte*")))
+  ' ~/.claude/settings.json >.claude/settings.json
   jq -s '{ mcpServers: (map(.mcpServers // {}) | add) }' \
     ../.mcp.json <(jq '{ mcpServers: (.mcpServers // {}) }' ~/.claude.json) >.mcp.json
 
-  # .lsp.json — kurulu Claude Code LSP eklentilerinin config'ini dump et
   lsp_exclude=(gopls)
   plugins=$(claude plugin list --json | jq -c 'map(select(.enabled))')
   manifests=(~/.claude/plugins/marketplaces/*/.claude-plugin/marketplace.json ${(f)"$(jq -r '.[].installPath + "/.claude-plugin/plugin.json"' <<<$plugins)"})
@@ -242,23 +262,6 @@ if [[ -d .claude ]]; then
     [inputs | if .plugins then .name as $m | .plugins[] | select("\(.name)@\($m)" | IN($on[].id)) end | .lspServers // empty]
     | add // {} | del(.[$ARGS.positional[]])' ${^manifests}(N) --args $lsp_exclude >.lsp.json
 
-  # Install global LSP servers
-  # npm add -g \
-  #   typescript \
-  #   @vtsls/language-server \
-  #   svelte-language-server
-
-  # Add Claude Code plugin marketplaces
-  # claude plugin marketplace add \
-  #   RA1NCS/svelte-lsp \
-  #   Piebald-AI/claude-code-lsps \
-  #   cloudflare/skills
-
-  # claude plugin install \
-  #   svelte-lsp@svelte-lsp \
-  #   vtsls@claude-code-lsps \
-  #   svelte-lsp@claude-code-lsps \
-  #   cloudflare@cloudflare
   vsext anthropic.claude-code
 fi
 
@@ -298,17 +301,36 @@ if [[ -d .claude ]]; then
 fi
 
 # VSCode
-touch .vscode/{extensions.json,settings.json,tasks.json,launch.json}
-vsext svelte.svelte-vscode
-vsext antfu.iconify
-vsext christian-kohler.path-intellisense
-vsext usernamehw.errorlens
-vsext formulahendry.auto-rename-tag
-# vsext editorconfig.editorconfig
+# TODO: launch.json
+vscopy tasks.json '.tasks |= map(select(.label == "Svelte*"))'
+vscopy settings.json 'with_entries(select(.key == (
+  "files.exclude",
+  "files.associations",
+  "explorer.fileNesting.*",
+  "tailwindCSS.experimental.classRegex",
+  "editor.codeActionsOnSave",
+  "editor.quickSuggestions",
+  "editor.defaultFormatter",
+  "editor.foldingStrategy",
+  "editor.formatOnSave",
+  "editor.formatOnPaste",
+  "js/ts.*",
+  "svelte.*",
+  "[svelte]",
+  "eslint.validate"
+)))'
+vsext \
+  svelte.svelte-vscode \
+  antfu.iconify \
+  christian-kohler.path-intellisense \
+  usernamehw.errorlens \
+  formulahendry.auto-rename-tag \
+  editorconfig.editorconfig
 
 # Github Actions
-# Dependabot / Renovate → otomatik PR açar, dependency'leri günceller.
-# Versioning ?
+# TODO: Dependabot / Renovate → auto PR
+# TODO: Versioning ?
+# TODO: yml validation, is working ?
 touch .github/workflows/{ci.yml,deploy.yml}
 vsext github.vscode-github-actions
 
@@ -324,6 +346,10 @@ vsext github.vscode-github-actions
 # pnpm add -g lighthouse
 pnpm up --loglevel error
 pnpm --loglevel silent format --log-level=warn
+
+# Docs
+# TODO: docs/README.md
+# TODO: README.md
 
 # Git
 # TODO: .gitignore ?
