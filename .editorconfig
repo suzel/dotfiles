@@ -17,3 +17,7 @@ indent_size = 2
 
 [*.md]
 trim_trailing_whitespace = false
+
+[{*.zsh,.z*}]
+shell_variant = zsh
+switch_case_indent = true
