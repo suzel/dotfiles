@@ -11,7 +11,6 @@ success() { echo "\033[0;32m✅ $*\033[0m"; }
 installed() { [[ -n $(pnpm pkg get "devDependencies[\"$1\"]") ]]; }
 envset() { pnpm dlx -s @dotenvx/dotenvx set "$1" "$2" --plain -q -f "${3:-.env,.env.example}"; }
 vsext() { IDS="$*" yq -i -oj '.recommendations |= (. + (strenv(IDS) | split(" ")) | unique)' .vscode/extensions.json; }
-vscopy() { sed '/^[[:space:]]*\/\//d' ~/Library/Application\ Support/Code/User/$1 | yq -oj "$2" >.vscode/$1; }
 
 # Checks
 installed @sveltejs/kit || {
@@ -47,7 +46,8 @@ mkdir -p \
 
 # Project Files
 node --version | cut -d 'v' -f 2 >.node-version
-touch src/{hooks.client,service-workers}.ts
+# TODO: ?
+# touch src/{hooks.client,service-workers}.ts
 touch src/lib/components/layout/{Header,Footer,GoogleAnalytics}.svelte
 
 # Build scripts allowlist
@@ -127,6 +127,9 @@ if ! grep -q enhancedImages vite.config.ts; then
     }
   },"
   CSP=$csp perl -pi -e 's{^([ \t]*)(?=experimental: \{ remoteFunctions)}{my $i = $1; $i . $ENV{CSP} =~ s/\n  /\n$i/gr . "\n$i"}e' vite.config.ts
+  sed -i '' $'s|^import { sveltekit }.*|&\\\nimport Icons from \'unplugin-icons/vite\';|' vite.config.ts
+  sed -i '' $'s/^    })$/    }),/;s/^  ]$/    Icons({ compiler: \'svelte\' })\\\n&/' vite.config.ts
+  sed -i '' $'1s|^|import \'unplugin-icons/types/svelte\';\\\n\\\n|' src/app.d.ts
 fi
 
 # Husky &  Lint-staged
@@ -148,6 +151,7 @@ pnpm pkg set \
 
 # TailwindCSS
 if installed tailwindcss; then
+  # TODO: ?
   touch src/lib/styles/design-token.css
   if [[ -f src/routes/layout.css ]]; then
     mv src/routes/layout.css src/lib/styles/layout.css
@@ -185,11 +189,13 @@ fi
 # Web files
 # npx @vite-pwa/assets-generator@latest --preset minimal-2023 static/img/favicons/favicon.svg
 # https://www.sopyo.com/llms.txt
+# TODO: ?
 touch static/{humans.txt,manifest.json}
 grep -qs '^Sitemap:' static/robots.txt || echo "\nSitemap: https://yourdomain.com/sitemap.xml" >>static/robots.txt
-logo=${TMPDIR:-/tmp}/svelte-logo.svg
-[[ -f $logo ]] || curl -fsSL -o $logo https://raw.githubusercontent.com/sveltejs/branding/master/svelte-logo.svg
-[[ -f static/img/logo.svg ]] || cp $logo static/img/logo.svg
+# TODO: ?
+# logo=${TMPDIR:-/tmp}/svelte-logo.svg
+# [[ -f $logo ]] || curl -fsSL -o $logo https://raw.githubusercontent.com/sveltejs/branding/master/svelte-logo.svg
+# [[ -f static/img/logo.svg ]] || cp $logo static/img/logo.svg
 pnpm add -D -s --loglevel warn @profullstack/favicon-generator
 pnpm pkg set \
   'scripts["gen:favicon"]'="fav -i ./static/img/logo.svg -o ./static/img/favicons --silent"
@@ -224,6 +230,12 @@ if [[ -f compose.yaml ]]; then
     'scripts["docker:up"]'="docker compose up -d --build" \
     'scripts["docker:down"]'="docker compose down"
   envset COMPOSE_FILE "docker/compose.yaml:docker/compose.dev.yaml" .env
+fi
+
+# Static
+# https://svelte.dev/docs/kit/adapter-static
+if installed @sveltejs/adapter-static; then
+  grep -qs 'prerender' src/routes/+layout.ts || echo "export const prerender = true;" >>src/routes/+layout.ts
 fi
 
 # Cloudflare
@@ -302,8 +314,9 @@ fi
 
 # VSCode
 # TODO: launch.json
-vscopy tasks.json '.tasks |= map(select(.label == "Svelte*"))'
-vscopy settings.json 'with_entries(select(.key == (
+vscat=(grep -v '^\s*//' ~/Library/Application\ Support/Code/User)
+$vscat/tasks.json | yq -oj '.tasks |= map(select(.label == "Svelte*"))' >.vscode/tasks.json
+$vscat/settings.json | yq -oj 'with_entries(select(.key == (
   "files.exclude",
   "files.associations",
   "explorer.fileNesting.*",
@@ -318,7 +331,7 @@ vscopy settings.json 'with_entries(select(.key == (
   "svelte.*",
   "[svelte]",
   "eslint.validate"
-)))'
+)))' >.vscode/settings.json
 vsext \
   svelte.svelte-vscode \
   antfu.iconify \
@@ -348,8 +361,13 @@ pnpm up --loglevel error
 pnpm --loglevel silent format --log-level=warn
 
 # Docs
-# TODO: docs/README.md
+touch ./docs/README.md
 # TODO: README.md
+# https://github.com/DavidWells/markdown-magic
+# https://github.com/andreasbm/readme
+# https://github.com/Jaid/tldw
+# https://github.com/kefranabg/readme-md-generator
+# https://github.com/azu/pkg-to-readme
 
 # Git
 # TODO: .gitignore ?
