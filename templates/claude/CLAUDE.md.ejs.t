@@ -1,4 +1,3 @@
-<%# pnpm dlx ejs -n -l pkg CLAUDE.md.ejs.t -f package.json -o .claude/CLAUDE.md -%>
 <%_
   const deps = { ...pkg.dependencies, ...pkg.devDependencies }
   const scripts = pkg.scripts ?? {}

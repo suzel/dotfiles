@@ -119,23 +119,6 @@ if ! grep -q enhancedImages vite.config.ts; then
   sed -i '' $'s|^import { sveltekit }.*|&\\\nimport Icons from \'unplugin-icons/vite\';|' vite.config.ts
   sed -i '' $'s/^\t\t})$/\t\t}),/;s/^\t]$/\t\tIcons({ compiler: \'svelte\' })\\\n&/' vite.config.ts
   sed -i '' $'1s|^|import \'unplugin-icons/types/svelte\';\\\n\\\n|' src/app.d.ts
-
-  #   csp="// Static build: CSP is injected as <meta http-equiv> in prerendered HTML.
-  #   // report-uri, report-to and frame-ancestors are not supported via meta — set them via host headers.
-  #   csp: {
-  #     mode: 'auto',
-  #     directives: {
-  #       'script-src': ['self', 'https://www.googletagmanager.com'],
-  #       'connect-src': ['self', 'https://*.google-analytics.com']
-  #     },
-  #     reportOnly: {
-  #       'report-uri': ['/api/csp-report'],
-  #       'script-src': ['self', 'https://www.googletagmanager.com'],
-  #       'connect-src': ['self', 'https://*.google-analytics.com']
-  #     }
-  #   },"
-  #   CSP=$csp perl -pi -e 's{^([ \t]*)(?=experimental: \{ remoteFunctions)}{my $i = $1; $i . $ENV{CSP} =~ s/\n  /\n$i/gr . "\n$i"}e' vite.config.ts
-
 fi
 
 # Husky &  Lint-staged
@@ -169,18 +152,11 @@ if installed tailwindcss; then
   vsext bradlc.vscode-tailwindcss
 fi
 
-# pnpm dlx shadcn-svelte@latest init --reinstall \
-#   --preset bIkeymG \
-#   --skip-preflight \
-#   --css src/lib/styles/shadcn.css \
-#   --components-alias '#lib/components' \
-#   --lib-alias '#lib' \
-#   --utils-alias '#lib/utils' \
-#   --hooks-alias '#lib/hooks' \
-#   --ui-alias '#lib/components/ui'
-
+# shadcn-svelte
+# https://www.shadcn-svelte.com/
+# info "Configuring shadcn-svelte..."
 # touch src/lib/styles/shadcn.css
-# pnpm dlx shadcn-svelte@latest init \
+# pnpm dlx -s shadcn-svelte@latest init \
 #   --cwd . \
 #   --preset bIkeymG \
 #   --base-color neutral \
@@ -191,12 +167,15 @@ fi
 #   --utils-alias '#lib/utils' \
 #   --hooks-alias '#lib/hooks' \
 #   --reinstall \
-#   --skip-preflight
+#   --skip-preflight >/dev/null
 
 # Web files
-# https://www.sopyo.com/llms.txt
-template static/humans.txt static/humans.txt
-grep -qs '^Sitemap:' static/robots.txt || echo "\nSitemap: https://yourdomain.com/sitemap.xml" >>static/robots.txt
+template assets/humans.txt static/humans.txt
+template assets/llms.txt static/llms.txt
+template assets/manifest.json static/manifest.json
+template assets/app.html src/app.html
+template svelte/robots.ts "src/routes/(meta)/robots.txt/+server.ts"
+template svelte/sitemap.ts "src/routes/(meta)/sitemap.xml/+server.ts"
 
 info "Generating favicons..."
 mv -f src/lib/assets/favicon.svg static/img/favicons/favicon.svg &&
@@ -205,77 +184,6 @@ mv -f src/lib/assets/favicon.svg static/img/favicons/favicon.svg &&
   npx @vite-pwa/assets-generator@latest \
     --preset minimal-2023 \
     static/img/favicons/favicon.svg >/dev/null
-
-sed -i '' '/<meta charset/i\
-    <!-- Base -->
-/%sveltekit.head%/i\
-\
-    <!-- Theme -->\
-    <meta name="color-scheme" content="light" />\
-    <meta name="theme-color" content="#ffffff" />\
-\
-    <!-- Favicons -->\
-    <link rel="icon" href="%sveltekit.assets%/img/favicons/favicon.ico" sizes="48x48" />\
-    <link rel="icon" href="%sveltekit.assets%/img/favicons/favicon.svg" sizes="any" type="image/svg+xml" />\
-    <link rel="apple-touch-icon" href="%sveltekit.assets%/img/favicons/apple-touch-icon-180x180.png" />\
-\
-    <!-- Links -->\
-    <link rel="manifest" href="%sveltekit.assets%/manifest.json" />\
-    <link rel="author" href="%sveltekit.assets%/humans.txt" type="text/plain" />\
-    <link rel="robots" href="%sveltekit.assets%/robots.txt" type="text/plain" />\
-	<link rel="sitemap" href="%sveltekit.assets%/sitemap.xml" type="application/xml" />\
-
-' src/app.html
-pnpm exec prettier --write src/app.html
-
-# manifest.json'u üret: name/short_name/description package.json'dan
-yq -o json -I 2 '{
-  "name": .name,
-  "short_name": .name,
-  "description": .description,
-  "categories": ["technology"],
-  "lang": "en",
-  "start_url": "/?source=pwa",
-  "scope": "/",
-  "display": "standalone",
-  "orientation": "portrait-primary",
-  "background_color": "#ffffff",
-  "theme_color": "#ffffff",
-  "icons": [
-    {"src": "/img/favicons/pwa-64x64.png", "sizes": "64x64", "type": "image/png"},
-    {"src": "/img/favicons/pwa-192x192.png", "sizes": "192x192", "type": "image/png"},
-    {"src": "/img/favicons/pwa-512x512.png", "sizes": "512x512", "type": "image/png"},
-    {"src": "/img/favicons/maskable-icon-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
-  ]
-}' package.json >static/manifest.json
-pnpm exec prettier --ignore-path /dev/null --write static/manifest.json
-
-# robots.txt üret (SITE_URL = package.json homepage)
-SITE_URL=$(yq -e -r '.homepage' package.json) && echo "# www.robotstxt.org
-
-# Allow crawling of all content
-User-agent: *
-
-# Disallow private paths
-Disallow: /404.html
-Disallow: /admin
-Disallow: /api
-Disallow: /account
-Disallow: /sign-in
-Disallow: /sign-up
-
-# Sitemap
-Sitemap: ${SITE_URL%/}/sitemap.xml" >static/robots.txt
-
-# sitemap.xml üret (SITE_URL = package.json homepage)
-SITE_URL=$(yq -e -r '.homepage' package.json) && cat >static/sitemap.xml <<EOF
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>${SITE_URL%/}/</loc>
-  </url>
-</urlset>
-EOF
 
 # Docker
 # https://www.docker.com

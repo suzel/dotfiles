@@ -1,4 +1,3 @@
-<%# pnpm dlx ejs -n -l pkg SECURITY.md.ejs.t -f package.json -o SECURITY.md -%>
 <%_
   // repository.url | homepage → "u/r"
   const slug = (pkg.repository?.url ?? pkg.repository ?? pkg.homepage ?? '')

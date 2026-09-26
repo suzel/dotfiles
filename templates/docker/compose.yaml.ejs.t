@@ -1,4 +1,3 @@
-<%# pnpm dlx ejs -n -l pkg compose.yaml.ejs.t -f package.json -o compose.yaml -%>
 <%_
   // "@su/My.App" → "su-my-app" (compose allows [a-z0-9_-])
   const name = pkg.name.toLowerCase().replace(/^@/, '').replace(/[^a-z0-9_-]/g, '-')

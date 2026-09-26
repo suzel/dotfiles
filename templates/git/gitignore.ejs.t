@@ -1,4 +1,3 @@
-<%# pnpm dlx ejs -n -l pkg gitignore.ejs.t -f package.json -o .gitignore -%>
 <%_
   const deps = { ...pkg.dependencies, ...pkg.devDependencies }
   // adapters that write the compiled app to /build

@@ -1,4 +1,3 @@
-<%# mkdir -p sql && pnpm dlx ejs -n -l pkg init.sql.ejs.t -f package.json -o sql/init.sql -%>
 -- Schema
 
 create schema api;

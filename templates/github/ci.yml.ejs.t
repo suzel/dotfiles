@@ -1,4 +1,3 @@
-<%# pnpm dlx ejs -n -l pkg ci.yml.ejs.t -f package.json -o .github/workflows/ci.yml -%>
 <%_ const scripts = pkg.scripts ?? {} -%>
 name: CI
 

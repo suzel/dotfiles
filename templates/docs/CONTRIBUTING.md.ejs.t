@@ -1,4 +1,3 @@
-<%# pnpm dlx ejs -n -l pkg CONTRIBUTING.md.ejs.t -f package.json -o CONTRIBUTING.md -%>
 <%_
   const deps = { ...pkg.dependencies, ...pkg.devDependencies }
   const scripts = pkg.scripts ?? {}

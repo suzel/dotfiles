@@ -1,4 +1,3 @@
-<%# pnpm dlx ejs -n -l pkg README.md.ejs.t -f package.json -o README.md -%>
 <%_
   // repository.url | homepage → "u/r"
   const slug = (pkg.repository?.url ?? pkg.repository ?? pkg.homepage ?? '')

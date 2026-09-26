@@ -1,4 +1,3 @@
-<%# pnpm dlx ejs -n -l pkg DESIGN.md.ejs.t -f package.json -o .claude/DESIGN.md -%>
 <%_
   // "my-app" → "My App"
   const title = pkg.name.replace(/[-_]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())

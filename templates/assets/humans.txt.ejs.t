@@ -1,4 +1,3 @@
-<%# pnpm dlx ejs -n -l pkg humans.txt.ejs.t -f package.json -o static/humans.txt -%>
 <%_
   const deps = { ...pkg.dependencies, ...pkg.devDependencies }
 

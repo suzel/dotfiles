@@ -1,4 +1,3 @@
-<%# pnpm dlx ejs -n -l pkg deploy.yml.ejs.t -f package.json -o .github/workflows/deploy.yml -%>
 <%_
   // "@su/My.App" → "su-my-app" (Cloudflare Pages allows [a-z0-9-])
   const project = pkg.name.toLowerCase().replace(/^@/, '').replace(/[^a-z0-9-]/g, '-')

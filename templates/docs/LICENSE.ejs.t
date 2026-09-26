@@ -1,4 +1,3 @@
-<%# pnpm dlx ejs -n -l pkg LICENSE.ejs.t -f package.json -o LICENSE -%>
 <%_
   // "Name <mail> (url)" | { name, email }; no author → "<package> contributors"
   const author = typeof pkg.author === 'string'
