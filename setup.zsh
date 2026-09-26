@@ -74,8 +74,8 @@ source ~/.zshenv
 cp -r ./config/git/ ~/.config/git/
 cp ./config/git/.gitignore ~/.config/git/ignore
 cp -r ./config/ghostty/ ~/.config/ghostty/
-# curl -L -o ~/.config/ghostty/ayu-dark.icns
-# https://github.com/jasonlong/ghostty-theme-icons/raw/main/icons/ayu-dark/ayu-dark.icns
+curl -L -o ~/.config/ghostty/ayu-dark.icns \
+  https://github.com/jasonlong/ghostty-theme-icons/raw/main/icons/ayu-dark/ayu-dark.icns
 cp ./config/vscode/argv.json ~/.vscode/argv.json
 cp ./config/vscode/{settings,keybindings}.json ~/Library/Application\ Support/Code/User/
 cp ./config/starship/starship.toml ~/.config/starship.toml
@@ -89,6 +89,10 @@ success "Directories created."
 # Copy script files
 info "Copying script files..."
 cp -r ./scripts/*.zsh $SCRIPTS_DIR
+# chmod +x sv-setup.zsh
+# chmod +x sv-check.zsh
+# ln -sf ~/Projects/dotfiles/scripts/sv-setup.zsh ~/Scripts/
+# ln -sf ~/Projects/dotfiles/scripts/sv-check.zsh ~/Scripts/
 success "Script files copied."
 
 # Update macOS Settings
