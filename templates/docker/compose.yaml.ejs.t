@@ -1,11 +1,10 @@
 <%_
-  // "@su/My.App" → "su-my-app" (compose allows [a-z0-9_-])
   const name = pkg.name.toLowerCase().replace(/^@/, '').replace(/[^a-z0-9_-]/g, '-')
 -%>
-# yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-spec/main/schema/compose-spec.json
+name: <%- name %>
+
 # Services are opt-in via profiles, enable them in .env: COMPOSE_PROFILES=db
 # .env example: https://github.com/suzel/postgrest-example/blob/master/.env
-name: <%- name %>
 
 services:
   postgrest:

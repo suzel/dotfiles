@@ -5,6 +5,9 @@
 
 set -euo pipefail
 
+# Flags
+export NPM_CONFIG_LOGLEVEL=error
+
 # Log Functions
 info() { echo "\033[0;34mℹ️  $*\033[0m"; }
 warn() { echo "\033[0;33m⚠️  $*\033[0m"; }
@@ -44,6 +47,7 @@ mkdir -p \
   scripts \
   src/lib/{config,styles,types,utils} \
   src/lib/components/layout \
+  src/routes/"(meta)"/{robots.txt,sitemap.xml} \
   $(installed @sveltejs/adapter-static || echo src/lib/{remote,stores}) \
   $(installed @sveltejs/adapter-static || echo src/lib/components/admin/ui) \
   $(installed @sveltejs/adapter-static || echo src/lib/server/{db,images,integrations,services,storage}) \
@@ -81,7 +85,7 @@ packages=(
   zod
   svelte-sonner
 )
-pnpm add -s -D --loglevel warn $packages
+pnpm add -s -D $packages
 
 # License & publish metadata
 if [[ $(pnpm pkg get private) != true ]]; then
@@ -124,7 +128,7 @@ fi
 # Husky &  Lint-staged
 info "Configuring Husky & lint-staged..."
 [ -d .git ] || git init -q
-pnpm add -D -s --loglevel warn husky lint-staged
+pnpm add -s -D husky lint-staged
 pnpm exec husky
 echo 'pnpm lint-staged' >.husky/pre-commit
 prepush='pnpm lint && pnpm check'
@@ -177,21 +181,26 @@ template assets/app.html src/app.html
 template svelte/robots.ts "src/routes/(meta)/robots.txt/+server.ts"
 template svelte/sitemap.ts "src/routes/(meta)/sitemap.xml/+server.ts"
 
-info "Generating favicons..."
-mv -f src/lib/assets/favicon.svg static/img/favicons/favicon.svg &&
-  rmdir src/lib/assets &&
-  sed -i '' '/favicon/d' src/routes/+layout.svelte &&
-  npx @vite-pwa/assets-generator@latest \
-    --preset minimal-2023 \
-    static/img/favicons/favicon.svg >/dev/null
+if [[ -f src/lib/assets/favicon.svg ]]; then
+  info "Generating favicons..."
+  mkdir -p static/img/favicons
+  mv -f src/lib/assets/favicon.svg static/img/favicons/favicon.svg &&
+    rmdir src/lib/assets &&
+    sed -i '' '/favicon/d' src/routes/+layout.svelte &&
+    npx @vite-pwa/assets-generator@latest \
+      --preset minimal-2023 \
+      static/img/favicons/favicon.svg >/dev/null
+fi
 
 # Docker
 # https://www.docker.com
 if installed drizzle-kit; then
   info "Configuring Docker..."
   rm -f compose.yaml && mkdir -p docker/sql
-  touch docker/{compose.dev.yaml,Dockerfile,Dockerfile.dockerignore}
+  template docker/dev.compose.yaml docker/dev.compose.yaml
   template docker/compose.yaml docker/compose.yaml
+  template docker/Dockerfile docker/Dockerfile
+  template docker/.dockerignore docker/Dockerfile.dockerignore
   template docker/init.sql docker/sql/init.sql
   pnpm dlx -s dclint -q --fix docker/compose.yaml
   pnpm pkg set \
@@ -274,22 +283,20 @@ if [[ -d .claude ]]; then
   info "Configuring DESIGN.md..."
   design=.claude/DESIGN.md
   tokens=src/lib/styles/design-tokens.css
-  lsc=lint-staged.config.js
   template claude/DESIGN.md $design
-  pnpm add -D -s --loglevel error @google/design.md
+  pnpm add -s -D @google/design.md
   pnpm pkg set \
     'scripts["design:lint"]'="design.md lint $design" \
     'scripts["design:spec"]'="design.md spec --rules > docs/DESIGN.spec.md" \
     'scripts["design:sync"]'="design.md export $design --format css-tailwind > $tokens"
-  pnpm design:spec && pnpm design:sync
+  pnpm design:spec >/dev/null 2>&1 && pnpm design:sync >/dev/null 2>&1
   sed -i '' $'1a\\\n'"@import './${tokens:t}';" ${tokens:h}/layout.css
   sed -i '' "s/\]\$/],/;/^};\$/i\\
   '$design': [\\
     'pnpm design:lint',\\
     () => 'pnpm design:sync',\\
     () => 'git add $tokens'\\
-  ]" $lsc
-  pnpm prettier --write $lsc
+  ]" lint-staged.config.js
 fi
 
 # VSCode
@@ -338,11 +345,11 @@ template docs/DOCS_README.md docs/README.md
 # Last Check
 info "Updating dependencies & formatting..."
 pnpm audit --fix >/dev/null || warn "Some vulnerabilities could not be fixed"
-pnpm up --loglevel error
-pnpm --loglevel silent format --log-level=warn
+pnpm up -s
+pnpm format --log-level=silent >/dev/null 2>&1
 
 # Git
-if [[ -d .git ]]; then
+if [[ ! -d .git ]]; then
   info "Initializing Git repository..."
   template git/gitignore .gitignore
   git init -q -b main
@@ -372,3 +379,5 @@ fi
 # gh secret set DATABASE_URL --body "postgres://user:password@host:5432/dbname"
 # gh variable set PUBLIC_GA_MEASUREMENT_ID --body ""
 # gh variable set PUBLIC_SITE_URL --body "https://yourdomain.com"
+
+success "Completed!"
