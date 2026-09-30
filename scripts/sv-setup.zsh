@@ -1,12 +1,11 @@
 #!/usr/bin/env zsh
 
-# sv setup script
+# SvelteKit Setup Script
 # Run from the project root. Exits 1 when a ❌ check fails, so it can gate CI.
 
-set -euo pipefail
+# https://github.com/jaywcjlove/ejs-cli
 
-# Flags
-export NPM_CONFIG_LOGLEVEL=error
+set -euo pipefail
 
 # Log Functions
 info() { echo "\033[0;34mℹ️  $*\033[0m"; }
@@ -16,9 +15,8 @@ success() { echo "\033[0;32m✅ $*\033[0m"; }
 
 # Helper Functions
 installed() { [[ -n $(pnpm pkg get "devDependencies[\"$1\"]") ]]; }
-envset() { pnpm dlx -s @dotenvx/dotenvx set "$1" "$2" --plain -q -f "${3:-.env,.env.example}"; }
+setenv() { grep -qs "^$1=" ${@:3} && sed -i '' "s|^$1=.*|$1=$2|" ${@:3} || echo "$1=$2" | tee -a ${@:3} >/dev/null; }
 vsext() { IDS="$*" yq -i -oj '.recommendations |= (. + (strenv(IDS) | split(" ")) | unique)' .vscode/extensions.json; }
-template() { pnpm dlx -s ejs -n -l pkg ~/Projects/dotfiles/templates/$1.ejs.t -f package.json -o "${2:-${1:t}}"; }
 
 # Checks
 installed @sveltejs/kit || {
@@ -30,76 +28,71 @@ installed @sveltejs/kit || {
 info "Updating package meta..."
 pnpm pkg set \
   version="0.0.1" \
+  type="module" \
   author.name="$(git config user.name || echo '')" \
   author.email="$(git config user.email || echo '')" \
-  type="module" \
+  engines.node=">=$(node -v | cut -c 2- | cut -d. -f1)" \
+  engines.pnpm=">=$(pnpm --version | cut -d. -f1)" \
   packageManager="pnpm@$(pnpm --version)" \
-  scripts.clean="rm -rf .svelte-kit build node_modules/.vite .wrangler" \
-  scripts.dev="vite dev --open" \
-  engines.node=">=$(node -p 'process.versions.node.split(".")[0]')" \
-  engines.pnpm=">=$(pnpm --version | cut -d. -f1)"
+  scripts.clean="rm -rf node_modules/.vite .svelte-kit build" \
+  appConfig.features='["dark-mode", "multi-language", "auth"]' \
+  keywords='["node", "ejs", "generator"]'
 
 # Project Structure
+# TODO: Remove folder for static adapter
+# TODO: src/routes/{admin,api}
 info "Creating project structure..."
 mkdir -p \
-  .github/workflows \
-  docs \
   scripts \
-  src/lib/{config,styles,types,utils} \
-  src/lib/components/layout \
   src/routes/"(meta)"/{robots.txt,sitemap.xml} \
-  $(installed @sveltejs/adapter-static || echo src/lib/{remote,stores}) \
-  $(installed @sveltejs/adapter-static || echo src/lib/components/admin/ui) \
-  $(installed @sveltejs/adapter-static || echo src/lib/server/{db,images,integrations,services,storage}) \
-  $(installed @sveltejs/adapter-static || echo src/params) \
-  $(installed @sveltejs/adapter-static || echo src/routes/{admin,api})
+  src/lib/{remote,stores} \
+  src/lib/{config,styles,types,schemas,utils} \
+  src/lib/components/layout \
+  src/lib/components/admin/ui \
+  src/lib/server/{db,images,integrations,services,storage}
 
 # Project Files
 info "Creating project files..."
-node --version | cut -d 'v' -f 2 >.node-version
+# TODO: service-workers.ts ?
 touch \
-  src/{hooks.client,service-workers}.ts \
+  src/routes/+layout.ts \
+  src/hooks.client.ts \
   src/lib/components/layout/{Header,Footer,GoogleAnalytics}.svelte
+
+# TODO: setenv PUBLIC_SITE_URL "$(pnpm pkg get homepage)" .env .env.example
+node --version | cut -d 'v' -f 2 >.node-version
 if installed @sveltejs/adapter-static; then
   grep -qs 'prerender' src/routes/+layout.ts || echo "export const prerender = true;" >>src/routes/+layout.ts
 fi
 
 # Build scripts allowlist
 info "Configuring pnpm workspace..."
-echo "allowBuilds:
-  esbuild: true
-  sharp: true
-  workerd: true
-update:
-  ignoreDeps:
-    - typescript" >pnpm-workspace.yaml
+pnpm -s approve-builds esbuild sharp workerd
 
 # Packages
 info "Installing packages..."
-packages=(
-  @sveltejs/enhanced-img
-  unplugin-icons @iconify-json/logos
-  prettier-plugin-packagejson
-  svelte-check
-  schema-dts
+pnpm add -s -D \
+  @sveltejs/enhanced-img \
+  prettier-plugin-packagejson \
+  unplugin-icons @iconify-json/logos \
+  svelte-sonner \
+  schema-dts \
   zod
-  svelte-sonner
-)
-pnpm add -s -D $packages
 
 # License & publish metadata
 if [[ $(pnpm pkg get private) != true ]]; then
   pnpm pkg set license="MIT"
-  template docs/LICENSE
 fi
 
 # ESLint
+# https://eslint.org
 if installed eslint; then
   sed -i '' "s/rules: {}/rules: { 'svelte\/no-at-html-tags': 'off' }/" eslint.config.js
   vsext dbaeumer.vscode-eslint
 fi
 
 # Prettier
+# https://prettier.io
 if installed prettier; then
   sed -i '' 's/useTabs: true/useTabs: false/' prettier.config.js
   grep -q prettier-plugin-packagejson prettier.config.js ||
@@ -107,7 +100,9 @@ if installed prettier; then
   vsext esbenp.prettier-vscode
 fi
 
-# Vite plugins
+# Vite
+# https://vite.dev
+pnpm pkg set scripts.dev="vite dev --open"
 if ! grep -q enhancedImages vite.config.ts; then
 
   sed -i '' $'s|^import { sveltekit } from .@sveltejs/kit/vite.;$|&\\\nimport { enhancedImages } from \'@sveltejs/enhanced-img\';|' vite.config.ts
@@ -117,7 +112,7 @@ if ! grep -q enhancedImages vite.config.ts; then
 
   if installed @sveltejs/adapter-static; then
     sed -i '' "s|^\([[:space:]]*\)adapter: adapter(),|\1adapter: adapter({\n\1\tpages: 'build',\n\1\tassets: 'build',\n\1\tfallback: '404.html',\n\1\tprecompress: false,\n\1\tstrict: true\n\1}),|" vite.config.ts
-    sed -i '' "s|^\([[:space:]]*\)adapter: adapter(|\1inlineStyleThreshold: 16384,\n\1prerender: {\n\1\torigin: 'https://www.domain.com'\n\1},\n&|" vite.config.ts
+    # sed -i '' "s|^\([[:space:]]*\)adapter: adapter(|\1inlineStyleThreshold: 16384,\n\1prerender: {\n\1\torigin: 'https://www.domain.com'\n\1},\n&|" vite.config.ts
   fi
 
   sed -i '' $'s|^import { sveltekit }.*|&\\\nimport Icons from \'unplugin-icons/vite\';|' vite.config.ts
@@ -126,6 +121,8 @@ if ! grep -q enhancedImages vite.config.ts; then
 fi
 
 # Husky &  Lint-staged
+# https://github.com/typicode/husky
+# https://github.com/lint-staged/lint-staged
 info "Configuring Husky & lint-staged..."
 [ -d .git ] || git init -q
 pnpm add -s -D husky lint-staged
@@ -144,6 +141,7 @@ pnpm pkg set \
   scripts.lint-staged="lint-staged"
 
 # TailwindCSS
+# https://tailwindcss.com
 if installed tailwindcss; then
   info "Configuring TailwindCSS..."
   old=src/routes/layout.css
@@ -157,8 +155,9 @@ if installed tailwindcss; then
 fi
 
 # shadcn-svelte
-# https://www.shadcn-svelte.com/
-# info "Configuring shadcn-svelte..."
+# https://www.shadcn-svelte.com
+# --preset b1z24YGeV9
+info "Configuring shadcn-svelte..."
 # touch src/lib/styles/shadcn.css
 # pnpm dlx -s shadcn-svelte@latest init \
 #   --cwd . \
@@ -174,20 +173,14 @@ fi
 #   --skip-preflight >/dev/null
 
 # Web files
-template assets/humans.txt static/humans.txt
-template assets/llms.txt static/llms.txt
-template assets/manifest.json static/manifest.json
-template assets/app.html src/app.html
-template svelte/robots.ts "src/routes/(meta)/robots.txt/+server.ts"
-template svelte/sitemap.ts "src/routes/(meta)/sitemap.xml/+server.ts"
-
-if [[ -f src/lib/assets/favicon.svg ]]; then
+[[ -f "static/robots.txt" ]] && rm static/robots.txt
+if [[ -f "src/lib/assets/favicon.svg" ]]; then
   info "Generating favicons..."
   mkdir -p static/img/favicons
   mv -f src/lib/assets/favicon.svg static/img/favicons/favicon.svg &&
     rmdir src/lib/assets &&
     sed -i '' '/favicon/d' src/routes/+layout.svelte &&
-    npx @vite-pwa/assets-generator@latest \
+    pnpm dlx -s @vite-pwa/assets-generator@latest \
       --preset minimal-2023 \
       static/img/favicons/favicon.svg >/dev/null
 fi
@@ -197,22 +190,16 @@ fi
 if installed drizzle-kit; then
   info "Configuring Docker..."
   rm -f compose.yaml && mkdir -p docker/sql
-  template docker/dev.compose.yaml docker/dev.compose.yaml
-  template docker/compose.yaml docker/compose.yaml
-  template docker/Dockerfile docker/Dockerfile
-  template docker/.dockerignore docker/Dockerfile.dockerignore
-  template docker/init.sql docker/sql/init.sql
   pnpm dlx -s dclint -q --fix docker/compose.yaml
   pnpm pkg set \
     'scripts["docker:up"]'="docker compose up -d --build" \
     'scripts["docker:down"]'="docker compose down" \
     'scripts["db:start"]'="docker compose up -d --wait postgres"
-  envset COMPOSE_FILE "docker/compose.yaml:docker/compose.dev.yaml" .env
+  setenv COMPOSE_FILE "docker/compose.yaml:docker/compose.dev.yaml" .env
   if installed postgres; then
-    # sv's DATABASE_URL defaults: postgres://root:mysecretpassword@localhost:5432/local
-    envset POSTGRES_USER root
-    envset POSTGRES_PASSWORD mysecretpassword
-    envset POSTGRES_DB local
+    setenv POSTGRES_USER root .env
+    setenv POSTGRES_PASSWORD mysecretpassword .env
+    setenv POSTGRES_DB local .env
     pnpm db:start || warn "Database not started, run later: pnpm db:start"
   fi
 fi
@@ -234,9 +221,6 @@ fi
 # https://www.better-auth.com
 if installed better-auth; then
   info "Configuring Better Auth..."
-  envset BETTER_AUTH_SECRET "$(openssl rand -base64 32)" .env
-  envset RATE_LIMIT_MAX 100
-  envset RATE_LIMIT_WINDOW 60
   pnpm auth:schema
   pnpm db:generate >/dev/null && pnpm db:migrate >/dev/null ||
     warn "Auth tables not created, run later: pnpm db:generate && pnpm db:migrate"
@@ -256,11 +240,11 @@ fi
 # Claude
 if [[ -d .claude ]]; then
   info "Configuring Claude..."
+  # TODO: Remove and move to templates ?
   [[ -f AGENTS.md ]] && mv AGENTS.md .claude/SvelteKit.md
-  template claude/CLAUDE.md .claude/CLAUDE.md
 
   yq -oj '
-    del(.hooks, .extraKnownMarketplaces, .permissions, .modelSettings) |
+    del(.hooks, .extraKnownMarketplaces, .permissions, .modelSettings, .skillListing*) |
     .enabledPlugins |= with_entries(select(.key == ("*typescript*", "*svelte*")))
   ' ~/.claude/settings.json >.claude/settings.json
   jq -s '{ mcpServers: (map(.mcpServers // {}) | add) }' \
@@ -283,14 +267,14 @@ if [[ -d .claude ]]; then
   info "Configuring DESIGN.md..."
   design=.claude/DESIGN.md
   tokens=src/lib/styles/design-tokens.css
-  template claude/DESIGN.md $design
   pnpm add -s -D @google/design.md
   pnpm pkg set \
     'scripts["design:lint"]'="design.md lint $design" \
     'scripts["design:spec"]'="design.md spec --rules > docs/DESIGN.spec.md" \
     'scripts["design:sync"]'="design.md export $design --format css-tailwind > $tokens"
   pnpm design:spec >/dev/null 2>&1 && pnpm design:sync >/dev/null 2>&1
-  sed -i '' $'1a\\\n'"@import './${tokens:t}';" ${tokens:h}/layout.css
+  #   grep -qF "@import './${tokens:t}';" "${tokens:h}/layout.css" ||
+  #     sed -i '' $'1a\\\n'"@import './${tokens:t}';" ${tokens:h}/layout.css
   sed -i '' "s/\]\$/],/;/^};\$/i\\
   '$design': [\\
     'pnpm design:lint',\\
@@ -331,36 +315,41 @@ vsext \
 # Github Actions
 # TODO: Dependabot / Renovate → Auto PR
 # TODO: Versioning ?
-template github/deploy.yml .github/workflows/deploy.yml
-template github/ci.yml .github/workflows/ci.yml
+info "Generating Github Action files..."
+mkdir -p .github/workflows
 vsext github.vscode-github-actions
 
 # Docs
 info "Generating docs..."
-template docs/README.md
-template docs/CONTRIBUTING.md
-template docs/SECURITY.md
-template docs/DOCS_README.md docs/README.md
+mkdir -p docs
+
+# Generate Template Files
+ejsc -s -o \
+  -c ~/Projects/dotfiles/.ejscrc.mjs \
+  -t ~/Projects/dotfiles/templates
 
 # Last Check
 info "Updating dependencies & formatting..."
 pnpm audit --fix >/dev/null || warn "Some vulnerabilities could not be fixed"
-pnpm up -s
-pnpm format --log-level=silent >/dev/null 2>&1
+pnpm -s up
+pnpm exec svelte-kit sync
+pnpm format --log-level=silent
+pnpm --silent check --threshold error
 
 # Git
 if [[ ! -d .git ]]; then
   info "Initializing Git repository..."
-  template git/gitignore .gitignore
-  git init -q -b main
-  git add .
-  git commit -q -m "Initial commit"
-  git switch -q -c dev
-  git remote add origin https://github.com/suzel/sveltekit-project.git
   pnpm pkg set \
     repository.type="git" \
     repository.url="git+https://github.com/suzel/sveltekit-project.git" \
     bugs.url="https://github.com/suzel/sveltekit-project/issues"
+  git init -q -b main
+  git add .
+  git switch -q -c dev
+  git commit -q -m "Initial commit"
+  # TODO: Set repo address
+  # git remote add origin https://github.com/suzel/sveltekit-project.git
+  # git push origin dev
 fi
 
 # TODO: gh cli

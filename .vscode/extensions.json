@@ -1,3 +1,7 @@
 {
-  "recommendations": ["EditorConfig.editorconfig", "mkhl.shfmt"]
+  "recommendations": [
+    "EditorConfig.editorconfig",
+    "mkhl.shfmt",
+    "tamasfe.even-better-toml"
+  ]
 }
