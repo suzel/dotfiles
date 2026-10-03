@@ -14,15 +14,7 @@ pskill() {
   pkill -f "$1"
 }
 
-# Extract archives intelligently
+# Extract archives (macOS bsdtar detects the format: tar.*, zip, 7z, rar...)
 extract() {
-  case $1 in
-    *.tar.gz|*.tgz) tar -xzf "$1";;
-    *.tar.bz2|*.tbz2) tar -xjf "$1";;
-    *.tar.xz) tar -xJf "$1";;
-    *.zip) unzip "$1";;
-    *.rar) unrar x "$1";;
-    *.7z) 7z x "$1";;
-    *) echo "Unknown archive format";;
-  esac
+  tar -xf "$1"
 }

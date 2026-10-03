@@ -5,6 +5,7 @@
 # =============================================================================
 # Configures macOS preferences for a better user experience.
 # Designed to be idempotent (safe to run multiple times).
+# Usage: defaults.zsh (also run by: dotfiles macos)
 # =============================================================================
 
 # Log Functions
@@ -199,17 +200,6 @@ defaults write com.apple.screencapture type -string "png"
 
 # Disable shadow in screenshots
 defaults write com.apple.screencapture disable-shadow -bool true
-
-# =============================================================================
-# TextEdit
-# =============================================================================
-
-# Open as plain text by default (not rich text)
-defaults write com.apple.TextEdit RichText -int 0
-
-# Use UTF-8 encoding
-defaults write com.apple.TextEdit PlainTextEncoding -int 4
-defaults write com.apple.TextEdit PlainTextEncodingForWrite -int 4
 
 # =============================================================================
 # Activity Monitor

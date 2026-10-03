@@ -1,4 +1,7 @@
-[includeIf "hasconfig:remote.*.url:**/suzel/**"]
+[user]
+	useConfigOnly = true
+
+[includeIf "gitdir:~/Projects/"]
 	path = ~/.config/git/config.local
 
 [format]
@@ -13,7 +16,6 @@
 	fsmonitor = true
 	untrackedCache = true
 	whitespace = fix,-indent-with-non-tab,trailing-space
-	excludesfile = ~/.config/git/.gitignore
 
 [push]
 	default = simple

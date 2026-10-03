@@ -16,13 +16,13 @@ alias c='clear'
 alias h='history'
 alias f='open -a Finder ./'
 alias cat='bat --paging=never'
-alias reload='. ~/.zshenv && . $ZDOTDIR/.zshrc'
+alias reload='exec zsh'
+alias dotfiles='$PROJECTS_DIR/dotfiles/setup.zsh'
 alias top='top -o cpu'
 alias numFiles='find . -maxdepth 1 -type f | wc -l'
-alias path="echo -e ${PATH//:/\\n}"
+alias path='print -l $path'
 alias today="date +'%m-%d-%Y'"
 alias aliases="alias | sed 's/=.*//'"
-alias functions='declare -F'
 alias count='find . -type f | wc -l'
 
 # System

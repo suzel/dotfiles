@@ -1,3 +1,6 @@
+# Taps
+tap "domt4/autoupdate"
+
 # Fonts
 cask "font-atkinson-hyperlegible-next"
 cask "font-fira-code"
@@ -77,7 +80,6 @@ brew "deno"
 brew "gh"
 brew "git"
 brew "go"
-brew "hygen"
 brew "node"
 brew "opentofu"
 brew "pi-coding-agent"
@@ -86,7 +88,6 @@ brew "python"
 brew "rustup"
 brew "uv"
 cask "claude-code"
-cask "docker-desktop"
 cask "ghostty"
 cask "insomnia"
 cask "bruno"

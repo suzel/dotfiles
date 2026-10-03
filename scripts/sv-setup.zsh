@@ -251,19 +251,21 @@ if [[ -d .claude ]]; then
   # TODO: Remove and move to templates ?
   [[ -f AGENTS.md ]] && mv AGENTS.md .claude/SvelteKit.md
 
+  # settings.json is committed: plugins + their marketplaces only (no personal prefs, env, permissions)
   yq -oj '
-    del(.hooks, .extraKnownMarketplaces, .permissions, .modelSettings, .skillListing*) |
-    .enabledPlugins |= with_entries(select(.key == ("*typescript*", "*svelte*")))
+    .enabledPlugins |= with_entries(select(.key == ("*typescript*", "*svelte*"))) |
+    (.enabledPlugins | keys | map(sub(".*@", ""))) as $m |
+    {"extraKnownMarketplaces": (.extraKnownMarketplaces | with_entries(select(.key == $m[]))), "enabledPlugins": .enabledPlugins}
   ' ~/.claude/settings.json >.claude/settings.json
-  jq -s '{ mcpServers: (map(.mcpServers // {}) | add) }' \
-    ../.mcp.json <(jq '{ mcpServers: (.mcpServers // {}) }' ~/.claude.json) >.mcp.json
 
-  lsp_exclude=(gopls)
-  plugins=$(claude plugin list --json | jq -c 'map(select(.enabled))')
-  manifests=(~/.claude/plugins/marketplaces/*/.claude-plugin/marketplace.json ${(f)"$(jq -r '.[].installPath + "/.claude-plugin/plugin.json"' <<<$plugins)"})
-  jq -n --argjson on "$plugins" '
-    [inputs | if .plugins then .name as $m | .plugins[] | select("\(.name)@\($m)" | IN($on[].id)) end | .lspServers // empty]
-    | add // {} | del(.[$ARGS.positional[]])' ${^manifests}(N) --args $lsp_exclude >.lsp.json
+  # .mcp.json is committed: user-scope servers with env/headers (tokens) are never copied,
+  # svelte is dropped because the svelte plugin already ships it
+  jq -s '
+    def secret: ((.env // {}) + (.headers // {}) | length) > 0;
+    { mcpServers: ((.[0].mcpServers // {}) + ((.[1].mcpServers // {}) | with_entries(select(.value | secret | not))) | del(.svelte)) }
+  ' ../.mcp.json ~/.claude.json >.mcp.json
+
+  # No .lsp.json: per the docs it only exists inside plugins, and the plugins are enabled in settings.json above
 
   has_dep prettier && echo "/.claude/skills/" >>.prettierignore
   add_vscode_ext anthropic.claude-code
@@ -329,15 +331,20 @@ add_vscode_ext github.vscode-github-actions
 # https://github.com/rafazafar/gh-scaffold
 info "Generating docs..."
 mkdir -p docs
+repo="$(git config github.user)/$(pnpm pkg get name)"
+# Parameters only: gh-scaffold 1.0.4 ignores preset/issueTemplates/license from yml (CLI defaults win) and has no flags
+# for owners/support link, so those are filled below like the other placeholders
 pnpm dlx -s gh-scaffold@1.0.4 -w \
   --preset strict \
   --issue-templates forms \
   --license "${$(pnpm pkg get license | tr A-Z a-z):-none}" \
-  --skip GOVERNANCE,MAINTAINERS,CHANGELOG \
+  --skip GOVERNANCE,MAINTAINERS,CHANGELOG,CODEOWNERS,FUNDING \
   </dev/null >/dev/null
 [[ -f LICENSE ]] &&
   sed -i '' "s|<YEAR>|$(date +%Y)|; s|<COPYRIGHT HOLDER>|$(git config user.name)|" LICENSE
 sed -i '' "s|(add contact here)|$(git config user.email)|" SECURITY.md
+echo "* @${repo%/*}" >.github/CODEOWNERS
+sed -i '' "s|url: https://github.com\$|url: https://github.com/$repo/blob/HEAD/SUPPORT.md|" .github/ISSUE_TEMPLATE/config.yml
 
 # Last Check
 info "Updating dependencies & formatting..."
@@ -348,7 +355,6 @@ pnpm lint >/dev/null || warn "Lint errors, run: pnpm lint"
 pnpm --silent check --threshold error || warn "Type errors, run: pnpm check"
 
 # Git
-repo="$(git config github.user)/$(pnpm pkg get name)"
 if ! git rev-parse -q --verify HEAD >/dev/null; then
   info "Creating initial commit..."
   pnpm pkg set \

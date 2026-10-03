@@ -1,4 +1,3 @@
-// Place your key bindings in this file to override the defaults
 [
   {
     "key": "cmd+d",
@@ -36,9 +35,9 @@
     "command": "workbench.view.extension.tomjs-snippets-manager"
   },
   {
-    "key": "ctrl+alt+b",
+    "key": "f13",
     "command": "simpleBrowser.show",
-    "args": "http://localhost:3000"
+    "args": "http://localhost:8080"
   },
   {
     "key": "shift+enter",

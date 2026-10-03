@@ -1,17 +1,14 @@
 # PATH
-typeset -U path
+typeset -U path fpath
 path=(
   "/opt/homebrew/bin"
   "/opt/homebrew/sbin"
-  "/opt/homebrew/share/zsh-completions"
-  "/opt/homebrew/share/zsh/site-functions"
   "$HOME/.local/bin"
   "$HOME/.bun/bin"
   "$HOME/.cargo/bin"
   "$HOME/go/bin"
   "$HOME/Library/pnpm"
   "$HOME/Scripts"
-  "$GOBIN"
   $path
 )
 
@@ -22,13 +19,18 @@ setopt no_clobber extended_glob interactive_comments
 HISTFILE="$ZDOTDIR/.zsh_history"
 HISTSIZE=10000
 SAVEHIST=$HISTSIZE
-setopt append_history inc_append_history share_history
+setopt share_history
 setopt hist_ignore_all_dups hist_ignore_space hist_reduce_blanks hist_verify
 
 # Navigation
 setopt auto_cd auto_pushd pushd_ignore_dups cdable_vars
 
 # Completion
+fpath=(
+  "/opt/homebrew/share/zsh-completions"
+  "/opt/homebrew/share/zsh/site-functions"
+  $fpath
+)
 setopt auto_list auto_menu always_to_end
 autoload -Uz compinit
 [[ -n $ZDOTDIR/.zcompdump(#qN.mh+24) ]] && compinit || compinit -C

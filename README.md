@@ -16,7 +16,7 @@ Personal macOS configuration files and setup scripts. Automates everything from 
 ## Installation
 
 ```zsh
-curl -sSL https://git.io/suzel-dotfiles | zsh -s
+curl -fsSL https://git.io/suzel-dotfiles | zsh -s
 ```
 
 ## License

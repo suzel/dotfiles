@@ -1,16 +1,13 @@
-# Use zsh as the default shell
-shell-integration = zsh
-shell-integration-features = no-cursor,sudo,title
+# Shell integration (shell is auto-detected)
+shell-integration-features = no-cursor,sudo,title,ssh-env,ssh-terminfo
 
-# Font setup for icons and readability
-font-family = JetBrains Mono
+# Font (Nerd Font icons come from Ghostty's built-in Symbols Nerd Font)
+font-family = Ioskeley Mono Term
 font-size = 14
-font-feature = +liga
-font-feature = +calt
-font-feature = +dlig
+font-feature = zero
 
 # Theme
-theme = light:Github Light Default,dark:Github Dark Default
+theme = light:GitHub Light Default,dark:GitHub Dark Default
 background-blur = 10
 background-opacity = 0.95
 
@@ -25,7 +22,6 @@ window-padding-y = 16
 window-width = 100
 window-height = 40
 window-padding-balance = true
-window-padding-color = background
 window-theme = system
 
 # Minimal macOS titlebar for cleaner appearance
@@ -37,31 +33,16 @@ confirm-close-surface = false
 
 # Mouse
 mouse-hide-while-typing = true
-scrollback-limit = 1000000
+# Bytes per surface (100 MB), not lines
+scrollback-limit = 100000000
 
 # Split management
 keybind = ctrl+shift+z=toggle_split_zoom
 keybind = ctrl+shift+equal=equalize_splits
 
-# Font adjustment
-keybind = ctrl+plus=increase_font_size:1
-keybind = ctrl+minus=decrease_font_size:1
-keybind = ctrl+0=reset_font_size
-
-# Clipboard protection
-clipboard-read = allow
-clipboard-write = allow
-clipboard-paste-protection = true
-
-# Claude Code support
-keybind = shift+enter=text:\n
+# Left Option as Alt (Claude Code / shell shortcuts), right Option keeps special chars
 macos-option-as-alt = left
 
 # Custom icon
 macos-icon = custom
-macos-custom-icon = ~/.config/ghostty/ayu-dark.icns
-
-# Custom shaders
-# custom-shader-animation = false
-# https://github.com/0xhckr/ghostty-shaders
-# custom-shader = /path/to/shader.glsl
+macos-custom-icon = ~/.config/ghostty/ayu-dark.png

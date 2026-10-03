@@ -5,7 +5,8 @@
 # =============================================================================
 # Configures macOS security hardening and system preferences.
 # Designed to be idempotent (safe to run multiple times).
-# Requires: Run with sudo from parent setup.zsh
+# Usage: security.zsh (not run by setup.zsh)
+# Requires: admin rights. Calls sudo itself; run as your user, not with sudo.
 # =============================================================================
 
 # Log Functions
