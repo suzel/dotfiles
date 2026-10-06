@@ -79,6 +79,7 @@ pnpm -s approve-builds esbuild sharp workerd
 info "Installing packages..."
 pnpm add -s -D \
   prettier-plugin-packagejson \
+  @ianvs/prettier-plugin-sort-imports \
   @sveltejs/enhanced-img \
   unplugin-icons @iconify-json/logos \
   svelte-sonner \
@@ -98,6 +99,12 @@ if has_dep prettier; then
   sed -i '' 's/useTabs: true/useTabs: false/' prettier.config.js
   grep -q prettier-plugin-packagejson prettier.config.js ||
     sed -i '' -E "s/(['\"])prettier-plugin-svelte(['\"])/&, \1prettier-plugin-packagejson\2/" prettier.config.js
+  # https://github.com/IanVS/prettier-plugin-sort-imports
+  grep -q prettier-plugin-sort-imports prettier.config.js ||
+    sed -i '' -E \
+      -e "s|(['\"])prettier-plugin-svelte(['\"])|\1@ianvs/prettier-plugin-sort-imports\2, &|" \
+      -e $'s|^([[:space:]]*)plugins: .*|&\\\n\\1importOrder: [\'<BUILTIN_MODULES>\', \'<THIRD_PARTY_MODULES>\', \'\', \'^[$#]\', \'\', \'^[./]\'],|' \
+      prettier.config.js
   add_vscode_ext esbenp.prettier-vscode
 fi
 
@@ -107,8 +114,6 @@ fi
 if [[ -f vite.config.ts ]]; then
   pnpm pkg set scripts.dev="vite dev --open"
 
-  sed -i '' $'s|^import { sveltekit } from .@sveltejs/kit/vite.;$|&\\\nimport { enhancedImages } from \'@sveltejs/enhanced-img\';|' vite.config.ts
-  sed -i '' $'s|^\\(\t*\\)sveltekit(|\\1enhancedImages(),\\\n\\1sveltekit(|' vite.config.ts
   sed -i '' "s|^\([[:space:]]*\)plugins: \[|\1logLevel: 'warn',\n&|" vite.config.ts
   sed -i '' "s|^\([[:space:]]*\)plugins: \[|\1build: {\n\1\1reportCompressedSize: false\n\1},\n&|" vite.config.ts
 
@@ -175,6 +180,7 @@ fi
 #   --skip-preflight >/dev/null
 
 # Assets
+touch static/{manifest.json,humans.txt,llms.txt}
 [[ -f "static/robots.txt" ]] && rm static/robots.txt
 if [[ -f "src/lib/assets/favicon.svg" ]]; then
   info "Generating favicons..."
@@ -214,7 +220,7 @@ if [[ -f compose.yaml ]]; then
     'scripts["docker:down"]'="docker compose down"
   set_dotenv COMPOSE_FILE "docker/compose.yaml" .env
   set_dotenv COMPOSE_PROJECT_NAME "${${${PWD:t}:l}//[^a-z0-9_-]/-}" .env
-  pnpm docker:up ||
+  COMPOSE_PROGRESS=quiet pnpm -s docker:up ||
     warn "Docker services not started, run later: pnpm docker:up"
 fi
 
@@ -223,7 +229,12 @@ fi
 if has_dep drizzle-kit; then
   info "Configuring Drizzle..."
   db=src/lib/server/db
-  [[ -f $db/schema.ts ]] && mkdir -p $db/schema && mv $db/schema.ts $db/schema/index.ts
+  pnpm add -s -D drizzle-zod
+  if [[ -f $db/schema.ts ]]; then
+    mkdir -p $db/schema && mv $db/schema.ts $db/schema/index.ts
+    sed -i '' '/^export \*/!d' $db/schema/index.ts
+    touch $db/schema/common.ts
+  fi
   sed -i '' 's|db/schema\.ts|db/schema|' drizzle.config.ts
   grep -q postgresql drizzle.config.ts && add_vscode_ext ckolkman.vscode-postgres
   grep -q sqlite drizzle.config.ts && add_vscode_ext qwtel.sqlite-viewer
@@ -305,7 +316,7 @@ fi
 
 # DESIGN.md
 # https://github.com/google-labs-code/design.md
-if [[ -f .claude/DESIGN.md ]]; then
+if [[ -d .claude ]]; then
   info "Configuring DESIGN.md..."
   design=.claude/DESIGN.md
   tokens=src/lib/styles/design-tokens.css
@@ -378,7 +389,7 @@ pnpm dlx -s gh-scaffold@1.0.4 -w \
   </dev/null >/dev/null
 [[ -f LICENSE ]] &&
   sed -i '' "s|<YEAR>|$(date +%Y)|; s|<COPYRIGHT HOLDER>|$(git config user.name)|" LICENSE
-sed -i '' "s|(add contact here)|$(git config user.email)|" SECURITY.md
+sed -i '' "s|(add contact here)|<$(git config user.email)>|" SECURITY.md
 echo "* @${repo%/*}" >.github/CODEOWNERS
 sed -i '' "s|url: https://github.com\$|&/$repo/blob/HEAD/SUPPORT.md|" \
   .github/ISSUE_TEMPLATE/config.yml

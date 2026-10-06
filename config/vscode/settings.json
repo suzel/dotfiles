@@ -145,7 +145,12 @@
   "js/ts.preferences.importModuleSpecifier": "non-relative",
   "js/ts.preferences.includePackageJsonAutoImports": "on",
   "js/ts.preferences.autoImportFileExcludePatterns": [
-    "**/node_modules/@types/node/console.d.ts"
+    "**/node_modules/@types/node/console.d.ts",
+    "**/node_modules/zod/**",
+    "**/node_modules/better-auth/dist/index.d.*ts"
+  ],
+  "js/ts.preferences.autoImportSpecifierExcludeRegexes": [
+    "^drizzle-orm/(mysql|singlestore|gel)-core"
   ],
   "js/ts.inlayHints.parameterNames.enabled": "none",
   "js/ts.suggest.autoImports": true,
