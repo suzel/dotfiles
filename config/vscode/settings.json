@@ -8,6 +8,8 @@
   "claudeCode.preferredLocation": "panel",
   "chat.agentsControl.enabled": "compact",
   // "chat.disableAIFeatures": false,
+  "chat.unifiedAgentsBar.enabled": true,
+  "chat.titleBar.openInAgentsWindow.enabled": false,
 
   // Editor
   "editor.bracketPairColorization.enabled": false,
@@ -17,8 +19,14 @@
     "source.sortImports": "always",
   },
   "editor.quickSuggestions": {
+    "other": "on",
     "strings": "on",
+    "comments": "off",
   },
+  "editor.quickSuggestionsDelay": 0,
+  "editor.snippetSuggestions": "top",
+  "editor.tabCompletion": "onlySnippets",
+  "editor.wordBasedSuggestions": "off",
   "editor.foldingStrategy": "indentation",
   "editor.cursorBlinking": "phase",
   "editor.cursorWidth": 1,
@@ -139,7 +147,7 @@
 
   // Svelte
   "svelte.enable-ts-plugin": true,
-  // "svelte.plugin.svelte.runesLegacyModeCodeLens.enable": false,
+  "svelte.plugin.svelte.runesLegacyModeCodeLens.enable": false,
 
   // Git
   "git.autofetch": true,
@@ -148,11 +156,15 @@
   "git.ignoreMissingGitWarning": true,
 
   // Markdown
-  "markdown.preview.fontFamily": "Avenir Next",
+  "markdown.preview.fontFamily": "'Figtree'",
   "markdown.preview.fontSize": 15,
 
   // Security
   "security.promptForLocalFileProtocolHandling": false,
+
+  // Snippet Studio
+  "snippetstudio.shell.snippets": [],
+  "snippetstudio.statusBar.showItem": false,
 
   // Tasks
   "task.allowAutomaticTasks": "on",
@@ -196,9 +208,9 @@
   "workbench.experimental.modernUI": true,
   "workbench.experimental.modernUIUppercaseViewHeaders": true,
   "workbench.activityBar.compact": true,
-  "workbench.activityBar.location": "top",
   "workbench.iconTheme": "symbols",
   "workbench.preferredDarkColorTheme": "Cursor Dark Midnight",
+  "workbench.activityBar.location": "top",
 
   // Window Settings
   "window.density.layout": "compact",
@@ -207,6 +219,4 @@
   // Others
   "telemetry.telemetryLevel": "off",
   "update.showReleaseNotes": false,
-  "chat.unifiedAgentsBar.enabled": true,
-  "chat.titleBar.openInAgentsWindow.enabled": false,
 }

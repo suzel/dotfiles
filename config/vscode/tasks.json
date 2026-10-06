@@ -1,0 +1,148 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "_Svelte: build",
+      "hide": true,
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["build"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": { "panel": "dedicated", "clear": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "_Svelte: dev",
+      "hide": true,
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["dev"],
+      "isBackground": true,
+      "presentation": { "panel": "dedicated", "reveal": "always" },
+      "problemMatcher": {
+        "owner": "vite",
+        "fileLocation": ["relative", "${workspaceFolder}"],
+        "pattern": {
+          "regexp": "^(.+?):(\\d+):(\\d+):\\s+(error|warning)\\s+(.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "severity": 4,
+          "message": 5
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".*VITE.*",
+          "endsPattern": "(Local|Network):.*"
+        }
+      }
+    },
+    {
+      "label": "_Svelte: check",
+      "hide": true,
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["check"],
+      "group": { "kind": "test", "isDefault": true },
+      "presentation": { "panel": "dedicated" },
+      "problemMatcher": ["$tsc"]
+    },
+    {
+      "label": "_Svelte: lint",
+      "hide": true,
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["lint"],
+      "presentation": { "panel": "dedicated" },
+      "problemMatcher": ["$eslint-stylish"]
+    },
+    // Cloudflare: npx picks the project's wrangler if installed, else downloads latest.
+    // --update-config writes the binding into the workspace's wrangler config, then types regenerates Env.
+    {
+      "label": "_Cloudflare: D1 create",
+      "hide": true,
+      "type": "shell",
+      "command": "npx -y wrangler d1 create ${input:cfName} --binding ${input:cfBinding} --update-config && npx -y wrangler types",
+      "presentation": { "panel": "shared", "focus": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "_Cloudflare: R2 bucket create",
+      "hide": true,
+      "type": "shell",
+      "command": "npx -y wrangler r2 bucket create ${input:cfName} --binding ${input:cfBinding} --update-config && npx -y wrangler types",
+      "presentation": { "panel": "shared", "focus": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "_Cloudflare: KV namespace create",
+      "hide": true,
+      "type": "shell",
+      "command": "npx -y wrangler kv namespace create ${input:cfName} --binding ${input:cfBinding} --update-config && npx -y wrangler types",
+      "presentation": { "panel": "shared", "focus": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "_Cloudflare: types",
+      "hide": true,
+      "type": "shell",
+      "command": "npx -y wrangler types",
+      "presentation": { "panel": "shared" },
+      "problemMatcher": []
+    },
+    {
+      "label": "_Cloudflare: D1 migrate",
+      "hide": true,
+      "type": "shell",
+      "command": "npx -y wrangler d1 migrations apply ${input:cfDb} ${input:cfTarget}",
+      "presentation": { "panel": "shared", "focus": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "_Cloudflare: D1 backup",
+      "hide": true,
+      "type": "shell",
+      "command": "mkdir -p backups && npx -y wrangler d1 export ${input:cfDb} --remote --output backups/${input:cfDb}-$(date +%F-%H%M).sql",
+      "presentation": { "panel": "shared", "focus": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "_Cloudflare: tail",
+      "hide": true,
+      "type": "shell",
+      "command": "npx -y wrangler tail --format pretty",
+      "presentation": { "panel": "dedicated", "reveal": "always" },
+      "problemMatcher": []
+    }
+  ],
+  "inputs": [
+    {
+      "id": "cfName",
+      "type": "promptString",
+      "description": "Resource name (e.g. my-app-db, my-app-uploads)"
+    },
+    {
+      "id": "cfBinding",
+      "type": "promptString",
+      "description": "Binding name in wrangler config (e.g. DB, BUCKET, KV)"
+    },
+    {
+      "id": "cfDb",
+      "type": "promptString",
+      "description": "D1 database name or binding",
+      "default": "DB"
+    },
+    {
+      "id": "cfTarget",
+      "type": "pickString",
+      "description": "Apply migrations to",
+      "options": ["--local", "--remote"],
+      "default": "--local"
+    }
+  ]
+}

@@ -6,17 +6,17 @@
 # Configures a project created with sv: package meta, project structure,
 # tooling, database, auth, editor settings and Git.
 # Run from the project root. Exits 1 if it is not a SvelteKit project.
-# Usage: sv-setup [--admin] [--publish]
-#   --admin    also configures shadcn-svelte
-#   --publish  also creates the GitHub repository
+# Usage: sv-setup
 # Requires: pnpm, jq, yq
 # =============================================================================
 
-# Resources:
-# https://svelte.dev/docs/kit/service-workers
-# https://svelte.dev/docs/kit/migrating-to-sveltekit-3
-
 set -euo pipefail
+
+# Error trap
+TRAPZERR() {
+  error "Error at ${funcfiletrace[1]}"
+  exit 1
+}
 
 # Log Functions
 info() { echo "\033[0;34mℹ️  $*\033[0m"; }
@@ -70,11 +70,12 @@ if has_dep @sveltejs/adapter-static; then
   grep -qs 'prerender' src/routes/+layout.ts || echo "export const prerender = true;" >>src/routes/+layout.ts
 fi
 
-# Build scripts allowlist
+# Approvals
 info "Configuring pnpm workspace..."
 pnpm -s approve-builds esbuild sharp workerd
 
 # Packages
+# TODO: Add other packages
 info "Installing packages..."
 pnpm add -s -D \
   prettier-plugin-packagejson \
@@ -83,12 +84,6 @@ pnpm add -s -D \
   svelte-sonner \
   schema-dts \
   zod
-
-# License & publish metadata
-# TODO: License type ?
-if [[ $(pnpm pkg get private) != true ]]; then
-  pnpm pkg set license="MIT"
-fi
 
 # ESLint
 # https://eslint.org
@@ -108,8 +103,9 @@ fi
 
 # Vite
 # https://vite.dev
-pnpm pkg set scripts.dev="vite dev --open"
-if ! grep -q enhancedImages vite.config.ts; then
+# TODO: ???
+if [[ -f vite.config.ts ]]; then
+  pnpm pkg set scripts.dev="vite dev --open"
 
   sed -i '' $'s|^import { sveltekit } from .@sveltejs/kit/vite.;$|&\\\nimport { enhancedImages } from \'@sveltejs/enhanced-img\';|' vite.config.ts
   sed -i '' $'s|^\\(\t*\\)sveltekit(|\\1enhancedImages(),\\\n\\1sveltekit(|' vite.config.ts
@@ -162,25 +158,23 @@ if has_dep tailwindcss; then
   add_vscode_ext bradlc.vscode-tailwindcss
 fi
 
-# shadcn-svelte (opt-in: sv-setup --admin)
+# shadcn-svelte
 # https://www.shadcn-svelte.com
-if ((${argv[(Ie)--admin]})); then
-  info "Configuring shadcn-svelte..."
-  pnpm dlx -s shadcn-svelte@latest init \
-    --cwd . \
-    --preset bIkeymG \
-    --base-color neutral \
-    --css src/lib/styles/layout.css \
-    --lib-alias '#lib' \
-    --components-alias '#lib/components' \
-    --ui-alias '#lib/components/ui' \
-    --utils-alias '#lib/utils' \
-    --hooks-alias '#lib/hooks' \
-    --reinstall \
-    --skip-preflight >/dev/null
-fi
+# info "Configuring shadcn-svelte..."
+# pnpm dlx -s shadcn-svelte@latest init \
+#   --cwd . \
+#   --preset bIkeymG \
+#   --base-color neutral \
+#   --css src/lib/styles/layout.css \
+#   --lib-alias '#lib' \
+#   --components-alias '#lib/components' \
+#   --ui-alias '#lib/components/ui' \
+#   --utils-alias '#lib/utils' \
+#   --hooks-alias '#lib/hooks' \
+#   --reinstall \
+#   --skip-preflight >/dev/null
 
-# Web files
+# Assets
 [[ -f "static/robots.txt" ]] && rm static/robots.txt
 if [[ -f "src/lib/assets/favicon.svg" ]]; then
   info "Generating favicons..."
@@ -195,43 +189,55 @@ fi
 
 # Docker
 # https://www.docker.com
-if has_dep drizzle-kit; then
+if [[ -f compose.yaml ]]; then
   info "Configuring Docker..."
-  rm -f compose.yaml && mkdir -p docker/sql
-  pnpm dlx -s dclint -q --fix docker/compose.yaml
-  pnpm pkg set \
-    'scripts["docker:up"]'="docker compose up -d --build" \
-    'scripts["docker:down"]'="docker compose down" \
-    'scripts["db:start"]'="docker compose up -d --wait postgres"
-  set_dotenv COMPOSE_FILE "docker/compose.yaml:docker/compose.dev.yaml" .env
+  mkdir -p docker && mv compose.yaml docker/
   if has_dep postgres; then
-    set_dotenv POSTGRES_USER root .env
-    set_dotenv POSTGRES_PASSWORD mysecretpassword .env
-    set_dotenv POSTGRES_DB local .env
-    pnpm db:start || warn "Database not started, run later: pnpm db:start"
+    port=5432
+    while lsof -iTCP:$port -sTCP:LISTEN >/dev/null; do ((port++)); done
+    sed -i '' "s|@localhost:5432/|@localhost:$port/|" .env
+    port=$port yq -i '.services.db |= (
+      .image = "postgres:18-alpine" |
+      .ports = ["127.0.0.1:" + strenv(port) + ":5432"] |
+      .healthcheck = {
+        "test": "pg_isready -h 127.0.0.1 -U $${POSTGRES_USER} -d $${POSTGRES_DB}",
+        "interval": "2s",
+        "retries": 15
+      }
+    )' docker/compose.yaml
   fi
+  pnpm dlx -s dclint -q --fix docker/compose.yaml ||
+    warn "Compose lint errors, run: pnpm dlx dclint docker/compose.yaml"
+  pnpm pkg delete 'scripts["db:start"]'
+  pnpm pkg set \
+    'scripts["docker:up"]'="docker compose up -d --build --wait" \
+    'scripts["docker:down"]'="docker compose down"
+  set_dotenv COMPOSE_FILE "docker/compose.yaml" .env
+  set_dotenv COMPOSE_PROJECT_NAME "${${${PWD:t}:l}//[^a-z0-9_-]/-}" .env
+  pnpm docker:up ||
+    warn "Docker services not started, run later: pnpm docker:up"
 fi
 
 # Database
 # https://orm.drizzle.team
 if has_dep drizzle-kit; then
   info "Configuring Drizzle..."
-  pnpm pkg set \
-    'scripts["db:studio"]'="(sleep 2 && open https://local.drizzle.studio) & drizzle-kit studio" \
-    'scripts["db:push"]'="drizzle-kit push --force"
-  sed -i '' 's/strict: true/strict: false/' drizzle.config.ts
-  add_vscode_ext ckolkman.vscode-postgres
-  pnpm db:generate >/dev/null && pnpm db:migrate >/dev/null ||
-    warn "Database not migrated, run later: pnpm db:generate && pnpm db:migrate"
+  db=src/lib/server/db
+  [[ -f $db/schema.ts ]] && mkdir -p $db/schema && mv $db/schema.ts $db/schema/index.ts
+  sed -i '' 's|db/schema\.ts|db/schema|' drizzle.config.ts
+  grep -q postgresql drizzle.config.ts && add_vscode_ext ckolkman.vscode-postgres
+  grep -q sqlite drizzle.config.ts && add_vscode_ext qwtel.sqlite-viewer
 fi
 
 # Better-Auth
 # https://www.better-auth.com
 if has_dep better-auth; then
   info "Configuring Better Auth..."
-  pnpm auth:schema
-  pnpm db:generate >/dev/null && pnpm db:migrate >/dev/null ||
-    warn "Auth tables not created, run later: pnpm db:generate && pnpm db:migrate"
+  [[ -f $db/auth.schema.ts ]] && mv $db/auth.schema.ts $db/schema/auth.ts
+  sed -i '' 's|/auth\.schema|/auth|' $db/schema/index.ts
+  sed -i '' 's|db/auth\.schema\.ts|db/schema/auth.ts|' package.json
+  pnpm auth:schema >/dev/null 2>&1 ||
+    warn "Auth schema not generated, run later: pnpm auth:schema"
 fi
 
 # Cloudflare
@@ -243,9 +249,37 @@ if has_dep @sveltejs/adapter-cloudflare; then
     .compatibility_flags = ["nodejs_compat"] |
     .vars.NODE_ENV = "production"
   ' wrangler.jsonc
+  if grep -qs d1-http drizzle.config.ts; then
+    # TODO: 1. pnpm exec wrangler d1 create <name> -> ID to wrangler.jsonc database_id
+    # TODO: 2. fill CLOUDFLARE_* in .env, then: pnpm db:generate && pnpm db:migrate
+    # TODO: 3. pnpm db:migrate:remote
+    yq -i -o=json '.d1_databases = [{
+      "binding": "DB",
+      "database_name": .name,
+      "database_id": "local",
+      "migrations_dir": "drizzle"
+    }]' wrangler.jsonc
+    pnpm pkg delete 'scripts["db:push"]'
+    pnpm pkg set \
+      'scripts["db:migrate"]'="wrangler d1 migrations apply DB --local" \
+      'scripts["db:migrate:remote"]'="wrangler d1 migrations apply DB --remote" \
+      'scripts["db:backup"]'="mkdir -p backups && wrangler d1 export DB --remote --output backups/DB-\$(date +%F-%H%M).sql"
+    grep -qx '/backups/' .gitignore || echo '/backups/' >>.gitignore
+  fi
+  pnpm gen >/dev/null
+fi
+
+# Migrations
+# https://orm.drizzle.team/docs/migrations
+if has_dep drizzle-kit; then
+  info "Running migrations..."
+  pnpm db:generate >/dev/null && pnpm db:migrate >/dev/null ||
+    warn "Database not migrated, run later: pnpm db:generate && pnpm db:migrate"
 fi
 
 # Claude
+# https://www.claude.ai
+# TODO: .lsp.json ???
 if [[ -d .claude ]]; then
   info "Configuring Claude..."
   # TODO: Remove and move to templates ?
@@ -265,26 +299,25 @@ if [[ -d .claude ]]; then
     { mcpServers: ((.[0].mcpServers // {}) + ((.[1].mcpServers // {}) | with_entries(select(.value | secret | not))) | del(.svelte)) }
   ' ../.mcp.json ~/.claude.json >.mcp.json
 
-  # No .lsp.json: per the docs it only exists inside plugins, and the plugins are enabled in settings.json above
-
   has_dep prettier && echo "/.claude/skills/" >>.prettierignore
   add_vscode_ext anthropic.claude-code
 fi
 
 # DESIGN.md
 # https://github.com/google-labs-code/design.md
-if [[ -d .claude ]]; then
+if [[ -f .claude/DESIGN.md ]]; then
   info "Configuring DESIGN.md..."
   design=.claude/DESIGN.md
   tokens=src/lib/styles/design-tokens.css
   pnpm add -s -D @google/design.md
   pnpm pkg set \
     'scripts["design:lint"]'="design.md lint $design" \
-    'scripts["design:spec"]'="design.md spec --rules > docs/DESIGN.spec.md" \
+    'scripts["design:spec"]'="design.md spec --rules > .claude/DESIGN.spec.md" \
     'scripts["design:sync"]'="design.md export $design --format css-tailwind > $tokens"
-  pnpm design:spec >/dev/null 2>&1 && pnpm design:sync >/dev/null 2>&1
-  #   grep -qF "@import './${tokens:t}';" "${tokens:h}/layout.css" ||
-  #     sed -i '' $'1a\\\n'"@import './${tokens:t}';" ${tokens:h}/layout.css
+  { pnpm design:spec && pnpm design:sync; } >/dev/null 2>&1 ||
+    warn "DESIGN.md not exported, run later: pnpm design:spec && pnpm design:sync"
+  [[ -f ${tokens:h}/layout.css ]] && ! grep -q ${tokens:t} ${tokens:h}/layout.css &&
+    sed -i '' $'1a\\\n'"@import './${tokens:t}';" ${tokens:h}/layout.css
   sed -i '' "s/\]\$/],/;/^};\$/i\\
   '$design': [\\
     'pnpm design:lint',\\
@@ -296,7 +329,13 @@ fi
 # VSCode
 # https://code.visualstudio.com
 info "Configuring VSCode..."
-vscode_pick tasks.json '.tasks |= map(select(.label == "Svelte*"))'
+tasks=Svelte
+has_dep @sveltejs/adapter-cloudflare && tasks+='|Cloudflare'
+vscode_pick tasks.json '.tasks |= map(
+  select(.label | test("^_('$tasks'):")) |
+  .label |= sub("^_", "") |
+  del(.hide)
+)'
 vscode_pick settings.json 'with_entries(select(.key == (
   "files.*",
   "explorer.fileNesting.*",
@@ -320,31 +359,29 @@ add_vscode_ext \
   editorconfig.editorconfig
 
 # Github Actions
-# TODO: Dependabot / Renovate → Auto PR
 # TODO: Versioning ?
 info "Generating Github Action files..."
 mkdir -p .github/workflows
 add_vscode_ext github.vscode-github-actions
 
 # Docs
-# TODO: Doc templates, e.g. DESIGN.md, ARCHITECTURE.md, ROADMAP.md, etc.
 # https://github.com/rafazafar/gh-scaffold
 info "Generating docs..."
 mkdir -p docs
+[[ $(pnpm pkg get private) == true ]] || pnpm pkg set license=MIT
 repo="$(git config github.user)/$(pnpm pkg get name)"
-# Parameters only: gh-scaffold 1.0.4 ignores preset/issueTemplates/license from yml (CLI defaults win) and has no flags
-# for owners/support link, so those are filled below like the other placeholders
 pnpm dlx -s gh-scaffold@1.0.4 -w \
   --preset strict \
   --issue-templates forms \
-  --license "${$(pnpm pkg get license | tr A-Z a-z):-none}" \
+  --license "${(L)$(pnpm pkg get license):-none}" \
   --skip GOVERNANCE,MAINTAINERS,CHANGELOG,CODEOWNERS,FUNDING \
   </dev/null >/dev/null
 [[ -f LICENSE ]] &&
   sed -i '' "s|<YEAR>|$(date +%Y)|; s|<COPYRIGHT HOLDER>|$(git config user.name)|" LICENSE
 sed -i '' "s|(add contact here)|$(git config user.email)|" SECURITY.md
 echo "* @${repo%/*}" >.github/CODEOWNERS
-sed -i '' "s|url: https://github.com\$|url: https://github.com/$repo/blob/HEAD/SUPPORT.md|" .github/ISSUE_TEMPLATE/config.yml
+sed -i '' "s|url: https://github.com\$|&/$repo/blob/HEAD/SUPPORT.md|" \
+  .github/ISSUE_TEMPLATE/config.yml
 
 # Last Check
 info "Updating dependencies & formatting..."
@@ -355,6 +392,7 @@ pnpm lint >/dev/null || warn "Lint errors, run: pnpm lint"
 pnpm --silent check --threshold error || warn "Type errors, run: pnpm check"
 
 # Git
+# TODO: ! git rev-parse -q --verify HEAD >/dev/null; ???
 if ! git rev-parse -q --verify HEAD >/dev/null; then
   info "Creating initial commit..."
   pnpm pkg set \
@@ -368,21 +406,19 @@ fi
 
 # GitHub (opt-in: sv-setup --publish)
 # TODO: .env.production.public ???
-if ((${argv[(Ie)--publish]})); then
-  info "Creating GitHub repository..."
-  license=$(pnpm pkg get license)
-  gh repo create $repo \
-    --source=. \
-    --private \
-    --description "$(pnpm pkg get description)" \
-    --homepage "$(pnpm pkg get homepage)" \
-    --remote=origin \
-    --push \
-    ${license:+--license=$license} \
-    --disable-wiki
-  # Secrets & variables
-  [[ -f .env.production ]] && gh secret set -f .env.production
-  [[ -f .env.production.public ]] && gh variable set -f .env.production.public
-fi
+# info "Creating GitHub repository..."
+# license=$(pnpm pkg get license)
+# gh repo create $repo \
+#   --source=. \
+#   --private \
+#   --description "$(pnpm pkg get description)" \
+#   --homepage "$(pnpm pkg get homepage)" \
+#   --remote=origin \
+#   --push \
+#   ${license:+--license=$license} \
+#   --disable-wiki
+# # Secrets & variables
+# [[ -f .env.production ]] && gh secret set -f .env.production
+# [[ -f .env.production.public ]] && gh variable set -f .env.production.public
 
 success "Completed!"

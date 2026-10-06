@@ -10,7 +10,8 @@ warn() { echo "\033[0;33m⚠️  $*\033[0m" >&2; }
 error() { echo "\033[0;31m❌ $*\033[0m" >&2; }
 success() { echo "\033[0;32m✅ $*\033[0m"; }
 
-# $LINENO is function-relative inside traps, funcfiletrace has the real file:line
+# Error trap: print where the script failed and exit.
+# Uses funcfiletrace, $LINENO is function-relative here.
 TRAPZERR() {
   error "Error at ${funcfiletrace[1]}"
   exit 1
@@ -41,6 +42,7 @@ links=(
   config/vscode/argv.json ~/.vscode/argv.json
   config/vscode/settings.json ~/Library/Application\ Support/Code/User/settings.json
   config/vscode/keybindings.json ~/Library/Application\ Support/Code/User/keybindings.json
+  config/vscode/tasks.json ~/Library/Application\ Support/Code/User/tasks.json
 )
 
 # The installer also installs the Command Line Tools (git included) without the GUI dialog.
