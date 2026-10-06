@@ -7,21 +7,21 @@
   "claudeCode.initialPermissionMode": "bypassPermissions",
   "claudeCode.preferredLocation": "panel",
   "chat.agentsControl.enabled": "compact",
-  // "chat.disableAIFeatures": false,
   "chat.unifiedAgentsBar.enabled": true,
   "chat.titleBar.openInAgentsWindow.enabled": false,
 
   // Editor
   "editor.bracketPairColorization.enabled": false,
   "editor.codeActionsOnSave": {
+    "source.addMissingImports": "explicit",
     "source.fixAll.eslint": "explicit",
     "source.organizeImports": "explicit",
-    "source.sortImports": "always",
+    "source.sortImports": "always"
   },
   "editor.quickSuggestions": {
     "other": "on",
     "strings": "on",
-    "comments": "off",
+    "comments": "off"
   },
   "editor.quickSuggestionsDelay": 0,
   "editor.snippetSuggestions": "top",
@@ -53,7 +53,7 @@
   "editor.suggestSelection": "first",
   "editor.suggest.selectionMode": "always",
   "editor.unicodeHighlight.allowedLocales": {
-    "tr": true,
+    "tr": true
   },
 
   // Explorer
@@ -71,7 +71,7 @@
     "package.json": ".node-*, pnpm*, .*.json, *.json, *.jsonc, *rc, *.config.js, *.config.ts, *config.json",
     "README.md": "LICENSE, CONTRIBUTING*, SECURITY*, CODE_OF_CONDUCT*, CHANGELOG*",
     "+page.svelte": "+page.ts, +page.server.ts",
-    "+layout.svelte": "+layout.ts, +layout.server.ts",
+    "+layout.svelte": "+layout.ts, +layout.server.ts"
   },
 
   // Exclude files
@@ -88,45 +88,48 @@
     ".output": true,
     ".cloudflare": true,
     ".wrangler": true,
-    "src/cf-worker.d.ts": true,
+    "src/cf-worker.d.ts": true
   },
   "files.associations": {
     "*.css": "tailwindcss",
-    ".env*": "dotenv",
+    ".env*": "dotenv"
   },
 
   // Language Overrides
   "[shellscript]": {
     "editor.defaultFormatter": "mkhl.shfmt",
-    "editor.formatOnSave": true,
+    "editor.formatOnSave": true
   },
   "[html, javascript, typescript, json, jsonc]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[markdown]": {
     "diffEditor.ignoreTrimWhitespace": false,
     "editor.defaultFormatter": "DavidAnson.vscode-markdownlint",
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
-      "source.fixAll.markdownlint": "explicit",
+      "source.fixAll.markdownlint": "explicit"
     },
     "editor.quickSuggestions": {
       "comments": "off",
       "other": "off",
-      "strings": "off",
+      "strings": "off"
     },
     "editor.unicodeHighlight.ambiguousCharacters": true,
     "editor.unicodeHighlight.invisibleCharacters": false,
-    "editor.wordWrap": "on",
+    "editor.wordWrap": "on"
   },
   "[svelte]": {
     "editor.defaultFormatter": "svelte.svelte-vscode",
+    "js/ts.preferences.autoImportFileExcludePatterns": [
+      "**/node_modules/@types/node/**"
+    ]
   },
   "[go]": {
-    "editor.defaultFormatter": "golang.go",
+    "editor.defaultFormatter": "golang.go"
   },
   "[toml]": {
-    "editor.defaultFormatter": "tamasfe.even-better-toml",
+    "editor.defaultFormatter": "tamasfe.even-better-toml"
   },
 
   // ESLint
@@ -141,6 +144,9 @@
   "js/ts.preferences.preferTypeOnlyAutoImports": true,
   "js/ts.preferences.importModuleSpecifier": "non-relative",
   "js/ts.preferences.includePackageJsonAutoImports": "on",
+  "js/ts.preferences.autoImportFileExcludePatterns": [
+    "**/node_modules/@types/node/console.d.ts"
+  ],
   "js/ts.inlayHints.parameterNames.enabled": "none",
   "js/ts.suggest.autoImports": true,
   "js/ts.experimental.useTsgo": false,
@@ -148,6 +154,7 @@
   // Svelte
   "svelte.enable-ts-plugin": true,
   "svelte.plugin.svelte.runesLegacyModeCodeLens.enable": false,
+  "svelte.plugin.svelte.defaultScriptLanguage": "ts",
 
   // Git
   "git.autofetch": true,
@@ -181,11 +188,11 @@
   "terminal.integrated.profiles.osx": {
     "zsh": {
       "path": "/bin/zsh",
-      "args": ["-l"],
-    },
+      "args": ["-l"]
+    }
   },
   "terminal.integrated.env.osx": {
-    "ZDOTDIR": "${env:HOME}/.config/zsh",
+    "ZDOTDIR": "${env:HOME}/.config/zsh"
   },
   "workbench.colorCustomizations": {
     "tab.activeBorderTop": "#00000000",
@@ -193,7 +200,7 @@
     "tab.border": "#00000000",
     "editorGroupHeader.tabsBorder": "#00000000",
     "focusBorder": "#00000000",
-    "notebook.focusedCellBorder": "#00000000",
+    "notebook.focusedCellBorder": "#00000000"
   },
   "workbench.editor.editorActionsLocation": "titleBar",
   "workbench.editor.empty.hint": "hidden",
@@ -218,5 +225,5 @@
 
   // Others
   "telemetry.telemetryLevel": "off",
-  "update.showReleaseNotes": false,
+  "update.showReleaseNotes": false
 }
