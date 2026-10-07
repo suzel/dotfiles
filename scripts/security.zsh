@@ -11,8 +11,8 @@
 
 # Log Functions
 info() { echo "\033[0;34mℹ️  $*\033[0m"; }
-warn() { echo "\033[0;33m⚠️  $*\033[0m"; }
-error() { echo "\033[0;31m❌ $*\033[0m"; }
+warn() { echo "\033[0;33m⚠️  $*\033[0m" >&2; }
+error() { echo "\033[0;31m❌️ $*\033[0m" >&2; }
 success() { echo "\033[0;32m✅ $*\033[0m"; }
 
 # Close System Settings to prevent it from overriding changes
@@ -24,10 +24,11 @@ osascript -e 'tell application "System Settings" to quit' 2>/dev/null
 # =============================================================================
 
 info "Configuring firewall..."
-sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on || error "Failed to enable firewall"
-sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setstealthmode on || error "Failed to enable stealth mode"
-sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setallowsigned on || error "Failed to allow signed apps"
-sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setallowsignedapp on || error "Failed to allow signed app exceptions"
+fw="/usr/libexec/ApplicationFirewall/socketfilterfw"
+sudo $fw --setglobalstate on || error "Failed to enable firewall"
+sudo $fw --setstealthmode on || error "Failed to enable stealth mode"
+sudo $fw --setallowsigned on || error "Failed to allow signed apps"
+sudo $fw --setallowsignedapp on || error "Failed to allow signed app exceptions"
 
 # =============================================================================
 # Network Ports & Services
@@ -127,7 +128,8 @@ defaults write com.apple.screensaver askForPasswordDelay -int 0
 
 info "Disabling remote access..."
 # Note: Requires Full Disk Access for Terminal (macOS Catalina+)
-sudo systemsetup -f -setremotelogin off || error "Failed to disable remote login"
+sudo systemsetup -f -setremotelogin off ||
+  error "Failed to disable remote login"
 ard_path="/System/Library/CoreServices/RemoteManagement"
 ard_path+="/ARDAgent.app/Contents/Resources/kickstart"
 sudo "$ard_path" -deactivate -stop 2>/dev/null

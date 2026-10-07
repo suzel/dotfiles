@@ -5,14 +5,17 @@
     "when": "editorTextFocus && !editorReadonly"
   },
   {
-    "key": "shift+alt+down",
-    "command": "-editor.action.copyLinesDownAction",
-    "when": "editorTextFocus && !editorReadonly"
-  },
-  {
     "key": "cmd+shift+l",
     "command": "editor.action.format",
     "when": "editorTextFocus && !editorReadonly"
+  },
+  {
+    "key": "ctrl+shift+delete",
+    "command": "editor.action.fontZoomReset"
+  },
+  {
+    "key": "ctrl+shift+down",
+    "command": "editor.action.fontZoomOut"
   },
   {
     "key": "ctrl+shift+i",
@@ -27,17 +30,14 @@
     "command": "editor.action.fontZoomIn"
   },
   {
-    "key": "ctrl+shift+down",
-    "command": "editor.action.fontZoomOut"
+    "key": "enter",
+    "command": "markdown.showPreviewToSide",
+    "when": "resourceExtname == .md && explorerViewletVisible && filesExplorerFocus"
   },
   {
-    "key": "f18",
-    "command": "workbench.view.extension.tomjs-snippets-manager"
-  },
-  {
-    "key": "f13",
-    "command": "simpleBrowser.show",
-    "args": "http://localhost:8080"
+    "key": "shift+alt+down",
+    "command": "-editor.action.copyLinesDownAction",
+    "when": "editorTextFocus && !editorReadonly"
   },
   {
     "key": "shift+enter",
@@ -46,11 +46,6 @@
       "text": "\\\r\n"
     },
     "when": "terminalFocus"
-  },
-  {
-    "key": "enter",
-    "command": "markdown.showPreviewToSide",
-    "when": "resourceExtname == .md && explorerViewletVisible && filesExplorerFocus"
   },
   {
     "key": "cmd+numpad2",
@@ -63,7 +58,20 @@
     "when": "terminalProcessSupported"
   },
   {
-    "key": "ctrl+shift+delete",
-    "command": "editor.action.fontZoomReset"
+    "key": "f16",
+    "command": "workbench.action.toggleSidebarVisibility"
+  },
+  {
+    "key": "f17",
+    "command": "workbench.action.createTerminalEditorSide"
+  },
+  {
+    "key": "f18",
+    "command": "workbench.action.browser.open",
+    "args": { "openToSide": true }
+  },
+  {
+    "key": "f19",
+    "command": "workbench.action.toggleAuxiliaryBar"
   }
 ]

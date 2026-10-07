@@ -2,13 +2,15 @@
   // Breadcrumbs
   "breadcrumbs.enabled": false,
 
+  // Chat
+  "chat.agentsControl.enabled": "compact",
+  "chat.unifiedAgentsBar.enabled": true,
+  "chat.titleBar.openInAgentsWindow.enabled": false,
+
   // Claude Code
   "claudeCode.allowDangerouslySkipPermissions": true,
   "claudeCode.initialPermissionMode": "bypassPermissions",
   "claudeCode.preferredLocation": "panel",
-  "chat.agentsControl.enabled": "compact",
-  "chat.unifiedAgentsBar.enabled": true,
-  "chat.titleBar.openInAgentsWindow.enabled": false,
 
   // Editor
   "editor.bracketPairColorization.enabled": false,
@@ -35,7 +37,6 @@
   "editor.fontWeight": "400",
   "editor.fontSize": 14.5,
   "editor.lineHeight": 1.55,
-  // "editor.lineHeight": 1.7,
   "editor.fontLigatures": "'calt', 'zero'",
   "editor.formatOnPaste": true,
   "editor.formatOnSave": true,
@@ -199,6 +200,12 @@
   "terminal.integrated.env.osx": {
     "ZDOTDIR": "${env:HOME}/.config/zsh"
   },
+
+  // Window
+  "window.autoDetectColorScheme": true,
+  "window.density.layout": "compact",
+
+  // Workbench
   "workbench.colorCustomizations": {
     "tab.activeBorderTop": "#00000000",
     "tab.activeBorder": "#00000000",
@@ -220,13 +227,9 @@
   "workbench.experimental.modernUI": true,
   "workbench.experimental.modernUIUppercaseViewHeaders": true,
   "workbench.activityBar.compact": true,
+  "workbench.activityBar.location": "top",
   "workbench.iconTheme": "symbols",
   "workbench.preferredDarkColorTheme": "Cursor Dark Midnight",
-  "workbench.activityBar.location": "top",
-
-  // Window Settings
-  "window.density.layout": "compact",
-  "window.autoDetectColorScheme": true,
 
   // Others
   "telemetry.telemetryLevel": "off",

@@ -14,7 +14,7 @@ set -euo pipefail
 # Log Functions
 info() { echo "\033[0;34mℹ️  $*\033[0m"; }
 warn() { echo "\033[0;33m⚠️  $*\033[0m" >&2; }
-error() { echo "\033[0;31m❌ $*\033[0m" >&2; }
+error() { echo "\033[0;31m❌️ $*\033[0m" >&2; }
 success() { echo "\033[0;32m✅ $*\033[0m"; }
 
 # Error trap
@@ -28,20 +28,24 @@ die() {
   exit 1
 }
 
-# Sets $disk. Asked before the download, so a wrong disk fails in seconds, not after ~15 GB.
+# Sets $disk. Asked first: a wrong disk fails in seconds, not after ~15 GB
 pick_disk() {
   info "External disks:"
   diskutil list external physical
   echo "Enter the USB disk identifier (e.g., disk4):"
   read -r disk
-  [[ $disk == disk<-> ]] || die "Expected a whole disk like disk4, got '$disk'."
+  [[ $disk == disk<-> ]] ||
+    die "Expected a whole disk like disk4, got '$disk'."
 
   local plist
-  plist=$(diskutil info -plist $disk 2>/dev/null) || die "/dev/$disk does not exist."
-  # Internal check, not a boot-disk name match: on Apple Silicon / is on disk3, the SSD itself is disk0
-  [[ $(plutil -extract Internal raw - <<<$plist) == false ]] || die "/dev/$disk is an internal disk."
+  plist=$(diskutil info -plist $disk 2>/dev/null) ||
+    die "/dev/$disk does not exist."
+  # Internal flag, not a boot-disk name: on Apple Silicon / is disk3, SSD disk0
+  [[ $(plutil -extract Internal raw - <<<$plist) == false ]] ||
+    die "/dev/$disk is an internal disk."
 
-  warn "All data on /dev/$disk ($(plutil -extract MediaName raw - <<<$plist)) will be erased after the download!"
+  warn "All data on /dev/$disk ($(plutil -extract MediaName raw - <<<$plist))" \
+    "will be erased after the download!"
   echo "Continue? (y/N):"
   read -r confirm
   [[ $confirm == [yY] ]] || {
@@ -53,24 +57,28 @@ pick_disk() {
 download() {
   local version
   # awk reads to the end, so pipefail never sees a SIGPIPE from softwareupdate
-  version=$(softwareupdate --list-full-installers | awk -F'Version: ' 'NF > 1 && !v { split($2, a, ","); v = a[1] } END { print v }')
+  version=$(softwareupdate --list-full-installers | awk -F'Version: ' '
+    NF > 1 && !v { split($2, a, ","); v = a[1] }
+    END { print v }')
   [[ -n $version ]] || die "Could not find any macOS installers."
   info "Downloading macOS $version..."
   softwareupdate --fetch-full-installer --full-installer-version $version
 }
 
 create() {
-  local installer=(/Applications/Install\ macOS*.app(N/om[1])) # newest installer
+  # newest installer
+  local installer=(/Applications/Install\ macOS*.app(N/om[1]))
   (($#installer)) || die "macOS installer not found in /Applications."
 
-  # createinstallmedia reformats the volume as Mac OS Extended itself; this only gives it a volume to target
+  # createinstallmedia reformats it itself; this just gives it a volume
   info "Erasing /dev/$disk..."
   diskutil eraseDisk JHFS+ Installer GPT $disk
   local volume
   volume=$(diskutil info -plist ${disk}s2 | plutil -extract MountPoint raw -)
 
   info "Creating bootable installer from ${installer:t}..."
-  sudo "$installer/Contents/Resources/createinstallmedia" --volume "$volume" --nointeraction --downloadassets
+  sudo "$installer/Contents/Resources/createinstallmedia" \
+    --volume "$volume" --nointeraction --downloadassets
 }
 
 main() {

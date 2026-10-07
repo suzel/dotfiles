@@ -1,17 +1,17 @@
 #!/usr/bin/env zsh
-# Full install: curl -fsSL https://raw.githubusercontent.com/suzel/dotfiles/main/setup.zsh | zsh -s
-# Single steps: ./setup.zsh config packages   (steps: homebrew repo config packages macos)
+# Full install: curl -fsSL https://git.io/suzel-dotfiles | zsh -s
+# Single steps: ./setup.zsh config packages
+# Steps: homebrew repo config packages macos
 
 set -euo pipefail
 
 # Log Functions
 info() { echo "\033[0;34mℹ️  $*\033[0m"; }
 warn() { echo "\033[0;33m⚠️  $*\033[0m" >&2; }
-error() { echo "\033[0;31m❌ $*\033[0m" >&2; }
+error() { echo "\033[0;31m❌️ $*\033[0m" >&2; }
 success() { echo "\033[0;32m✅ $*\033[0m"; }
 
-# Error trap: print where the script failed and exit.
-# Uses funcfiletrace, $LINENO is function-relative here.
+# Error trap: funcfiletrace, as $LINENO is function-relative here
 TRAPZERR() {
   error "Error at ${funcfiletrace[1]}"
   exit 1
@@ -19,13 +19,13 @@ TRAPZERR() {
 
 readonly DOTFILES="$HOME/Projects/dotfiles"
 readonly REPO_URL="https://github.com/suzel/dotfiles.git"
-readonly BREW_URL="https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh"
+readonly GH_RAW="https://raw.githubusercontent.com"
+readonly BREW_URL="$GH_RAW/Homebrew/install/HEAD/install.sh"
+readonly CODE_USER=~/Library/Application\ Support/Code/User
 
-# Repo path → target. Configs are symlinked, so edits on either side are the same file.
-# zsh files are linked one by one: ZDOTDIR also gets .zsh_history/.zcompdump,
-# which must stay out of the repo.
+# Repo path → target, symlinked: edits on either side hit the same file
 links=(
-  # Zsh
+  # Zsh, file by file: ZDOTDIR's .zsh_history/.zcompdump stay out of the repo
   config/zsh/.zshenv ~/.zshenv
   config/zsh/.zshrc ~/.config/zsh/.zshrc
   config/zsh/.zsh_aliases ~/.config/zsh/.zsh_aliases
@@ -40,17 +40,16 @@ links=(
 
   # VS Code
   config/vscode/argv.json ~/.vscode/argv.json
-  config/vscode/settings.json ~/Library/Application\ Support/Code/User/settings.json
-  config/vscode/keybindings.json ~/Library/Application\ Support/Code/User/keybindings.json
-  config/vscode/tasks.json ~/Library/Application\ Support/Code/User/tasks.json
+  config/vscode/settings.json $CODE_USER/settings.json
+  config/vscode/keybindings.json $CODE_USER/keybindings.json
+  config/vscode/tasks.json $CODE_USER/tasks.json
 )
 
-# The installer also installs the Command Line Tools (git included) without the GUI dialog.
-# No sudo -v elsewhere: brew and mas ask for the password themselves when they need it.
+# The installer adds the Command Line Tools (git too), no GUI dialog
 homebrew() {
   info "Setting up Homebrew..."
   if [[ ! -x /opt/homebrew/bin/brew ]]; then
-    sudo -v # NONINTERACTIVE mode needs sudo already validated
+    sudo -v # NONINTERACTIVE needs it; elsewhere brew/mas ask themselves
     NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL "$BREW_URL")"
   fi
   eval "$(/opt/homebrew/bin/brew shellenv)"
@@ -66,31 +65,33 @@ repo() {
 
 config() {
   info "Linking config files and scripts..."
-  local i src dst
+  local i src dst f
   for ((i = 1; i < ${#links}; i += 2)); do
     src=${links[i]} dst=${links[i + 1]}
     mkdir -p "${dst:h}"
-    [[ -e $dst && ! -L $dst ]] && mv "$dst" "$dst.bak" # first run: keep the old copy
-    ln -sfn "$DOTFILES/$src" "$dst"                    # -n: don't link inside an existing dir link
+    # first run: keep the old copy
+    [[ -e $dst && ! -L $dst ]] && mv "$dst" "$dst.bak"
+    # -n: don't link inside an existing dir link
+    ln -sfn "$DOTFILES/$src" "$dst"
   done
-  # Keep the .zsh suffix: ~/Scripts precedes /usr/bin in PATH,
-  # so ~/Scripts/defaults would shadow defaults(1)
+  # Keep .zsh: ~/Scripts precedes /usr/bin, so defaults would shadow defaults(1)
   mkdir -p ~/Scripts
   ln -sf $DOTFILES/scripts/*.zsh ~/Scripts/
+  # .js drop the suffix (names must shadow no command), npm deps: Brewfile
+  for f in $DOTFILES/scripts/*.js(N); do ln -sf $f ~/Scripts/${f:t:r}; done
   rm -f ~/Scripts/*(N-@) # drop links to scripts renamed or removed in the repo
 }
 
 packages() {
   info "Installing Brewfile packages (quiet, may take a while)..."
   local brewfile="$DOTFILES/config/brew/Brewfile"
-  # mas sees installed apps only through Spotlight; with indexing off it force-reinstalls them
+  # mas sees apps only via Spotlight; with indexing off it reinstalls them
   [[ $(mdutil -s /) == *"Indexing enabled"* ]] ||
     export HOMEBREW_BUNDLE_MAS_SKIP="$(awk '/^mas / {print $NF}' "$brewfile")"
   brew bundle -q --file="$brewfile" ||
     warn "Some packages failed, re-run: dotfiles packages"
   brew cleanup -q --prune=all
-  # Nightly update + upgrade + cleanup (domt4/autoupdate tap from the Brewfile).
-  # start refuses to run twice, delete never fails: recreating re-applies these options.
+  # Nightly upgrade (Brewfile tap); start refuses to rerun, so delete first
   brew autoupdate delete >/dev/null
   brew autoupdate start 03:00 --upgrade --cleanup --ac-only --notify-on-error
 }

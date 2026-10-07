@@ -8,13 +8,3 @@ servedir() {
 scrapeimages() {
   wget -nd -H -p -A jpg,jpeg,png,gif -e robots=off "$1"
 }
-
-# Find and kill processes by name
-pskill() {
-  pkill -f "$1"
-}
-
-# Extract archives (macOS bsdtar detects the format: tar.*, zip, 7z, rar...)
-extract() {
-  tar -xf "$1"
-}

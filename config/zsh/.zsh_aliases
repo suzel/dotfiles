@@ -33,12 +33,13 @@ alias localip='ipconfig getifaddr en0'
 alias ping='ping -c 5'
 alias ports='lsof -i -P -n | grep LISTEN'
 alias gen_pwd="LC_ALL=C tr -dc '[:alnum:]' < /dev/urandom | head -c 20 | pbcopy"
-alias tre="tree -aC -I '.git|node_modules' --dirsfirst . | less -FRNX"
 alias wget='wget -c'
+alias pskill='pkill -f'
+alias extract='tar -xf' # bsdtar detects the format: tar.*, zip, 7z, rar...
 
 # Quick Edit
-alias zshrc='${EDITOR:-code} $ZDOTDIR/.zshrc'
-alias aliasedit='${EDITOR:-code} $ZDOTDIR/.zsh_aliases'
+alias zshrc='${=EDITOR} $ZDOTDIR/.zshrc'
+alias aliasedit='${=EDITOR} $ZDOTDIR/.zsh_aliases'
 
 # Brew
 alias bup='brew update && brew upgrade && brew cleanup'

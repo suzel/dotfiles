@@ -10,8 +10,8 @@
 
 # Log Functions
 info() { echo "\033[0;34mℹ️  $*\033[0m"; }
-warn() { echo "\033[0;33m⚠️  $*\033[0m"; }
-error() { echo "\033[0;31m❌ $*\033[0m"; }
+warn() { echo "\033[0;33m⚠️  $*\033[0m" >&2; }
+error() { echo "\033[0;31m❌️ $*\033[0m" >&2; }
 success() { echo "\033[0;32m✅ $*\033[0m"; }
 
 # Close System Settings to prevent it from overriding changes
