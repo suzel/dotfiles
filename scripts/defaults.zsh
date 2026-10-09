@@ -206,7 +206,7 @@ defaults write com.apple.screencapture disable-shadow -bool true
 # =============================================================================
 
 # Show all processes by default
-defaults write com.apple.ActivityMonitor ShowCategory -int 0
+defaults write com.apple.ActivityMonitor ShowCategory -int 100
 
 # Sort by CPU usage
 defaults write com.apple.ActivityMonitor SortColumn -string "CPUUsage"
@@ -218,9 +218,6 @@ defaults write com.apple.ActivityMonitor SortDirection -int 0
 
 # Speed up window resize animation
 defaults write NSGlobalDomain NSWindowResizeTime -float 0.1
-
-# Speed up Mission Control animation
-defaults write com.apple.dock expose-animation-duration -float 0.15
 
 # =============================================================================
 # Terminal.app
@@ -242,42 +239,52 @@ defaults write com.apple.terminal ShowLineMarks -bool false
 defaults write com.apple.terminal "Default Window Settings" -string "Pro"
 defaults write com.apple.terminal "Startup Window Settings" -string "Pro"
 
-# Scroll-back buffer size
-defaults write com.apple.terminal ScrollbackLines -int 100000
-
-# Disable audible bell, use visual bell instead
-defaults write com.apple.terminal Bell -bool false
-defaults write com.apple.terminal VisualBell -bool true
-defaults write com.apple.terminal VisualBellOnlyWhenMuted -bool false
-
-# Close window without confirmation on clean exit
-defaults write com.apple.terminal ExitOnCloseAction -int 1
-
-# Don't render bold text as bright colors
-defaults write com.apple.terminal BoldTextBrightColors -bool false
-
-# Dim inactive split panes
-defaults write com.apple.terminal DimInactiveSplitPanes -bool true
-
-# Enable ANSI colors
-defaults write com.apple.terminal ANSIColors -bool true
-
-# Show active process in window title
-defaults write com.apple.terminal ShowActiveProcessInTitle -bool true
-
-# Show working directory in window title
-defaults write com.apple.terminal ShowWorkingDirectoryInTitle -bool true
-
 # Open new tabs in the same working directory
 defaults write com.apple.terminal NewTabWorkingDirectoryBehavior -int 1
 
-# Set font and font size for Pro profile
+# Set font and font size for Pro profile (also creates it on a fresh install)
 osascript -e '
 tell application "Terminal"
     set font name of settings set "Pro" to "JetBrainsMono Nerd Font"
     set font size of settings set "Pro" to 16
 end tell'
 
+# Profile settings live under "Window Settings" → Pro, not at the top level.
+# Terminal must be closed, or it writes its in-memory profile back over them.
+if [[ $TERM_PROGRAM == Apple_Terminal ]]; then
+    warn "Running inside Terminal.app: Pro profile settings skipped, rerun from another terminal."
+else
+    osascript -e 'tell application "Terminal" to quit'
+    while pgrep -xq Terminal; do sleep 0.2; done
+
+    tp=$(mktemp)
+    defaults export com.apple.Terminal "$tp"
+    pro() {
+        /usr/libexec/PlistBuddy -c "Set ':Window Settings:Pro:$1' $3" "$tp" 2>/dev/null ||
+            /usr/libexec/PlistBuddy -c "Add ':Window Settings:Pro:$1' $2 $3" "$tp"
+    }
+
+    # Scroll-back buffer size
+    pro ShouldLimitScrollback bool true
+    pro ScrollbackLines integer 100000
+
+    # Disable audible bell, use visual bell instead
+    pro Bell bool false
+    pro VisualBell bool true
+    pro VisualBellOnlyWhenMuted bool false
+
+    # Close window when the shell exits cleanly
+    pro shellExitAction integer 1
+
+    # Don't render bold text as bright colors
+    pro UseBrightBold bool false
+
+    # Show active process and working directory in window title
+    pro ShowActiveProcessInTitle bool true
+    pro ShowRepresentedURLInTitle bool true
+
+    defaults import com.apple.Terminal "$tp" && rm "$tp"
+fi
 # =============================================================================
 # Restart affected services
 # =============================================================================

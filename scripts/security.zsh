@@ -41,16 +41,6 @@ httpd_plist="/System/Library/LaunchDaemons/org.apache.httpd.plist"
 sudo launchctl bootout system "$httpd_plist" 2>/dev/null
 sudo launchctl disable system/org.apache.httpd 2>/dev/null
 
-# Disable TFTP server
-tftpd_plist="/System/Library/LaunchDaemons/com.apple.tftpd.plist"
-sudo launchctl bootout system "$tftpd_plist" 2>/dev/null
-sudo launchctl disable system/com.apple.tftpd 2>/dev/null
-
-# Disable FTP server
-ftpd_plist="/System/Library/LaunchDaemons/com.apple.ftpd.plist"
-sudo launchctl bootout system "$ftpd_plist" 2>/dev/null
-sudo launchctl disable system/com.apple.ftpd 2>/dev/null
-
 # Disable NFS server
 nfsd_plist="/System/Library/LaunchDaemons/com.apple.nfsd.plist"
 sudo launchctl bootout system "$nfsd_plist" 2>/dev/null
@@ -65,33 +55,29 @@ sudo defaults write /Library/Preferences/com.apple.mDNSResponder.plist \
 # =============================================================================
 
 info "Setting DNS to Quad9..."
-# Set DNS to Quad9 (malware blocking + encrypted DNS) on all active interfaces
+# Set DNS to Quad9 (malware blocking) on all network services.
+# Plain DNS, not encrypted: encrypted DNS needs Quad9's .mobileconfig profile.
+# Disabled services are listed with a leading "*", which networksetup rejects.
 while IFS= read -r iface; do
-  sudo networksetup -setdnsservers "$iface" 9.9.9.9 149.112.112.112
+  sudo networksetup -setdnsservers "${iface#\*}" 9.9.9.9 149.112.112.112
 done < <(networksetup -listallnetworkservices | tail -n +2)
 
 # =============================================================================
-# Captive Portal & Certificate Verification
+# Captive Portal
 # =============================================================================
 
-info "Configuring captive portal & certificate verification..."
-# Disable captive portal (prevents auto-connecting to rogue hotspots)
+info "Disabling captive portal assistant..."
+# Don't auto-open hotspot login pages (log in via the browser instead)
 sudo defaults write \
   /Library/Preferences/SystemConfiguration/com.apple.captive.control \
   Active -bool false
-
-# Enable OCSP certificate revocation checking (system-wide)
-sudo defaults write /Library/Preferences/com.apple.security.revocation \
-  OCSPStyle -string RequireIfPresent
-sudo defaults write /Library/Preferences/com.apple.security.revocation \
-  CRLStyle -string RequireIfPresent
 
 # =============================================================================
 # FileVault (Disk Encryption)
 # =============================================================================
 
 info "Enabling FileVault..."
-sudo fdesetup enable 2>/dev/null
+fdesetup isactive >/dev/null || sudo fdesetup enable
 
 # =============================================================================
 # Gatekeeper
@@ -105,12 +91,14 @@ sudo spctl --global-enable || error "Failed to enable Gatekeeper"
 # =============================================================================
 
 info "Enabling automatic updates..."
-defaults write com.apple.SoftwareUpdate AutomaticCheckEnabled -bool true
-defaults write com.apple.SoftwareUpdate AutomaticDownload -bool true
-defaults write com.apple.SoftwareUpdate CriticalUpdateInstall -bool true
-defaults write com.apple.SoftwareUpdate \
-  AutomaticallyInstallMacOSUpdates -bool true
-defaults write com.apple.commerce AutoUpdate -bool true
+# softwareupdated reads the system domain, not the user one
+su_pref="/Library/Preferences/com.apple.SoftwareUpdate"
+sudo defaults write "$su_pref" AutomaticCheckEnabled -bool true
+sudo defaults write "$su_pref" AutomaticDownload -bool true
+sudo defaults write "$su_pref" CriticalUpdateInstall -bool true
+sudo defaults write "$su_pref" ConfigDataInstall -bool true
+sudo defaults write "$su_pref" AutomaticallyInstallMacOSUpdates -bool true
+sudo defaults write /Library/Preferences/com.apple.commerce AutoUpdate -bool true
 softwareupdate --schedule on
 
 # =============================================================================
@@ -119,8 +107,10 @@ softwareupdate --schedule on
 
 info "Configuring screen lock..."
 # Require password immediately after sleep or screen saver
-defaults write com.apple.screensaver askForPassword -int 1
-defaults write com.apple.screensaver askForPasswordDelay -int 0
+# (com.apple.screensaver askForPassword is ignored since macOS 10.13.4)
+sysadminctl -screenLock status 2>&1 | grep -q immediate ||
+  sudo sysadminctl -screenLock immediate -password - ||
+  error "Failed to set screen lock"
 
 # =============================================================================
 # Remote Access
@@ -156,7 +146,10 @@ sudo defaults write "$nat_pref" NAT -dict Enabled -int 0 2>/dev/null
 
 info "Configuring privacy & analytics..."
 defaults write com.apple.CrashReporter DialogType none
-defaults write com.apple.CrashReporter AutoSubmit -bool false
+# Don't share Mac analytics with Apple or app developers
+diag_pref="/Library/Application Support/CrashReporter/DiagnosticMessagesHistory.plist"
+sudo defaults write "$diag_pref" AutoSubmit -bool false
+sudo defaults write "$diag_pref" ThirdPartyDataSubmit -bool false
 defaults write com.apple.AdLib \
   allowApplePersonalizedAdvertising -bool false
 defaults write com.apple.AdLib \
@@ -209,7 +202,6 @@ defaults write com.apple.assistant.support "Assistant Enabled" -bool false
 defaults write com.apple.assistant.support \
   "Siri Data Sharing Opt-In Status" -int 2
 defaults write com.apple.Siri StatusMenuVisible -bool false
-defaults write com.apple.Siri UserHasDeclinedEnable -bool true
 
 
 # =============================================================================
