@@ -1,23 +1,26 @@
-# EditorConfig helps developers define and maintain consistent
-# coding styles between different editors and IDEs
-# http://editorconfig.org
-
+# Top-most config
 root = true
 
+# All files
 [*]
-# We recommend you to keep these unchanged
 charset = utf-8
 end_of_line = lf
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-# Change these settings to your own preference
+# Indentation
 indent_style = space
 indent_size = 2
 
+# Markdown hard breaks
 [*.md]
 trim_trailing_whitespace = false
 
+# Git config tabs
+[config/git/config*]
+indent_style = tab
+
+# Zsh (shfmt)
 [{*.zsh,.z*}]
 shell_variant = zsh
 switch_case_indent = true

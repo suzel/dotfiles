@@ -1,7 +1,7 @@
-# Shell integration (shell is auto-detected)
+# Shell integration
 shell-integration-features = no-cursor,sudo,title,ssh-env,ssh-terminfo
 
-# Font (Nerd Font icons come from Ghostty's built-in Symbols Nerd Font)
+# Font
 font-family = Ioskeley Mono Term
 font-size = 14
 font-feature = zero
@@ -11,11 +11,14 @@ theme = light:GitHub Light Default,dark:GitHub Dark Default
 background-blur = 10
 background-opacity = 0.95
 
-# Cursor preferences
+# Low latency
+window-vsync = false
+
+# Cursor
 cursor-style = block
 cursor-style-blink = true
 
-# Window size and padding
+# Window
 window-save-state = always
 window-padding-x = 16
 window-padding-y = 16
@@ -24,25 +27,24 @@ window-height = 40
 window-padding-balance = true
 window-theme = system
 
-# Minimal macOS titlebar for cleaner appearance
+# Titlebar
 macos-titlebar-style = transparent
 macos-titlebar-proxy-icon = hidden
 
+# Behavior
 working-directory = home
 confirm-close-surface = false
 
 # Mouse
 mouse-hide-while-typing = true
-# Bytes per surface (100 MB), not lines
-scrollback-limit = 100000000
 
-# Split management
+# Splits
 keybind = ctrl+shift+z=toggle_split_zoom
 keybind = ctrl+shift+equal=equalize_splits
 
-# Left Option as Alt (Claude Code / shell shortcuts), right Option keeps special chars
+# Option key
 macos-option-as-alt = left
 
-# Custom icon
+# App icon
 macos-icon = custom
 macos-custom-icon = ~/.config/ghostty/ayu-dark.png

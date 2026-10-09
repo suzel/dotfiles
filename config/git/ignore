@@ -38,9 +38,16 @@ __pycache__/
 .pnpm-store/
 node_modules/
 
+# Go
+go.work
+go.work.sum
+__debug_bin*
+*.test
+
 # Environment
 .env
 .env.*
+!.env.example
 
 # VSCode
 .vscode/*
@@ -49,3 +56,7 @@ node_modules/
 !.vscode/launch.json
 !.vscode/extensions.json
 !.vscode/*.code-snippets
+
+# Claude Code
+**/.claude/settings.local.json
+CLAUDE.local.md

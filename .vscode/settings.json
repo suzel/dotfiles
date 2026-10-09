@@ -1,6 +1,19 @@
 {
+  "files.associations": {
+    "**/config/git/config*": "properties",
+    "**/config/git/ignore": "ignore",
+    "**/config/ghostty/config": "properties",
+    "**/config/zsh/.zsh_*": "shellscript",
+    "Brewfile": "ruby"
+  },
   "[shellscript]": {
     "editor.defaultFormatter": "mkhl.shfmt",
     "editor.formatOnSave": true
+  },
+  "[json][jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2
   }
 }

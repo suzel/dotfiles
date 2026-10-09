@@ -4,21 +4,16 @@
 [includeIf "gitdir:~/Projects/"]
 	path = ~/.config/git/config.local
 
-[format]
-	pretty = oneline
-
-[color]
-	ui = true
-
 [core]
 	autocrlf = input
 	editor = code --wait
 	fsmonitor = true
 	untrackedCache = true
-	whitespace = fix,-indent-with-non-tab,trailing-space
+
+[apply]
+	whitespace = fix
 
 [push]
-	default = simple
 	autoSetupRemote = true
 
 [pull]
@@ -27,7 +22,6 @@
 [fetch]
 	prune = true
 	pruneTags = true
-	fsckobjects = true
 
 [rebase]
 	autoSquash = true
@@ -41,8 +35,9 @@
 [init]
 	defaultBranch = main
 
-[credential]
-	helper = osxkeychain
+# Fetch stays on https (no login needed), push uses the SSH key
+[url "git@github.com:"]
+	pushInsteadOf = https://github.com/
 
 [alias]
 	a = add --all
@@ -59,12 +54,11 @@
 	fu = fetch upstream
 	g = grep -p
 	l = log --oneline
-	lg = log --oneline --graph --decorate
+	lg = log --oneline --graph
 	ls = ls-files
 	m = merge
 	o = checkout
 	ob = checkout -b
-	pr = prune -v
 	ps = push
 	psf = push --force-with-lease --force-if-includes
 	psu = push -u
@@ -81,18 +75,20 @@
 	s = status
 	sb = status -s -b
 	w = show
-	wp = show -p
 	wr = show -p --no-color
 	# Utility aliases
 	amend = commit --amend
 	unstage = reset HEAD --
 	undo = reset --soft HEAD^
 	stash-all = stash push --include-untracked
-	up = "!git switch $(git symbolic-ref refs/remotes/origin/HEAD --short | sed 's|origin/||') && git pull --prune"
+	up = "!git switch $(git symbolic-ref refs/remotes/origin/HEAD --short | sed 's|origin/||') && git pull"
 
 [merge]
 	conflictstyle = zdiff3
 	tool = vscode
+
+[mergetool]
+	keepBackup = false
 
 [mergetool "vscode"]
 	cmd = code --wait --merge $REMOTE $LOCAL $BASE $MERGED
@@ -102,8 +98,10 @@
 	colorMoved = plain
 	colorMovedWS = allow-indentation-change
 	mnemonicPrefix = true
-	renames = true
 	tool = vscode
+
+[difftool]
+	prompt = false
 
 [difftool "vscode"]
 	cmd = code --wait --diff $LOCAL $REMOTE
@@ -125,9 +123,6 @@
 
 [transfer]
 	fsckobjects = true
-
-[receive]
-	fsckObjects = true
 
 [status]
 	showUntrackedFiles = all

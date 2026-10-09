@@ -1,29 +1,46 @@
+# Compact prompt
 add_newline = false
 
-format = """$directory$character"""
-command_timeout = 1000
+# Shown modules
+format = """$directory$git_branch$golang$nodejs${custom.svelte}$character"""
 
+# Prompt arrow
 [character]
-vicmd_symbol = "[N] >>>"
 success_symbol = '[➜](bold green)'
+error_symbol = '[➜](bold red)'
 
+# Git branch
 [git_branch]
-format = '[$symbol$branch(:$remote_branch)]($style)'
+symbol = "\ue702 "
+format = '[$symbol$branch(:$remote_branch)]($style) '
 
+# AWS profile
 [aws]
 format = '[$symbol(profile: "$profile" )(\(region: $region\) )]($style)'
-disabled = false
 style = 'bold blue'
 symbol = " "
 
+# Go icon
 [golang]
 format = '[ ](bold cyan)'
 
+# Node icon
+[nodejs]
+detect_folders = ['node_modules', '!.svelte-kit']
+format = '[$symbol]($style)'
+
+# Svelte icon
+[custom.svelte]
+detect_folders = ['.svelte-kit']
+symbol = " "
+style = 'bold #ff3e00'
+format = '[$symbol]($style)'
+
+# Kubernetes context
 [kubernetes]
 symbol = '☸ '
-disabled = true
-detect_files = ['Dockerfile']
 format = '[$symbol$context( \($namespace\))]($style) '
 
+# Docker context
 [docker_context]
 disabled = true
