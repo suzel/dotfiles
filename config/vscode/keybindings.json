@@ -30,22 +30,9 @@
     "command": "editor.action.fontZoomIn"
   },
   {
-    "key": "enter",
-    "command": "markdown.showPreviewToSide",
-    "when": "resourceExtname == .md && explorerViewletVisible && filesExplorerFocus"
-  },
-  {
     "key": "shift+alt+down",
     "command": "-editor.action.copyLinesDownAction",
     "when": "editorTextFocus && !editorReadonly"
-  },
-  {
-    "key": "shift+enter",
-    "command": "workbench.action.terminal.sendSequence",
-    "args": {
-      "text": "\\\r\n"
-    },
-    "when": "terminalFocus"
   },
   {
     "key": "cmd+numpad2",

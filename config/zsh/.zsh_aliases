@@ -35,7 +35,7 @@ alias ports='lsof -i -P -n | grep LISTEN'
 alias gen_pwd="LC_ALL=C tr -dc '[:alnum:]' < /dev/urandom | head -c 20 | pbcopy"
 alias wget='wget -c'
 alias pskill='pkill -f'
-alias extract='tar -xf' # bsdtar detects the format: tar.*, zip, 7z, rar...
+alias extract='tar -xf'
 
 # Quick Edit
 alias zshrc='${=EDITOR} $ZDOTDIR/.zshrc'

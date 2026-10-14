@@ -135,10 +135,7 @@
     "editor.wordWrap": "on"
   },
   "[svelte]": {
-    "editor.defaultFormatter": "svelte.svelte-vscode",
-    "js/ts.preferences.autoImportFileExcludePatterns": [
-      "**/node_modules/@types/node/**"
-    ]
+    "editor.defaultFormatter": "svelte.svelte-vscode"
   },
   "[go]": {
     "editor.defaultFormatter": "golang.go"
