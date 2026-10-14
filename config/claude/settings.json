@@ -1,0 +1,130 @@
+{
+  "skillListingMaxDescChars": 400,
+  "skillListingBudgetFraction": 0.05,
+  "env": {
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "true",
+    "ENABLE_TOOL_SEARCH": "true",
+    "USE_BUILTIN_RIPGREP": "0",
+    "CLAUDE_CODE_DISABLE_AUTO_MEMORY": "true",
+    "CLAUDE_CODE_DISABLE_GIT_INSTRUCTIONS": "true",
+    "CLAUDE_CODE_ENABLE_TASKS": "true",
+    "CLAUDE_CODE_NO_FLICKER": "true",
+    "DISABLE_COMPACT": "false",
+    "DISABLE_INSTALLATION_CHECKS": "true",
+    "ENABLE_LSP_TOOL": "true",
+    "FORCE_AUTOUPDATE_PLUGINS": "true",
+    "MAX_MCP_OUTPUT_TOKENS": "19999",
+    "PONYTAIL_DEFAULT_MODE": "ultra"
+  },
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
+  "permissions": {
+    "allow": [
+      "Bash(mkdir:*)",
+      "Bash(go:*)",
+      "Bash(ls:*)",
+      "Bash(git:*)",
+      "Bash(mv:*)",
+      "Bash(echo:*)",
+      "Bash(sed:*)",
+      "Bash(source:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)",
+      "Bash(npm:*)",
+      "Bash(npx:*)",
+      "Bash(pkill:*)",
+      "Bash(touch:*)",
+      "Bash(deadcode:*)",
+      "Bash(sqlite3:*)",
+      "Bash(curl:*)",
+      "Bash(grep:*)",
+      "Bash(rg:*)",
+      "Bash(chmod:*)",
+      "Bash(lsof:*)",
+      "Bash(make:*)",
+      "Bash(PORT=:*)",
+      "Bash(find:*)",
+      "Bash(docker:*)",
+      "Bash(poetry:*)",
+      "Bash(python:*)",
+      "Bash(python3:*)"
+    ],
+    "defaultMode": "auto"
+  },
+  "model": "opus",
+  "disableClaudeAiConnectors": true,
+  "skillOverrides": {
+    "dataviz": "user-invocable-only",
+    "artifact-design": "user-invocable-only",
+    "artifact-diagramming": "user-invocable-only",
+    "artifact-capabilities": "user-invocable-only",
+    "claude-api": "user-invocable-only",
+    "schedule": "user-invocable-only",
+    "workflow-authoring": "user-invocable-only",
+    "ponytail:ponytail-gain": "user-invocable-only",
+    "ponytail:ponytail-help": "user-invocable-only",
+    "ponytail:ponytail-debt": "user-invocable-only",
+    "keybindings-help": "user-invocable-only",
+    "fewer-permission-prompts": "user-invocable-only",
+    "loop": "user-invocable-only",
+    "init": "user-invocable-only"
+  },
+  "hooks": {
+    "PreToolUse": []
+  },
+  "enabledPlugins": {
+    "typescript-lsp@claude-plugins-official": true,
+    "gopls-lsp@claude-plugins-official": true,
+    "svelte-lsp@svelte-lsp": true,
+    "svelte@svelte": false,
+    "ponytail@ponytail": true,
+    "cc-plugin-plugin-authoring@builtin": false
+  },
+  "extraKnownMarketplaces": {
+    "svelte-lsp": {
+      "source": {
+        "source": "github",
+        "repo": "RA1NCS/svelte-lsp"
+      }
+    },
+    "svelte": {
+      "source": {
+        "source": "github",
+        "repo": "sveltejs/ai-tools"
+      }
+    },
+    "ponytail": {
+      "source": {
+        "source": "github",
+        "repo": "DietrichGebert/ponytail"
+      }
+    }
+  },
+  "outputStyle": "default",
+  "viewMode": "verbose",
+  "spinnerTipsEnabled": false,
+  "alwaysThinkingEnabled": true,
+  "modelSettings": {
+    "claude-opus-5": {
+      "effortLevel": "xhigh"
+    },
+    "claude-opus-5-5": {
+      "effortLevel": "xhigh"
+    },
+    "claude-sonnet-5-5": {
+      "effortLevel": "xhigh"
+    }
+  },
+  "prefersReducedMotion": true,
+  "autoMemoryEnabled": false,
+  "autoDreamEnabled": false,
+  "showThinkingSummaries": true,
+  "skipDangerousModePermissionPrompt": true,
+  "theme": "dark-ansi",
+  "preferredNotifChannel": "auto",
+  "autoCompactEnabled": false,
+  "showTurnDuration": true,
+  "terminalProgressBarEnabled": true
+}

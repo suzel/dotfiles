@@ -35,6 +35,12 @@ links=(
   config/ghostty ~/.config/ghostty
   config/starship/starship.toml ~/.config/starship.toml
 
+  config/claude/CLAUDE.md ~/.claude/CLAUDE.md
+  config/claude/settings.json ~/.claude/settings.json
+  config/claude/rules ~/.claude/rules
+  config/claude/skills ~/.claude/skills
+  config/claude/agents ~/.claude/agents
+
   config/vscode/argv.json ~/.vscode/argv.json
   config/vscode/settings.json $CODE_USER/settings.json
   config/vscode/keybindings.json $CODE_USER/keybindings.json
@@ -66,7 +72,7 @@ config() {
   for ((i = 1; i < ${#links}; i += 2)); do
     src=${links[i]} dst=${links[i + 1]}
     mkdir -p "${dst:h}"
-    [[ -e $dst && ! -L $dst ]] && mv "$dst" "$dst.bak"
+    [[ -e $dst && ! -L $dst ]] && rm -rf "$dst"
     ln -sfn "$DOTFILES/$src" "$dst"
   done
   mkdir -p ~/Scripts

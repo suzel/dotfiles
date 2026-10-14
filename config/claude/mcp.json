@@ -1,0 +1,73 @@
+{
+  "mcpServers": {
+    "chrome-devtools": {
+      "command": "npx",
+      "args": ["chrome-devtools-mcp@latest"]
+    },
+    "context7": {
+      "type": "http",
+      "url": "https://mcp.context7.com/mcp",
+      "headers": { "CONTEXT7_API_KEY": "${CONTEXT7_API_KEY}" }
+    },
+    "figma-dev-mode-mcp-server": {
+      "type": "http",
+      "url": "http://127.0.0.1:3845/mcp"
+    },
+    "firecrawl": {
+      "command": "npx",
+      "args": ["-y", "firecrawl-mcp"],
+      "env": { "FIRECRAWL_API_KEY": "${FIRECRAWL_API_KEY}" }
+    },
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp",
+      "headers": { "Authorization": "Bearer ${GITHUB_PAT}" }
+    },
+    "grep-mcp": {
+      "type": "http",
+      "url": "https://mcp.grep.app"
+    },
+    "mobbin": {
+      "type": "http",
+      "url": "https://api.mobbin.com/mcp"
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["@playwright/mcp@latest"]
+    },
+    "Ref": {
+      "type": "http",
+      "url": "https://api.ref.tools/mcp",
+      "headers": { "x-ref-api-key": "${REF_API_KEY}" }
+    },
+    "semble": {
+      "command": "uvx",
+      "args": ["--from", "semble[mcp]", "semble"]
+    },
+    "shadcn": {
+      "command": "npx",
+      "args": ["shadcn@latest", "mcp"]
+    },
+    "stripe": {
+      "type": "http",
+      "url": "https://mcp.stripe.com/"
+    },
+    "svelte-llm": {
+      "type": "http",
+      "url": "https://svelte-llm.stanislav.garden/mcp/mcp"
+    },
+    "web-fetch": {
+      "command": "npx",
+      "args": ["-y", "fetcher-mcp"]
+    },
+    "web-search": {
+      "command": "npx",
+      "args": ["-y", "open-websearch"],
+      "env": {
+        "MODE": "stdio",
+        "DEFAULT_SEARCH_ENGINE": "duckduckgo",
+        "ALLOWED_SEARCH_ENGINES": "duckduckgo,bing,exa"
+      }
+    }
+  }
+}
