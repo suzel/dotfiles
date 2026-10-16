@@ -17,7 +17,7 @@
 
   // Chat
   "chat.agentsControl.enabled": "compact",
-  "chat.unifiedAgentsBar.enabled": true,
+  "chat.disableAIFeatures": true,
   "chat.titleBar.openInAgentsWindow.enabled": false,
 
   // Claude Code
@@ -41,6 +41,7 @@
   "editor.quickSuggestionsDelay": 0,
   "editor.snippetSuggestions": "top",
   "editor.tabCompletion": "onlySnippets",
+  "editor.tabSize": 2,
   "editor.wordBasedSuggestions": "off",
   "editor.foldingStrategy": "indentation",
   "editor.cursorBlinking": "phase",
@@ -174,7 +175,6 @@
   "svelte.plugin.svelte.defaultScriptLanguage": "ts",
 
   // Git
-  "git.autofetch": true,
   "git.confirmSync": false,
   "git.enableSmartCommit": true,
   "git.ignoreMissingGitWarning": true,
@@ -240,9 +240,9 @@
   "workbench.activityBar.compact": true,
   "workbench.activityBar.location": "top",
   "workbench.iconTheme": "symbols",
-  "workbench.preferredDarkColorTheme": "Cursor Dark Midnight",
 
   // Others
   "telemetry.telemetryLevel": "off",
-  "update.showReleaseNotes": false
+  "update.showReleaseNotes": false,
+  "workbench.preferredDarkColorTheme": "Cursor Dark Midnight"
 }

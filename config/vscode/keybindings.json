@@ -35,6 +35,57 @@
     "when": "editorTextFocus && !editorReadonly"
   },
   {
+    "key": "cmd+enter",
+    "command": "workbench.action.terminal.runSelectedText",
+    "when": "editorTextFocus && !notebookEditorFocused"
+  },
+  {
+    "key": "ctrl+cmd+enter",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        "editor.action.clipboardCopyAction",
+        {
+          "command": "editor.action.insertSnippet",
+          "args": { "langId": "typescript", "name": "Drizzle From SQL" }
+        }
+      ]
+    },
+    "when": "editorHasSelection && editorLangId == typescript"
+  },
+  {
+    "key": "ctrl+cmd+enter",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        "cursorHome",
+        "cursorEndSelect",
+        "editor.action.clipboardCopyAction",
+        {
+          "command": "editor.action.insertSnippet",
+          "args": { "langId": "typescript", "name": "Drizzle From SQL" }
+        }
+      ]
+    },
+    "when": "!editorHasSelection && editorLangId == typescript"
+  },
+  {
+    "key": "ctrl+cmd+enter",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        "cursorHome",
+        "cursorEndSelect",
+        "editor.action.clipboardCopyAction",
+        {
+          "command": "editor.action.insertSnippet",
+          "args": { "langId": "typescript", "name": "Drizzle To Table" }
+        }
+      ]
+    },
+    "when": "!editorHasSelection && editorLangId == typescript && resourcePath =~ /\\/db\\/schema\\//"
+  },
+  {
     "key": "cmd+numpad2",
     "command": "workbench.action.terminal.fontZoomIn",
     "when": "terminalProcessSupported"

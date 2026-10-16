@@ -1,10 +1,18 @@
-# Working style
+# Guides
 
-- Keep going without stopping to check in, unless you truly need me or the next step is destructive.
-- Time matters here: do not spend time that can be avoided, and the earlier a correct result is
-  obtained, the better.
-- Once you have answered something, treat that answer as done. On later turns, focus on what I'm
-  asking now, and don't go back over an earlier answer unless I ask about it, point out a problem
-  with it, or a later step shows it was wrong.
-- Before changing code, read what the change touches, including callers, tests and config the task
-  doesn't mention.
+IMPORTANT: Before writing, editing or planning code in these areas, including plans and specs with
+code examples, open the matching file with the Read tool, not Bash. Skip files whose rules are
+already in context.
+
+- Zsh scripts: ~/.claude/guides/zsh.md
+- TypeScript (`.ts`, `.tsx`, `.svelte`): ~/.claude/guides/typescript.md
+- Svelte components: ~/.claude/guides/svelte.md
+- SvelteKit routes, load functions, form actions, hooks: ~/.claude/guides/sveltekit.md
+- HTML, CSS and UI design: ~/.claude/guides/frontend-design.md
+- Go: ~/.claude/guides/go.md
+- GitHub Actions workflows: ~/.claude/guides/ci.md
+- Dockerfiles: ~/.claude/guides/docker.md
+- VS Code snippets (`.code-snippets`): ~/.claude/guides/vscode-snippets.md
+
+@~/.claude/guides/workflows.md
+@~/.claude/guides/preferences.md

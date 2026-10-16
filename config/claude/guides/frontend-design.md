@@ -1,8 +1,3 @@
----
-paths:
-  - "**/*.{svelte,css,html}"
----
-
 # Frontend design
 
 Unless the task or the project's design asks for them, don't use these default styles:

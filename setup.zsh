@@ -37,7 +37,7 @@ links=(
 
   config/claude/CLAUDE.md ~/.claude/CLAUDE.md
   config/claude/settings.json ~/.claude/settings.json
-  config/claude/rules ~/.claude/rules
+  config/claude/guides ~/.claude/guides
   config/claude/skills ~/.claude/skills
   config/claude/agents ~/.claude/agents
 
@@ -45,6 +45,7 @@ links=(
   config/vscode/settings.json $CODE_USER/settings.json
   config/vscode/keybindings.json $CODE_USER/keybindings.json
   config/vscode/tasks.json $CODE_USER/tasks.json
+  config/vscode/snippets $CODE_USER/snippets
 )
 
 # Homebrew + CLT
@@ -77,7 +78,7 @@ config() {
   done
   mkdir -p ~/Scripts
   ln -sf $DOTFILES/scripts/*.zsh ~/Scripts/
-  rm -f ~/Scripts/*(N-@)
+  rm -f ~/Scripts/*(N-@) ~/.claude/*(N-@)
 }
 
 # Brewfile install

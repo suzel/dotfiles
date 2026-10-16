@@ -1,0 +1,88 @@
+{
+	"Pay Setup": {
+		"scope": "typescript",
+		"prefix": [
+			"pay::setup",
+			"setup"
+		],
+		"include": "**/lib/server/**",
+		"description": "better-auth Stripe plugin in auth.ts plugins: customer on sign-up, subscription plans, webhook",
+		"body": [
+			"// TODO: pnpm add @better-auth/stripe stripe@22 (the plugin supports stripe 18–22)",
+			"// TODO: imports: { stripe } from '@better-auth/stripe'; Stripe from 'stripe'; { STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET } from '\\$app/env/private' (declare both in src/env.ts)",
+			"// TODO: then `pnpm auth:schema` and push: adds the subscription table and user.stripeCustomerId",
+			"// TODO: Stripe dashboard → Webhooks: <ORIGIN>/api/auth/stripe/webhook with checkout.session.completed, customer.subscription.created/updated/deleted; locally: stripe listen --forward-to localhost:5173/api/auth/stripe/webhook",
+			"stripe({",
+			"\tstripeClient: new Stripe(STRIPE_SECRET_KEY),",
+			"\tstripeWebhookSecret: STRIPE_WEBHOOK_SECRET,",
+			"\tcreateCustomerOnSignUp: true,",
+			"\tsubscription: {",
+			"\t\tenabled: true,",
+			"\t\tplans: [{ name: '${1:pro}', priceId: '${2:price_123}' }]",
+			"\t}",
+			"})$0"
+		]
+	},
+	"Pay Checkout": {
+		"scope": "typescript",
+		"prefix": [
+			"pay::checkout",
+			"checkout"
+		],
+		"include": "*.remote.ts",
+		"description": "upgrade remote form: Stripe Checkout for a plan (better-auth Stripe plugin)",
+		"body": [
+			"// TODO: needs pay::setup; a page with a session (kit::hooks-guard), not logged in → 401",
+			"// TODO: button: <form {...upgrade}><button {...upgrade.fields.plan.as('submit', '${1:pro}')}>Upgrade</button></form>",
+			"export const upgrade = form(z.object({ plan: z.enum(['$1']) }), async ({ plan }) => {",
+			"\tconst { url } = await auth.api.upgradeSubscription({",
+			"\t\tbody: { plan, successUrl: '${2:/account}', cancelUrl: '${3:/pricing}' },",
+			"\t\theaders: getRequestEvent().request.headers",
+			"\t});",
+			"\tif (!url) error(502, 'Stripe did not return a checkout page');",
+			"\t// SvelteKit 3 only redirects to other sites listed in external",
+			"\tredirect(303, url, { external: ['https://checkout.stripe.com'] });",
+			"});$0"
+		]
+	},
+	"Pay Portal": {
+		"scope": "typescript",
+		"prefix": [
+			"pay::portal",
+			"portal"
+		],
+		"include": "*.remote.ts",
+		"description": "billingPortal remote form: Stripe customer portal (invoices, card, cancel)",
+		"body": [
+			"// TODO: needs pay::setup; button: <form {...billingPortal}><button>Manage billing</button></form>",
+			"// Stripe's page for invoices, payment method, plan change and cancellation",
+			"export const billingPortal = form(async () => {",
+			"\tconst { url } = await auth.api.createBillingPortal({",
+			"\t\tbody: { returnUrl: '${1:/account}' },",
+			"\t\theaders: getRequestEvent().request.headers",
+			"\t});",
+			"\tredirect(303, url, { external: ['https://billing.stripe.com'] });",
+			"});$0"
+		]
+	},
+	"Pay Require": {
+		"scope": "typescript",
+		"prefix": [
+			"pay::require",
+			"require"
+		],
+		"include": "**/lib/server/**",
+		"exclude": "**/lib/server/db/schema/**",
+		"description": "requirePlan(): the active subscription to a plan, or 403",
+		"body": [
+			"// TODO: needs pay::setup; use in remote functions, load and +server.ts: const subscription = await requirePlan();",
+			"/** The user's active (or trialing) subscription to the plan, or 403 */",
+			"export async function requirePlan(plan = '${1:pro}') {",
+			"\tconst subscriptions = await auth.api.listActiveSubscriptions({ headers: getRequestEvent().request.headers });",
+			"\tconst subscription = subscriptions.find((s) => s.plan === plan);",
+			"\tif (!subscription) error(403, 'Upgrade required');",
+			"\treturn subscription;",
+			"}$0"
+		]
+	}
+}

@@ -1,0 +1,625 @@
+{
+	"Drizzle Table": {
+		"scope": "typescript",
+		"prefix": "drizzle::table",
+		"include": "**/lib/server/db/schema/**",
+		"isFileTemplate": true,
+		"description": "Creates a drizzle pgTable named after the file, with zod schemas and type",
+		"body": [
+			"import { pgTable, text } from 'drizzle-orm/pg-core';",
+			"import { createInsertSchema, createUpdateSchema } from 'drizzle-zod';",
+			"import { z } from 'zod';",
+			"import { common } from './common';",
+			"",
+			"// TODO: run `pnpm add -D drizzle-zod zod` if missing",
+			"// TODO: create ./common.ts with `drizzle::common` if missing (once per project)",
+			"// TODO: add `export * from './$TM_FILENAME_BASE';` to schema/index.ts, then run `pnpm db:push`",
+			"",
+			"export const ${1:$TM_FILENAME_BASE} = pgTable('${2:$TM_FILENAME_BASE}', {",
+			"\t...common,",
+			"\t${3:name}: text('${3}').notNull()$0",
+			"});",
+			"",
+			"export const ${1}InsertSchema = createInsertSchema($1, {",
+			"\t$3: (s) => s.min(1)",
+			"}).omit({",
+			"\tcreatedAt: true,",
+			"\tupdatedAt: true",
+			"});",
+			"",
+			"export const ${1}UpdateSchema = createUpdateSchema($1, {",
+			"\t$3: (s) => s.min(1)",
+			"})",
+			"\t.omit({",
+			"\t\tcreatedAt: true,",
+			"\t\tupdatedAt: true",
+			"\t})",
+			"\t.extend({ id: z.number() });",
+			"",
+			"export type ${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/} = typeof $1.\\$inferSelect;",
+			""
+		]
+	},
+	// drizzle::to-table: a schema file from a copied column list, e.g. title:200!*, body?, authorId>user~, views:int=0
+	// Item: name[:type][flags][>table][=default]; items are split by commas, spaces, newlines or --
+	// Flags, anywhere before =: ? nullable, ! .unique(), * index(), ~ onDelete cascade (with >table)
+	// Types: 200 varchar(200), 10.2 numeric(10, 2), int, bool, date (timestamp), dateonly (date), json (jsonb),
+	//   float (doublePrecision), decimal (numeric(10, 2)), bigint; any other drizzle type is used as written
+	// No type: text, or integer for a >table other than user; =value gets quotes on string columns
+	// Each ${CLIPBOARD/…} does one job: an import, a table import, the columns, the indexes or the zod refinements.
+	// Their output is not re-indented by VS Code, so it is written with 2 spaces.
+	// Every regex starts with ^(?=[\s\S]*[^\w\s,:.?!*~>='"-])[\s\S]*| : copied code matches once and adds nothing.
+	// Column regex groups: 1 index layout (+2 spaces); 2-9 line breaks before .notNull(), .unique(), .references(),
+	//   .default() (each without/with the index layout); 10 not null; 11 no type and >table: integer; 12 no type: text;
+	//   13 ~; 14/15 =value quoted/raw; 16 name; 17 !; 18/19 numeric precision/scale; 20 varchar length;
+	//   21-28 int, bool, date, dateonly, json, float, decimal, bigint; 29 other type; 30 >table;
+	//   31-33 =now, ='quoted', =plain; 34 another item follows
+	"Drizzle To Table": {
+		"scope": "typescript",
+		"prefix": "drizzle::to-table",
+		"include": "**/lib/server/db/schema/**",
+		"isFileTemplate": true,
+		"description": "Creates a drizzle pgTable named after the file, with zod schemas and type, from a copied column list: name:type, ? nullable, ! unique, * index, >table foreign key, ~ cascade, =default; types 200 (varchar), 10.2 (numeric), int, bool, date, dateonly, json, float, decimal, bigint or any drizzle type",
+		"body": [
+			"import { ${CLIPBOARD/^(?=[\\s\\S]*[^\\w\\s,:.?!*~>='\"-])[\\s\\S]*|[\\s\\S]*?(:bigint\\b)[\\s\\S]*|[\\s\\S]*/${1:+bigint, }/}${CLIPBOARD/^(?=[\\s\\S]*[^\\w\\s,:.?!*~>='\"-])[\\s\\S]*|[\\s\\S]*?(:bool(?:ean)?\\b)[\\s\\S]*|[\\s\\S]*/${1:+boolean, }/}${CLIPBOARD/^(?=[\\s\\S]*[^\\w\\s,:.?!*~>='\"-])[\\s\\S]*|[\\s\\S]*?(:dateonly\\b)[\\s\\S]*|[\\s\\S]*/${1:+date, }/}${CLIPBOARD/^(?=[\\s\\S]*[^\\w\\s,:.?!*~>='\"-])[\\s\\S]*|[\\s\\S]*?(:(?:float|doublePrecision)\\b)[\\s\\S]*|[\\s\\S]*/${1:+doublePrecision, }/}${CLIPBOARD/^(?=[\\s\\S]*[^\\w\\s,:.?!*~>='\"-])[\\s\\S]*|[\\s\\S]*?(\\*)[\\s\\S]*|[\\s\\S]*/${1:+index, }/}${CLIPBOARD/^(?=[\\s\\S]*[^\\w\\s,:.?!*~>='\"-])[\\s\\S]*|[\\s\\S]*?(:int(?:eger)?\\b|(?<=^|[,\\s]|--)\\w+[?!*~]*>(?!user\\b)\\w)[\\s\\S]*|[\\s\\S]*/${1:+integer, }/}${CLIPBOARD/^(?=[\\s\\S]*[^\\w\\s,:.?!*~>='\"-])[\\s\\S]*|[\\s\\S]*?(:jsonb?\\b)[\\s\\S]*|[\\s\\S]*/${1:+jsonb, }/}${CLIPBOARD/^(?=[\\s\\S]*[^\\w\\s,:.?!*~>='\"-])[\\s\\S]*|[\\s\\S]*?(:(?:decimal|numeric|\\d+\\.\\d+)\\b)[\\s\\S]*|[\\s\\S]*/${1:+numeric, }/}pgTable${CLIPBOARD/^(?=[\\s\\S]*[^\\w\\s,:.?!*~>='\"-])[\\s\\S]*|[\\s\\S]*?(:text\\b|(?<=^|[,\\s]|--)\\w+[?!*~]*(?![\\w?!*~:]|>(?!user\\b)\\w))[\\s\\S]*|[\\s\\S]*/${1:+, text}/}${CLIPBOARD/^(?=[\\s\\S]*[^\\w\\s,:.?!*~>='\"-])[\\s\\S]*|[\\s\\S]*?(:time\\b)[\\s\\S]*|[\\s\\S]*/${1:+, time}/}${CLIPBOARD/^(?=[\\s\\S]*[^\\w\\s,:.?!*~>='\"-])[\\s\\S]*|[\\s\\S]*?(:(?:date|timestamp)\\b)[\\s\\S]*|[\\s\\S]*/${1:+, timestamp}/}${CLIPBOARD/^(?=[\\s\\S]*[^\\w\\s,:.?!*~>='\"-])[\\s\\S]*|[\\s\\S]*?(:uuid\\b)[\\s\\S]*|[\\s\\S]*/${1:+, uuid}/}${CLIPBOARD/^(?=[\\s\\S]*[^\\w\\s,:.?!*~>='\"-])[\\s\\S]*|[\\s\\S]*?(:(?:\\d+(?![.\\d])|varchar)\\b)[\\s\\S]*|[\\s\\S]*/${1:+, varchar}/}${CLIPBOARD/^(?=[\\s\\S]*[^\\w\\s,:.?!*~>='\"-])[\\s\\S]*|:(?!(?:\\d+|int|integer|bool|boolean|date|dateonly|time|timestamp|json|jsonb|uuid|float|doublePrecision|decimal|numeric|bigint|text|varchar)\\b)(\\w+)\\b(?![\\s\\S]*:\\1\\b)|[\\s\\S]/${1:+, }$1/g} } from 'drizzle-orm/pg-core';",
+			"import { createInsertSchema, createUpdateSchema } from 'drizzle-zod';",
+			"import { z } from 'zod';",
+			"",
+			"${CLIPBOARD/^(?=[\\s\\S]*[^\\w\\s,:.?!*~>='\"-])[\\s\\S]*|>(?!user\\b)(?=(?:[0-9A-Z_]|a(?:\\b|[0-9A-Z_a-t]|u(?:\\b|[0-9A-Z_a-s]|t(?:\\b|[0-9A-Z_a-g])))))(\\w+)\\b(?![\\s\\S]*>\\1\\b)|[\\s\\S]/${1:+import { }$1${1:+ \\} from './}$1${1:+';\n}/g}${CLIPBOARD/^(?=[\\s\\S]*[^\\w\\s,:.?!*~>='\"-])[\\s\\S]*|[\\s\\S]*?(>user\\b)[\\s\\S]*|[\\s\\S]*/${1:+import { user \\} from './auth';\n}/}${CLIPBOARD/^(?=[\\s\\S]*[^\\w\\s,:.?!*~>='\"-])[\\s\\S]*|>(?!user\\b)(?!(?:[0-9A-Z_]|a(?:\\b|[0-9A-Z_a-t]|u(?:\\b|[0-9A-Z_a-s]|t(?:\\b|[0-9A-Z_a-g]))))|auth\\b)(?=(?:[0-9A-Z_ab]|c(?:\\b|[0-9A-Z_a-n]|o(?:\\b|[0-9A-Z_a-l]|m(?:\\b|[0-9A-Z_a-l]|m(?:\\b|[0-9A-Z_a-n]|o(?:\\b|[0-9A-Z_a-m])))))))(\\w+)\\b(?![\\s\\S]*>\\1\\b)|[\\s\\S]/${1:+import { }$1${1:+ \\} from './}$1${1:+';\n}/g}import { common } from './common';${CLIPBOARD/^(?=[\\s\\S]*[^\\w\\s,:.?!*~>='\"-])[\\s\\S]*|>(?!user\\b)(?!(?:[0-9A-Z_ab]|c(?:\\b|[0-9A-Z_a-n]|o(?:\\b|[0-9A-Z_a-l]|m(?:\\b|[0-9A-Z_a-l]|m(?:\\b|[0-9A-Z_a-n]|o(?:\\b|[0-9A-Z_a-m]))))))|common\\b)(\\w+)\\b(?![\\s\\S]*>\\1\\b)|[\\s\\S]/${1:+\nimport { }$1${1:+ \\} from './}$1${1:+';}/g}",
+			"",
+			"// TODO: run `pnpm add -D drizzle-zod zod` if missing",
+			"${CLIPBOARD/^(?=[\\s\\S]*([^\\w\\s,:.?!*~>='\"-]))[\\s\\S]*|[\\s\\S]*/${1:+// TODO: the clipboard is not a column list like title:200!, body?, authorId>user\n}/}// TODO: create ./common.ts with `drizzle::common` if missing (once per project)",
+			"// TODO: add `export * from './$TM_FILENAME_BASE';` to schema/index.ts, then run `pnpm db:push`",
+			"",
+			"export const ${1:${TM_FILENAME_BASE/(.*)/${1:/camelcase}/}} = pgTable(${CLIPBOARD/^(?=[\\s\\S]*[^\\w\\s,:.?!*~>='\"-])[\\s\\S]*|[\\s\\S]*?(\\*)[\\s\\S]*|[\\s\\S]*/${1:+\n  }/}'${2:${TM_FILENAME_BASE/(.*)/${1:/snakecase}/}}',${CLIPBOARD/^(?=[\\s\\S]*[^\\w\\s,:.?!*~>='\"-])[\\s\\S]*|[\\s\\S]*?(\\*)[\\s\\S]*|[\\s\\S]*/${1:?\n  : }/}{",
+			"\t${CLIPBOARD/^(?=[\\s\\S]*[^\\w\\s,:.?!*~>='\"-])[\\s\\S]*|[\\s\\S]*?(\\*)[\\s\\S]*|[\\s\\S]*/${1:+  }/}...common${CLIPBOARD/^(?=[\\s\\S]*[^\\w\\s,:.?!*~>='\"-])[\\s\\S]*|[\\s\\S]*?(\\w)[\\s\\S]*|[\\s\\S]*/${1:+,\n}/}${CLIPBOARD/^(?=[\\s\\S]*[^\\w\\s,:.?!*~>='\"-])[\\s\\S]*|(?:[,\\s]|--)*(?:(?:(?=[\\s\\S]*\\*)|(?<=\\*[\\s\\S]*))(?=(\\w))|)(?:(?=[^,\\s=]*>)(?![^,\\s=]*\\?)(?![\\s\\S]*\\*)(?<!\\*[\\s\\S]*)(?=(\\w))|)(?:(?=[^,\\s=]*>)(?![^,\\s=]*\\?)(?:(?=[\\s\\S]*\\*)|(?<=\\*[\\s\\S]*))(?=(\\w))|)(?:(?=[^,\\s=]*>)(?=[^,\\s=]*!)(?![\\s\\S]*\\*)(?<!\\*[\\s\\S]*)(?=(\\w))|)(?:(?=[^,\\s=]*>)(?=[^,\\s=]*!)(?:(?=[\\s\\S]*\\*)|(?<=\\*[\\s\\S]*))(?=(\\w))|)(?:(?=[^,\\s=]*>)(?:(?![^,\\s=]*\\?)|(?=[^,\\s=]*!)|(?=[^,\\s]*=))(?![\\s\\S]*\\*)(?<!\\*[\\s\\S]*)(?=(\\w))|)(?:(?=[^,\\s=]*>)(?:(?![^,\\s=]*\\?)|(?=[^,\\s=]*!)|(?=[^,\\s]*=))(?:(?=[\\s\\S]*\\*)|(?<=\\*[\\s\\S]*))(?=(\\w))|)(?:(?=[^,\\s=]*>)(?=[^,\\s]*=)(?![\\s\\S]*\\*)(?<!\\*[\\s\\S]*)(?=(\\w))|)(?:(?=[^,\\s=]*>)(?=[^,\\s]*=)(?:(?=[\\s\\S]*\\*)|(?<=\\*[\\s\\S]*))(?=(\\w))|)(?:(?![^,\\s=]*\\?)(?=(\\w))|)(?:(?=\\w+[?!*~]*>(?!user\\b)\\w)(?=(\\w))|)(?:(?=\\w+[?!*~]*(?![\\w?!*~:]|>(?!user\\b)\\w))(?=(\\w))|)(?:(?=[^,\\s=]*>)(?=[^,\\s=]*(~))|)(?:(?=\\w+[?!*~]*(?::(?:\\d+(?:\\.\\d+)?|text|varchar|char|uuid|decimal|numeric|dateonly|time|interval|inet|cidr)\\b|(?![\\w?!*~:]|>(?!user\\b)\\w))[^,\\s=]*=(?!now(?![^,\\s])|['\"]))(?=(\\w))|(?=[^,\\s=]*=(?!now(?![^,\\s])|['\"]))(?=(\\w))|)(\\w+)(?=[^,\\s=]*(!)|)[?!*~]*(?::(?:(\\d+)\\.(\\d+)|(\\d+)|(int)|(bool)|(date)|(dateonly)|(json)|(float)|(decimal)|(bigint)|(\\w+))\\b)?[?!*~]*(?:>(\\w+))?[?!*~]*(?:=(?:(now)(?![^,\\s])|('[^',\\s]*'|\"[^\",\\s]*\")(?![^,\\s])|([^,\\s]+)))?(?:[,\\s]|--)*(?=(\\w)|)/${16:+  }${1:+  }$16${16:+: }${18:+numeric}${20:+varchar}${21:+integer}${22:+boolean}${23:+timestamp}${24:+date}${25:+jsonb}${26:+doublePrecision}${27:+numeric}${28:+bigint}$29${11:+integer}${12:+text}${16:+('}${16:/snakecase}${16:+'}${18:+, { precision: }$18${18:+, scale: }$19${18:+ \\}}${20:+, { length: }$20${20:+ \\}}${27:+, { precision: 10, scale: 2 \\}}${28:+, { mode: 'number' \\}}${16:+)}${25:+.$type<Record<string, unknown>>()}${2:+\n    }${3:+\n      }${10:+.notNull()}${4:+\n    }${5:+\n      }${17:+.unique()}${6:+\n    }${7:+\n      }${30:+.references(() => }$30${30:+.id}${13:+, { onDelete: 'cascade' \\}}${30:+)}${8:+\n    }${9:+\n      }${31:+.defaultNow()}${32:+.default(}$32${32:+)}${14:+.default('}${15:+.default(}$33${14:+')}${15:+)}${34:+,\n}/g}$0",
+			"${CLIPBOARD/^(?=[\\s\\S]*[^\\w\\s,:.?!*~>='\"-])[\\s\\S]*|[\\s\\S]*?(\\*)[\\s\\S]*|[\\s\\S]*/${1:?  \\},\n  (t) => [:\\}}/}${CLIPBOARD/^(?=[\\s\\S]*[^\\w\\s,:.?!*~>='\"-])[\\s\\S]*|(?<=^|[,\\s]|--)(?:(?<=(\\*)[\\s\\S]+)|)(\\w+)(?=[^,\\s=]*\\*)|[\\s\\S]/${1:+, }${2:+index().on(t.}$2${2:+)}/g}${CLIPBOARD/^(?=[\\s\\S]*[^\\w\\s,:.?!*~>='\"-])[\\s\\S]*|[\\s\\S]*?(\\*)[\\s\\S]*|[\\s\\S]*/${1:+]\n}/});",
+			"",
+			"export const ${1}InsertSchema = createInsertSchema($1${CLIPBOARD/^(?=[\\s\\S]*[^\\w\\s,:.?!*~>='\"-])[\\s\\S]*|[\\s\\S]*?((?<=^|[,\\s]|--)(?:(?![^,\\s]*[?=>])\\w+[?!*~]*(?::(?:\\d+(?![.\\d])|text|varchar)\\b|(?![\\w?!*~:]))|\\w+[?!*~]*:bool(?:ean)?\\b|\\w+[?!*~]*:(?:date|timestamp)\\b))[\\s\\S]*|[\\s\\S]*/${1:+, {\n}/}${CLIPBOARD/^(?=[\\s\\S]*[^\\w\\s,:.?!*~>='\"-])[\\s\\S]*|(?:[,\\s]|--)*(?:(?=(?![^,\\s]*[?=>])\\w+[?!*~]*(?::(?:\\d+(?![.\\d])|text|varchar)\\b|(?![\\w?!*~:])))(\\w+)[^,\\s]*(?:[,\\s]|--)*(?:(?=(?:[^,\\s]+(?:[,\\s]|--)+)*?(?=(?:(?![^,\\s]*[?=>])\\w+[?!*~]*(?::(?:\\d+(?![.\\d])|text|varchar)\\b|(?![\\w?!*~:]))|\\w+[?!*~]*:bool(?:ean)?\\b|\\w+[?!*~]*:(?:date|timestamp)\\b))(\\w))|)|(?=\\w+[?!*~]*:bool(?:ean)?\\b)(\\w+)[^,\\s]*(?:[,\\s]|--)*(?:(?=(?:[^,\\s]+(?:[,\\s]|--)+)*?(?=(?:(?![^,\\s]*[?=>])\\w+[?!*~]*(?::(?:\\d+(?![.\\d])|text|varchar)\\b|(?![\\w?!*~:]))|\\w+[?!*~]*:bool(?:ean)?\\b|\\w+[?!*~]*:(?:date|timestamp)\\b))(\\w))|)|(?=\\w+[?!*~]*:(?:date|timestamp)\\b)(?=[^,\\s=]*(\\?)|)(?=(?![^,\\s=]*\\?)[^,\\s]*(=)|)(\\w+)[^,\\s]*(?:[,\\s]|--)*(?:(?=(?:[^,\\s]+(?:[,\\s]|--)+)*?(?=(?:(?![^,\\s]*[?=>])\\w+[?!*~]*(?::(?:\\d+(?![.\\d])|text|varchar)\\b|(?![\\w?!*~:]))|\\w+[?!*~]*:bool(?:ean)?\\b|\\w+[?!*~]*:(?:date|timestamp)\\b))(\\w))|)|[^,\\s]+(?:[,\\s]|--)*)?/${1:+  }$1${1:+: (s) => s.min(1)}${2:+,\n}${3:+  }$3${3:+: z.boolean().default(false)}${4:+,\n}${7:+  }$7${7:+: z.coerce.date<string>()}${5:+.nullish()}${6:+.optional()}${8:+,\n}/g}${CLIPBOARD/^(?=[\\s\\S]*[^\\w\\s,:.?!*~>='\"-])[\\s\\S]*|[\\s\\S]*?((?<=^|[,\\s]|--)(?:(?![^,\\s]*[?=>])\\w+[?!*~]*(?::(?:\\d+(?![.\\d])|text|varchar)\\b|(?![\\w?!*~:]))|\\w+[?!*~]*:bool(?:ean)?\\b|\\w+[?!*~]*:(?:date|timestamp)\\b))[\\s\\S]*|[\\s\\S]*/${1:+\n\\}}/}).omit({",
+			"\tcreatedAt: true,",
+			"\tupdatedAt: true",
+			"});",
+			"",
+			"export const ${1}UpdateSchema = createUpdateSchema($1${CLIPBOARD/^(?=[\\s\\S]*[^\\w\\s,:.?!*~>='\"-])[\\s\\S]*|[\\s\\S]*?((?<=^|[,\\s]|--)(?:(?![^,\\s]*[?=>])\\w+[?!*~]*(?::(?:\\d+(?![.\\d])|text|varchar)\\b|(?![\\w?!*~:]))|\\w+[?!*~]*:(?:date|timestamp)\\b))[\\s\\S]*|[\\s\\S]*/${1:+, {\n}/}${CLIPBOARD/^(?=[\\s\\S]*[^\\w\\s,:.?!*~>='\"-])[\\s\\S]*|(?:[,\\s]|--)*(?:(?=(?![^,\\s]*[?=>])\\w+[?!*~]*(?::(?:\\d+(?![.\\d])|text|varchar)\\b|(?![\\w?!*~:])))(\\w+)[^,\\s]*(?:[,\\s]|--)*(?:(?=(?:[^,\\s]+(?:[,\\s]|--)+)*?(?=(?:(?![^,\\s]*[?=>])\\w+[?!*~]*(?::(?:\\d+(?![.\\d])|text|varchar)\\b|(?![\\w?!*~:]))|\\w+[?!*~]*:(?:date|timestamp)\\b))(\\w))|)|(?=\\w+[?!*~]*:(?:date|timestamp)\\b)(?=[^,\\s=]*(\\?)|)(?=(?![^,\\s=]*\\?)(\\w)|)(\\w+)[^,\\s]*(?:[,\\s]|--)*(?:(?=(?:[^,\\s]+(?:[,\\s]|--)+)*?(?=(?:(?![^,\\s]*[?=>])\\w+[?!*~]*(?::(?:\\d+(?![.\\d])|text|varchar)\\b|(?![\\w?!*~:]))|\\w+[?!*~]*:(?:date|timestamp)\\b))(\\w))|)|[^,\\s]+(?:[,\\s]|--)*)?/${1:+  }$1${1:+: (s) => s.min(1)}${2:+,\n}${5:+  }$5${5:+: z.coerce.date<string>()}${3:+.nullish()}${4:+.optional()}${6:+,\n}/g}${CLIPBOARD/^(?=[\\s\\S]*[^\\w\\s,:.?!*~>='\"-])[\\s\\S]*|[\\s\\S]*?((?<=^|[,\\s]|--)(?:(?![^,\\s]*[?=>])\\w+[?!*~]*(?::(?:\\d+(?![.\\d])|text|varchar)\\b|(?![\\w?!*~:]))|\\w+[?!*~]*:(?:date|timestamp)\\b))[\\s\\S]*|[\\s\\S]*/${1:+\n\\}}/})",
+			"\t.omit({",
+			"\t\tcreatedAt: true,",
+			"\t\tupdatedAt: true",
+			"\t})",
+			"\t.extend({ id: z.number() });",
+			"",
+			"export type ${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/} = typeof $1.\\$inferSelect;",
+			""
+		]
+	},
+	// drizzle::cols: the drizzle::to-table column regex (same groups, index layout off) for an existing pgTable.
+	// Lines after the first get 2 spaces; every column ends with a comma; VS Code's quick fix adds the imports.
+	"Drizzle Columns Paste": {
+		"scope": "typescript",
+		"prefix": ["drizzle::cols", "cols"],
+		"include": "**/lib/server/db/**",
+		"description": "Drizzle columns inside pgTable from a copied column list, drizzle::to-table notation",
+		"body": [
+			"${CLIPBOARD/^(?=[\\s\\S]*[^\\w\\s,:.?!*~>='\"-])[\\s\\S]*|[\\s\\S]*?(\\*)[\\s\\S]*|[\\s\\S]*/${1:+// TODO: add (t) => [}/}${CLIPBOARD/^(?=[\\s\\S]*[^\\w\\s,:.?!*~>='\"-])[\\s\\S]*|(?<=^|[,\\s]|--)(?:(?<=(\\*)[\\s\\S]+)|)(\\w+)(?=[^,\\s=]*\\*)|[\\s\\S]/${1:+, }${2:+index().on(t.}$2${2:+)}/g}${CLIPBOARD/^(?=[\\s\\S]*[^\\w\\s,:.?!*~>='\"-])[\\s\\S]*|[\\s\\S]*?(\\*)[\\s\\S]*|[\\s\\S]*/${1:+] as pgTable's third argument (drizzle::index)\n  }/}${CLIPBOARD/^(?=[\\s\\S]*([^\\w\\s,:.?!*~>='\"-]))[\\s\\S]*|[\\s\\S]*/${1:+// TODO: the clipboard is not a column list like title:200!, body?, authorId>user}/}${CLIPBOARD/^(?=[\\s\\S]*[^\\w\\s,:.?!*~>='\"-])[\\s\\S]*|(?:[,\\s]|--)*(?:(?!)(?=(\\w))|)(?:(?=[^,\\s=]*>)(?![^,\\s=]*\\?)(?=(\\w))|)(?:(?=[^,\\s=]*>)(?![^,\\s=]*\\?)(?!)(?=(\\w))|)(?:(?=[^,\\s=]*>)(?=[^,\\s=]*!)(?=(\\w))|)(?:(?=[^,\\s=]*>)(?=[^,\\s=]*!)(?!)(?=(\\w))|)(?:(?=[^,\\s=]*>)(?:(?![^,\\s=]*\\?)|(?=[^,\\s=]*!)|(?=[^,\\s]*=))(?=(\\w))|)(?:(?=[^,\\s=]*>)(?:(?![^,\\s=]*\\?)|(?=[^,\\s=]*!)|(?=[^,\\s]*=))(?!)(?=(\\w))|)(?:(?=[^,\\s=]*>)(?=[^,\\s]*=)(?=(\\w))|)(?:(?=[^,\\s=]*>)(?=[^,\\s]*=)(?!)(?=(\\w))|)(?:(?![^,\\s=]*\\?)(?=(\\w))|)(?:(?=\\w+[?!*~]*>(?!user\\b)\\w)(?=(\\w))|)(?:(?=\\w+[?!*~]*(?![\\w?!*~:]|>(?!user\\b)\\w))(?=(\\w))|)(?:(?=[^,\\s=]*>)(?=[^,\\s=]*(~))|)(?:(?=\\w+[?!*~]*(?::(?:\\d+(?:\\.\\d+)?|text|varchar|char|uuid|decimal|numeric|dateonly|time|interval|inet|cidr)\\b|(?![\\w?!*~:]|>(?!user\\b)\\w))[^,\\s=]*=(?!now(?![^,\\s])|['\"]))(?=(\\w))|(?=[^,\\s=]*=(?!now(?![^,\\s])|['\"]))(?=(\\w))|)(\\w+)(?=[^,\\s=]*(!)|)[?!*~]*(?::(?:(\\d+)\\.(\\d+)|(\\d+)|(int)|(bool)|(date)|(dateonly)|(json)|(float)|(decimal)|(bigint)|(\\w+))\\b)?[?!*~]*(?:>(\\w+))?[?!*~]*(?:=(?:(now)(?![^,\\s])|('[^',\\s]*'|\"[^\",\\s]*\")(?![^,\\s])|([^,\\s]+)))?(?:[,\\s]|--)*(?=(\\w)|)/$16${16:+: }${18:+numeric}${20:+varchar}${21:+integer}${22:+boolean}${23:+timestamp}${24:+date}${25:+jsonb}${26:+doublePrecision}${27:+numeric}${28:+bigint}$29${11:+integer}${12:+text}${16:+('}${16:/snakecase}${16:+'}${18:+, { precision: }$18${18:+, scale: }$19${18:+ \\}}${20:+, { length: }$20${20:+ \\}}${27:+, { precision: 10, scale: 2 \\}}${28:+, { mode: 'number' \\}}${16:+)}${25:+.$type<Record<string, unknown>>()}${2:+\n    }${3:+\n      }${10:+.notNull()}${4:+\n    }${5:+\n      }${17:+.unique()}${6:+\n    }${7:+\n      }${30:+.references(() => }$30${30:+.id}${13:+, { onDelete: 'cascade' \\}}${30:+)}${8:+\n    }${9:+\n      }${31:+.defaultNow()}${32:+.default(}$32${32:+)}${14:+.default('}${15:+.default(}$33${14:+')}${15:+)}${16:+,}${34:+\n  }/g}$0"
+		]
+	},
+	"Drizzle Common Columns": {
+		"scope": "typescript",
+		"prefix": "drizzle::common",
+		"include": "**/lib/server/db/schema/common.ts",
+		"isFileTemplate": true,
+		"description": "Creates shared id/createdAt/updatedAt columns used by drizzle::table",
+		"body": [
+			"import { integer, timestamp } from 'drizzle-orm/pg-core';",
+			"",
+			"export const common = {",
+			"\t// identity: the database generates ids, inserts can't set them (Postgres' recommended replacement for serial)",
+			"\tid: integer('id').primaryKey().generatedAlwaysAsIdentity(),",
+			"\tcreatedAt: timestamp('created_at').defaultNow().notNull(),",
+			"\t// ponytail: app-level only (Drizzle update queries), raw SQL won't touch it; add a DB trigger if that matters",
+			"\tupdatedAt: timestamp('updated_at')",
+			"\t\t.defaultNow()",
+			"\t\t.notNull()",
+			"\t\t.\\$onUpdate(() => new Date())",
+			"};",
+			""
+		]
+	},
+	"Column text": {
+		"scope": "typescript",
+		"prefix": ["col::text", "text"],
+		"include": "**/lib/server/db/**",
+		"description": "Text (string) column",
+		"body": [
+			"${1:name}: text('${1/([A-Z])/_${1:/downcase}/g}').notNull(),$0"
+		]
+	},
+	"Column int": {
+		"scope": "typescript",
+		"prefix": ["col::int", "int"],
+		"include": "**/lib/server/db/**",
+		"description": "Integer (number) column",
+		"body": [
+			"${1:name}: integer('${1/([A-Z])/_${1:/downcase}/g}').notNull(),$0"
+		]
+	},
+	"Column bool": {
+		"scope": "typescript",
+		"prefix": ["col::bool", "bool"],
+		"include": "**/lib/server/db/**",
+		"description": "Boolean column",
+		"body": [
+			"${1:name}: boolean('${1/([A-Z])/_${1:/downcase}/g}').notNull().default(${2|false,true|}),$0"
+		]
+	},
+	"Column date": {
+		"scope": "typescript",
+		"prefix": ["col::date", "date"],
+		"include": "**/lib/server/db/**",
+		"description": "Timestamp (Date) column; remote forms need a coerced date in the table schemas (see docs)",
+		"body": [
+			"${1:name}: timestamp('${1/([A-Z])/_${1:/downcase}/g}').notNull(),$0"
+		]
+	},
+	"Column json": {
+		"scope": "typescript",
+		"prefix": ["col::json", "json"],
+		"include": "**/lib/server/db/**",
+		"description": "Typed jsonb column; remote forms can't send it: .omit it from the form schema",
+		"body": [
+			"${1:name}: jsonb('${1/([A-Z])/_${1:/downcase}/g}').\\$type<${2:Record<string, unknown>}>().notNull(),$0"
+		]
+	},
+	"Column varchar": {
+		"scope": "typescript",
+		"prefix": ["col::varchar", "varchar"],
+		"include": "**/lib/server/db/**",
+		"description": "Varchar column with max length",
+		"body": [
+			"${1:name}: varchar('${1/([A-Z])/_${1:/downcase}/g}', { length: ${2:255} }).notNull(),$0"
+		]
+	},
+	"Column uuid": {
+		"scope": "typescript",
+		"prefix": ["col::uuid", "uuid"],
+		"include": "**/lib/server/db/**",
+		"description": "UUID column",
+		"body": [
+			"${1:name}: uuid('${1/([A-Z])/_${1:/downcase}/g}').notNull(),$0"
+		]
+	},
+	"Column bigint": {
+		"scope": "typescript",
+		"prefix": ["col::bigint", "bigint"],
+		"include": "**/lib/server/db/**",
+		"description": "Bigint column (number or bigint mode)",
+		"body": [
+			"${1:name}: bigint('${1/([A-Z])/_${1:/downcase}/g}', { mode: '${2|number,bigint|}' }).notNull(),$0"
+		]
+	},
+	"Column float": {
+		"scope": "typescript",
+		"prefix": ["col::float", "float"],
+		"include": "**/lib/server/db/**",
+		"description": "Double precision (float) column",
+		"body": [
+			"${1:name}: doublePrecision('${1/([A-Z])/_${1:/downcase}/g}').notNull(),$0"
+		]
+	},
+	"Column decimal": {
+		"scope": "typescript",
+		"prefix": ["col::decimal", "decimal"],
+		"include": "**/lib/server/db/**",
+		"description": "Numeric column, returns string (money-safe)",
+		"body": [
+			"${1:name}: numeric('${1/([A-Z])/_${1:/downcase}/g}', { precision: ${2:10}, scale: ${3:2} }).notNull(),$0"
+		]
+	},
+	"Column dateonly": {
+		"scope": "typescript",
+		"prefix": ["col::dateonly", "dateonly"],
+		"include": "**/lib/server/db/**",
+		"description": "Date-only column, returns 'YYYY-MM-DD'",
+		"body": [
+			"${1:name}: date('${1/([A-Z])/_${1:/downcase}/g}').notNull(),$0"
+		]
+	},
+	"Column time": {
+		"scope": "typescript",
+		"prefix": ["col::time", "time"],
+		"include": "**/lib/server/db/**",
+		"description": "Time column, returns 'HH:MM:SS'",
+		"body": [
+			"${1:name}: time('${1/([A-Z])/_${1:/downcase}/g}').notNull(),$0"
+		]
+	},
+	"Column enum": {
+		"scope": "typescript",
+		"prefix": ["col::enum", "enum"],
+		"include": "**/lib/server/db/**",
+		"description": "Text column limited to given values",
+		"body": [
+			"${1:name}: text('${1/([A-Z])/_${1:/downcase}/g}', { enum: [${2:'a', 'b'}] }).notNull(),$0"
+		]
+	},
+	"Column array": {
+		"scope": "typescript",
+		"prefix": ["col::array", "array"],
+		"include": "**/lib/server/db/**",
+		"description": "Array column",
+		"body": [
+			"${1:name}: ${2|text,integer|}('${1/([A-Z])/_${1:/downcase}/g}').array().notNull(),$0"
+		]
+	},
+	"Column fk": {
+		"scope": "typescript",
+		"prefix": ["col::fk", "fk"],
+		"include": "**/lib/server/db/**",
+		"description": "Foreign key column referencing another table's id",
+		"body": [
+			"${1:userId}: ${2|integer,text|}('${1/([A-Z])/_${1:/downcase}/g}')",
+			"\t.notNull()",
+			"\t.references(() => ${3:user}.id, { onDelete: '${4|cascade,restrict|}' }),$0"
+		]
+	},
+	"Drizzle Many-to-Many": {
+		"scope": "typescript",
+		"prefix": "drizzle::m2m",
+		"include": "**/lib/server/db/schema/**",
+		"isFileTemplate": true,
+		"description": "Creates a junction table with a composite primary key and its relations",
+		"body": [
+			"import { relations } from 'drizzle-orm';",
+			"import { integer, pgTable, primaryKey } from 'drizzle-orm/pg-core';",
+			"import { ${3:post} } from './$3';",
+			"import { ${4:tag} } from './$4';",
+			"",
+			"// TODO: add `export * from './$TM_FILENAME_BASE';` to schema/index.ts, then run `pnpm db:push`",
+			"// TODO: add `${4}s: many($1)` to ${3}Relations and `${3}s: many($1)` to ${4}Relations",
+			"",
+			"export const ${1:${TM_FILENAME_BASE/(.*)/${1:/camelcase}/}} = pgTable(",
+			"\t'${2:$TM_FILENAME_BASE}',",
+			"\t{",
+			"\t\t${3}Id: integer('${3}_id')",
+			"\t\t\t.notNull()",
+			"\t\t\t.references(() => $3.id, { onDelete: 'cascade' }),",
+			"\t\t${4}Id: integer('${4}_id')",
+			"\t\t\t.notNull()",
+			"\t\t\t.references(() => $4.id, { onDelete: 'cascade' })",
+			"\t},",
+			"\t(t) => [primaryKey({ columns: [t.${3}Id, t.${4}Id] })]",
+			");",
+			"",
+			"export const ${1}Relations = relations($1, ({ one }) => ({",
+			"\t$3: one($3, { fields: [$1.${3}Id], references: [$3.id] }),",
+			"\t$4: one($4, { fields: [$1.${4}Id], references: [$4.id] })",
+			"}));",
+			""
+		]
+	},
+	"Drizzle Relations": {
+		"scope": "typescript",
+		"prefix": ["drizzle::relations", "relations"],
+		"include": "**/lib/server/db/**",
+		"description": "Defines one/many relations for db.query",
+		"body": [
+			"export const ${1:$TM_FILENAME_BASE}Relations = relations($1, ({ one, many }) => ({",
+			"\t${2:author}: one(${3:user}, { fields: [$1.${4:userId}], references: [$3.id] }),",
+			"\t${5:comments}: many(${6:comment})",
+			"}));$0"
+		]
+	},
+	"Drizzle Index": {
+		"scope": "typescript",
+		"prefix": ["drizzle::index", "index"],
+		"include": "**/lib/server/db/**",
+		"description": "Index callback for pgTable's third argument",
+		"body": [
+			"(t) => [${1|index,uniqueIndex|}().on(t.${2:name})]$0"
+		]
+	},
+	"Drizzle Remote CRUD": {
+		"scope": "typescript",
+		"prefix": "drizzle::remote",
+		"include": "*.remote.ts",
+		"exclude": ["**/src/**/server/**", "auth.remote.ts", "admin.remote.ts"],
+		"isFileTemplate": true,
+		"description": "CRUD remote functions (query/form/command) for a drizzle table",
+		"body": [
+			"import { error } from '@sveltejs/kit';",
+			"import { command, form, getRequestEvent, query } from '\\$app/server';",
+			"import { desc, eq } from 'drizzle-orm';",
+			"import { z } from 'zod';",
+			"import { db } from '#lib/server/db/index.ts';",
+			"import { ${1:${TM_FILENAME_BASE/([^.]*).*/$1/}}, ${1}InsertSchema, ${1}UpdateSchema } from '#lib/server/db/schema/${1}.ts';",
+			"",
+			"// TODO: create src/lib/server/db/schema/${1}.ts with `drizzle::table` if missing",
+			"// TODO: any logged-in user can change any row: per-user data → drizzle::remote-owned; shared data → requireApiRole('admin') (api::require-role)",
+			"",
+			"function requireUser() {",
+			"\tconst { user } = getRequestEvent().locals;",
+			"\tif (!user) error(401, 'Unauthorized');",
+			"\treturn user;",
+			"}",
+			"",
+			"export const get${TM_FILENAME_BASE/([^.]*).*/${1:/pascalcase}/}s = query(async () => {",
+			"\treturn db.select().from($1).orderBy(desc($1.createdAt));",
+			"});",
+			"",
+			"export const get${TM_FILENAME_BASE/([^.]*).*/${1:/pascalcase}/} = query(z.number(), async (id) => {",
+			"\tconst [row] = await db.select().from($1).where(eq($1.id, id));",
+			"\tif (!row) error(404, 'Not found');",
+			"\treturn row;",
+			"});",
+			"",
+			"export const create${TM_FILENAME_BASE/([^.]*).*/${1:/pascalcase}/} = form(${1}InsertSchema, async (data) => {",
+			"\trequireUser();",
+			"\tawait db.insert($1).values(data);",
+			"\tvoid get${TM_FILENAME_BASE/([^.]*).*/${1:/pascalcase}/}s().refresh();",
+			"});",
+			"",
+			"export const update${TM_FILENAME_BASE/([^.]*).*/${1:/pascalcase}/} = form(${1}UpdateSchema, async ({ id, ...data }) => {",
+			"\trequireUser();",
+			"\tawait db.update($1).set(data).where(eq($1.id, id));",
+			"\tvoid get${TM_FILENAME_BASE/([^.]*).*/${1:/pascalcase}/}s().refresh();",
+			"\tvoid get${TM_FILENAME_BASE/([^.]*).*/${1:/pascalcase}/}(id).refresh();",
+			"});",
+			"",
+			"export const delete${TM_FILENAME_BASE/([^.]*).*/${1:/pascalcase}/} = command(z.number(), async (id) => {",
+			"\trequireUser();",
+			"\tawait db.delete($1).where(eq($1.id, id));",
+			"\tvoid get${TM_FILENAME_BASE/([^.]*).*/${1:/pascalcase}/}s().refresh();",
+			"});",
+			""
+		]
+	},
+	"DB list": {
+		"scope": "typescript",
+		"prefix": ["db::list", "list"],
+		"include": ["*.remote.ts", "*.server.ts", "+server.ts", "**/lib/server/**"],
+		"exclude": "**/lib/server/db/schema/**",
+		"description": "Paginated select, newest first",
+		"body": [
+			"const ${1:rows} = await db.select().from(${2:table}).orderBy(desc($2.createdAt)).limit(${3:20}).offset(${4:0});$0"
+		]
+	},
+	"DB get": {
+		"scope": "typescript",
+		"prefix": ["db::get", "get"],
+		"include": ["*.remote.ts", "*.server.ts", "+server.ts", "**/lib/server/**"],
+		"exclude": "**/lib/server/db/schema/**",
+		"description": "Select one row by id, 404 if missing",
+		"body": [
+			"const [${1:row}] = await db.select().from(${2:table}).where(eq($2.id, ${3:id}));",
+			"if (!$1) error(404, 'Not found');$0"
+		]
+	},
+	"DB insert": {
+		"scope": "typescript",
+		"prefix": ["db::insert", "insert"],
+		"include": ["*.remote.ts", "*.server.ts", "+server.ts", "**/lib/server/**"],
+		"exclude": "**/lib/server/db/schema/**",
+		"description": "Insert and return the new row",
+		"body": [
+			"const [${1:row}] = await db.insert(${2:table}).values(${3:data}).returning();$0"
+		]
+	},
+	"DB update": {
+		"scope": "typescript",
+		"prefix": ["db::update", "update"],
+		"include": ["*.remote.ts", "*.server.ts", "+server.ts", "**/lib/server/**"],
+		"exclude": "**/lib/server/db/schema/**",
+		"description": "Update by id and return the row",
+		"body": [
+			"const [${1:row}] = await db.update(${2:table}).set(${3:data}).where(eq($2.id, ${4:id})).returning();$0"
+		]
+	},
+	"DB delete": {
+		"scope": "typescript",
+		"prefix": ["db::delete", "delete"],
+		"include": ["*.remote.ts", "*.server.ts", "+server.ts", "**/lib/server/**"],
+		"exclude": "**/lib/server/db/schema/**",
+		"description": "Delete by id",
+		"body": [
+			"await db.delete(${1:table}).where(eq($1.id, ${2:id}));$0"
+		]
+	},
+	"DB transaction": {
+		"scope": "typescript",
+		"prefix": ["db::tx", "tx"],
+		"include": ["*.remote.ts", "*.server.ts", "+server.ts", "**/lib/server/**"],
+		"exclude": "**/lib/server/db/schema/**",
+		"description": "Run queries in a transaction",
+		"body": [
+			"await db.transaction(async (tx) => {",
+			"\t${TM_SELECTED_TEXT}$0",
+			"});"
+		]
+	},
+	"DB with": {
+		"scope": "typescript",
+		"prefix": ["db::with", "with"],
+		"include": ["*.remote.ts", "*.server.ts", "+server.ts", "**/lib/server/**"],
+		"exclude": "**/lib/server/db/schema/**",
+		"description": "Relational query with related rows (needs drizzle::relations)",
+		"body": [
+			"const ${1:rows} = await db.query.${2:table}.findMany({",
+			"\twith: { ${3:relation}: true }",
+			"});$0"
+		]
+	},
+	"DB upsert": {
+		"scope": "typescript",
+		"prefix": ["db::upsert", "upsert"],
+		"include": ["*.remote.ts", "*.server.ts", "+server.ts", "**/lib/server/**"],
+		"exclude": "**/lib/server/db/schema/**",
+		"description": "Insert or update on conflict, returns the row",
+		"body": [
+			"// TODO: ${2:table}.${4:name} needs .unique() (or a uniqueIndex) to be a conflict target",
+			"const [${1:row}] = await db",
+			"\t.insert($2)",
+			"\t.values(${3:data})",
+			"\t.onConflictDoUpdate({ target: $2.$4, set: $3 })",
+			"\t.returning();$0"
+		]
+	},
+	"DB count": {
+		"scope": "typescript",
+		"prefix": ["db::count", "count"],
+		"include": ["*.remote.ts", "*.server.ts", "+server.ts", "**/lib/server/**"],
+		"exclude": "**/lib/server/db/schema/**",
+		"description": "Count rows; pass a where condition as 2nd argument to filter",
+		"body": [
+			"const ${1:total} = await db.\\$count(${2:table});$0"
+		]
+	},
+	"DB search": {
+		"scope": "typescript",
+		"prefix": ["db::search", "search"],
+		"include": ["*.remote.ts", "*.server.ts", "+server.ts", "**/lib/server/**"],
+		"exclude": "**/lib/server/db/schema/**",
+		"description": "Case-insensitive contains search",
+		"body": [
+			"const ${1:rows} = await db",
+			"\t.select()",
+			"\t.from(${2:table})",
+			"\t.where(ilike($2.${3:name}, `%\\${${4:q}}%`))",
+			"\t.limit(${5:10});$0"
+		]
+	},
+	"Drizzle Seed": {
+		"scope": "typescript",
+		"prefix": "drizzle::seed",
+		"include": "**/lib/server/db/*.ts",
+		"isFileTemplate": true,
+		"description": "Seed script for local development (drizzle-seed)",
+		"body": [
+			"import { drizzle } from 'drizzle-orm/postgres-js';",
+			"import { reset, seed } from 'drizzle-seed';",
+			"import { ${1:tag} } from './schema';",
+			"",
+			"// TODO: run `pnpm add -D drizzle-seed tsx` if missing",
+			"// TODO: add `\"db:seed\": \"tsx --env-file=.env src/lib/server/db/$TM_FILENAME_BASE.ts\"` to package.json scripts",
+			"",
+			"const url = process.env.DATABASE_URL ?? '';",
+			"// reset() truncates with CASCADE: never run this against a non-local database",
+			"if (!/@(localhost|127\\.0\\.0\\.1)[:/]/.test(url))",
+			"\tthrow new Error('Refusing to seed a non-local database');",
+			"",
+			"const db = drizzle(url);",
+			"const tables = { $1 };",
+			"",
+			"await reset(db, tables);",
+			"await seed(db, tables, { count: ${2:10} });",
+			"await db.\\$client.end();",
+			""
+		]
+	},
+	"Column deletedAt": {
+		"scope": "typescript",
+		"prefix": ["col::deleted", "deleted"],
+		"include": "**/lib/server/db/**",
+		"description": "Nullable deletedAt column for soft delete; .omit it in the table schemas",
+		"body": [
+			"deletedAt: timestamp('deleted_at'),$0"
+		]
+	},
+	"Drizzle From SQL": {
+		"scope": "typescript",
+		"prefix": [
+			"drizzle::sql",
+			"fromsql"
+		],
+		"include": [
+			"*.remote.ts",
+			"*.server.ts",
+			"+server.ts",
+			"**/lib/server/**"
+		],
+		"description": "Drizzle query from copied SQL (select/insert/update/delete; where with and, join, order by, limit/offset, :params)",
+		"body": [
+			"${CLIPBOARD/^\\s*(?:(select)\\b[\\s\\S]*|(update)\\s+(\\w+)[\\s\\S]*|(delete)\\s+from\\s+(\\w+)[\\s\\S]*|(insert)\\s+into\\s+(\\w+)[\\s\\S]*)$|^[\\s\\S]*$/${1:+db.select(}${2:+db.update(}$3${2:+)}${4:+db.delete(}$5${4:+)}${6:+db.insert(}$7${6:+)}/i}${CLIPBOARD/^\\s*(select)\\s+(?!\\*)[\\s\\S]*$|^[\\s\\S]*$/${1:+{ }/i}${CLIPBOARD/(?<=^\\s*select\\b[\\s\\S]*)(?!select\\b|from\\b)(?:(\\w+)\\.(\\w+)(?=[\\w.,\\s]*\\bfrom\\b)|(\\w+)(?=[\\w.,\\s]*\\bfrom\\s+(\\w+)))|(?<=^\\s*select\\b[\\s\\S]*)(,)(?=[\\w.,\\s]*\\bfrom\\b)|'[^']*'|\\w+|[\\s\\S]/$2${2:+: }$1${2:+.}$2$3${3:+: }$4${3:+.}$3${5:+, }/gi}${CLIPBOARD/^\\s*(select)\\s+(?!\\*)[\\s\\S]*$|^[\\s\\S]*$/${1:+ \\}}/i}${CLIPBOARD/^\\s*select\\b[\\s\\S]*?\\bfrom\\s+(\\w+)[\\s\\S]*$|^[\\s\\S]*$/${1:+).from(}$1${1:+)}/i}${CLIPBOARD/^\\s*(?:(update)|(insert))\\b[\\s\\S]*$|^[\\s\\S]*$/${1:+.set({ }${2:+.values({ }/i}${CLIPBOARD/(?<=\\bset\\s(?:(?!\\bwhere\\b)[\\s\\S])*)(\\w+)\\s*=\\s*(?::(\\w+)|(now\\(\\))|('[^']*'|-?\\d+(?:\\.\\d+)?|true|false|null))|(?<=\\bset\\s(?:(?!\\bwhere\\b)[\\s\\S])*)(,)|'[^']*'|\\w+|[\\s\\S]/$1${1:+: }$2${3:+new Date()}$4${5:+, }/gi}${CLIPBOARD/(?<=\\binsert\\s+into\\s+\\w+\\s*\\(\\s*(?:\\w+\\s*,\\s*){0})(\\w+)(?=(?:\\s*,[^)]*)?\\s*\\)\\s*values\\s*\\(\\s*(?:(?::\\w+|now\\(\\)|'[^']*'|-?\\d+(?:\\.\\d+)?|true|false|null)\\s*,\\s*){0}(?::(\\w+)|(now\\(\\))|('[^']*'|-?\\d+(?:\\.\\d+)?|true|false|null)))|(?<=\\binsert\\s+into\\s+\\w+\\s*\\(\\s*(?:\\w+\\s*,\\s*){1})(\\w+)(?=(?:\\s*,[^)]*)?\\s*\\)\\s*values\\s*\\(\\s*(?:(?::\\w+|now\\(\\)|'[^']*'|-?\\d+(?:\\.\\d+)?|true|false|null)\\s*,\\s*){1}(?::(\\w+)|(now\\(\\))|('[^']*'|-?\\d+(?:\\.\\d+)?|true|false|null)))|(?<=\\binsert\\s+into\\s+\\w+\\s*\\(\\s*(?:\\w+\\s*,\\s*){2})(\\w+)(?=(?:\\s*,[^)]*)?\\s*\\)\\s*values\\s*\\(\\s*(?:(?::\\w+|now\\(\\)|'[^']*'|-?\\d+(?:\\.\\d+)?|true|false|null)\\s*,\\s*){2}(?::(\\w+)|(now\\(\\))|('[^']*'|-?\\d+(?:\\.\\d+)?|true|false|null)))|(?<=\\binsert\\s+into\\s+\\w+\\s*\\(\\s*(?:\\w+\\s*,\\s*){3})(\\w+)(?=(?:\\s*,[^)]*)?\\s*\\)\\s*values\\s*\\(\\s*(?:(?::\\w+|now\\(\\)|'[^']*'|-?\\d+(?:\\.\\d+)?|true|false|null)\\s*,\\s*){3}(?::(\\w+)|(now\\(\\))|('[^']*'|-?\\d+(?:\\.\\d+)?|true|false|null)))|(?<=\\binsert\\s+into\\s+\\w+\\s*\\(\\s*(?:\\w+\\s*,\\s*){4})(\\w+)(?=(?:\\s*,[^)]*)?\\s*\\)\\s*values\\s*\\(\\s*(?:(?::\\w+|now\\(\\)|'[^']*'|-?\\d+(?:\\.\\d+)?|true|false|null)\\s*,\\s*){4}(?::(\\w+)|(now\\(\\))|('[^']*'|-?\\d+(?:\\.\\d+)?|true|false|null)))|(?<=\\binsert\\s+into\\s+\\w+\\s*\\(\\s*(?:\\w+\\s*,\\s*){5})(\\w+)(?=(?:\\s*,[^)]*)?\\s*\\)\\s*values\\s*\\(\\s*(?:(?::\\w+|now\\(\\)|'[^']*'|-?\\d+(?:\\.\\d+)?|true|false|null)\\s*,\\s*){5}(?::(\\w+)|(now\\(\\))|('[^']*'|-?\\d+(?:\\.\\d+)?|true|false|null)))|(?<=\\binsert\\s+into\\s+\\w+\\s*\\(\\s*(?:\\w+\\s*,\\s*){6})(\\w+)(?=(?:\\s*,[^)]*)?\\s*\\)\\s*values\\s*\\(\\s*(?:(?::\\w+|now\\(\\)|'[^']*'|-?\\d+(?:\\.\\d+)?|true|false|null)\\s*,\\s*){6}(?::(\\w+)|(now\\(\\))|('[^']*'|-?\\d+(?:\\.\\d+)?|true|false|null)))|(?<=\\binsert\\s+into\\s+\\w+\\s*\\(\\s*(?:\\w+\\s*,\\s*){7})(\\w+)(?=(?:\\s*,[^)]*)?\\s*\\)\\s*values\\s*\\(\\s*(?:(?::\\w+|now\\(\\)|'[^']*'|-?\\d+(?:\\.\\d+)?|true|false|null)\\s*,\\s*){7}(?::(\\w+)|(now\\(\\))|('[^']*'|-?\\d+(?:\\.\\d+)?|true|false|null)))|(?<=\\binsert\\s+into\\s+\\w+\\s*\\(\\s*(?:\\w+\\s*,\\s*){8})(\\w+)(?=(?:\\s*,[^)]*)?\\s*\\)\\s*values\\s*\\(\\s*(?:(?::\\w+|now\\(\\)|'[^']*'|-?\\d+(?:\\.\\d+)?|true|false|null)\\s*,\\s*){8}(?::(\\w+)|(now\\(\\))|('[^']*'|-?\\d+(?:\\.\\d+)?|true|false|null)))|(?<=\\binsert\\s+into\\s+\\w+\\s*\\(\\s*(?:\\w+\\s*,\\s*){9})(\\w+)(?=(?:\\s*,[^)]*)?\\s*\\)\\s*values\\s*\\(\\s*(?:(?::\\w+|now\\(\\)|'[^']*'|-?\\d+(?:\\.\\d+)?|true|false|null)\\s*,\\s*){9}(?::(\\w+)|(now\\(\\))|('[^']*'|-?\\d+(?:\\.\\d+)?|true|false|null)))|(?<=\\binsert\\s+into\\s+\\w+\\s*\\([^)]*)(,)(?=[^)]*\\)\\s*values\\b)|'[^']*'|\\w+|[\\s\\S]/$1${1:+: }$2${3:+new Date()}$4$5${5:+: }$6${7:+new Date()}$8$9${9:+: }$10${11:+new Date()}$12$13${13:+: }$14${15:+new Date()}$16$17${17:+: }$18${19:+new Date()}$20$21${21:+: }$22${23:+new Date()}$24$25${25:+: }$26${27:+new Date()}$28$29${29:+: }$30${31:+new Date()}$32$33${33:+: }$34${35:+new Date()}$36$37${37:+: }$38${39:+new Date()}$40${41:+, }/gi}${CLIPBOARD/^\\s*(update|insert)\\b[\\s\\S]*$|^[\\s\\S]*$/${1:+ \\})}/i}${CLIPBOARD/(?:(left)|(right)|(full))\\s+(?:outer\\s+)?join\\s+(\\w+)\\s+on\\s+([\\w.]+)\\s*=\\s*([\\w.]+)|(?:inner\\s+)?(join)\\s+(\\w+)\\s+on\\s+([\\w.]+)\\s*=\\s*([\\w.]+)|'[^']*'|\\w+|[\\s\\S]/${1:+.leftJoin(}${2:+.rightJoin(}${3:+.fullJoin(}${7:+.innerJoin(}$4$8${4:+, eq(}${8:+, eq(}$5$9${4:+, }${8:+, }$6$10${4:+))}${8:+))}/gi}${CLIPBOARD/^[\\s\\S]*?\\bwhere\\b(?:(?!\\b(?:order|limit|offset)\\b)[\\s\\S])*?\\b(and)\\b[\\s\\S]*$|^[\\s\\S]*?\\b(where)\\b[\\s\\S]*$|^[\\s\\S]*$/${1:+.where(and(}${2:+.where(}/i}${CLIPBOARD/(?<=\\bwhere\\b(?:(?!\\b(?:order|limit|offset)\\b)[\\s\\S])*)(?!(?:and|order|limit|offset)\\b)(?:(\\w+)\\.(\\w+)|(?<=\\b(?:from|update)\\s+(\\w+)\\b[\\s\\S]*)(\\w+))\\s*(?:(=)|(!=|<>)|(>=)|(<=)|(>)|(<)|(not\\s+like)|(like)|(ilike)|(is\\s+not\\s+null)|(is\\s+null)|(not\\s+in)|(in))\\s*(?:(?::(\\w+)|(now\\(\\))|('[^']*'|-?\\d+(?:\\.\\d+)?|true|false|null))|\\(\\s*(?::(\\w+)|([^)]*?))\\s*\\))?|(?<=\\bwhere\\b(?:(?!\\b(?:order|limit|offset)\\b)[\\s\\S])*)\\b(and)\\b|'[^']*'|\\w+|[\\s\\S]/${5:+eq(}${6:+ne(}${7:+gte(}${8:+lte(}${9:+gt(}${10:+lt(}${11:+notLike(}${12:+like(}${13:+ilike(}${14:+isNotNull(}${15:+isNull(}${16:+notInArray(}${17:+inArray(}$1$3${1:+.}${3:+.}$2$4${18:+, }$18${19:+, new Date()}${20:+, }$20${21:+, }$21${22:+, [}$22${22:+]}${2:+)}${4:+)}${23:+, }/gi}${CLIPBOARD/^[\\s\\S]*?\\bwhere\\b(?:(?!\\b(?:order|limit|offset)\\b)[\\s\\S])*?\\b(and)\\b[\\s\\S]*$|^[\\s\\S]*?\\b(where)\\b[\\s\\S]*$|^[\\s\\S]*$/${1:+))}${2:+)}/i}${CLIPBOARD/^[\\s\\S]*?\\b(order)\\s+by\\b[\\s\\S]*$|^[\\s\\S]*$/${1:+.orderBy(}/i}${CLIPBOARD/(?<=\\border\\s+by\\b(?:(?!\\b(?:limit|offset)\\b)[\\s\\S])*)(?!(?:limit|offset)\\b)(?:(\\w+)\\.(\\w+)|(?<=\\b(?:from|update)\\s+(\\w+)\\b[\\s\\S]*)(\\w+))(?:\\s+(asc)|\\s+(desc))?|(?<=\\border\\s+by\\b(?:(?!\\b(?:limit|offset)\\b)[\\s\\S])*)(,)|'[^']*'|\\w+|[\\s\\S]/${5:+asc(}${6:+desc(}$1$3${1:+.}${3:+.}$2$4${5:+)}${6:+)}${7:+, }/gi}${CLIPBOARD/^[\\s\\S]*?\\b(order)\\s+by\\b[\\s\\S]*$|^[\\s\\S]*$/${1:+)}/i}${CLIPBOARD/^[\\s\\S]*?\\blimit\\s+:?(\\w+)[\\s\\S]*$|^[\\s\\S]*$/${1:+.limit(}$1${1:+)}/i}${CLIPBOARD/^[\\s\\S]*?\\boffset\\s+:?(\\w+)[\\s\\S]*$|^[\\s\\S]*$/${1:+.offset(}$1${1:+)}/i}$0"
+		]
+	},
+	"DB soft delete": {
+		"scope": "typescript",
+		"prefix": ["db::softdelete", "softdelete"],
+		"include": ["*.remote.ts", "*.server.ts", "+server.ts", "**/lib/server/**"],
+		"exclude": "**/lib/server/db/schema/**",
+		"description": "Soft delete by id (sets deletedAt)",
+		"body": [
+			"// TODO: add isNull(${1:table}.deletedAt) to every select, count, update and delete, or deleted rows can still be listed, patched and deleted again",
+			"// TODO: add deletedAt: true to ${1}InsertSchema and ${1}UpdateSchema .omit() so clients can't set it",
+			"await db.update($1).set({ deletedAt: new Date() }).where(eq($1.id, ${2:id}));$0"
+		]
+	},
+	"Column owner": {
+		"scope": "typescript",
+		"prefix": ["col::owner", "owner"],
+		"include": "**/lib/server/db/**",
+		"description": "userId column referencing the better-auth user (row owner)",
+		"body": [
+			"userId: text('user_id')",
+			"\t.notNull()",
+			"\t.references(() => ${1:user}.id, { onDelete: 'cascade' }),$0"
+		]
+	},
+	"Drizzle Remote Owned CRUD": {
+		"scope": "typescript",
+		"prefix": "drizzle::remote-owned",
+		"include": "*.remote.ts",
+		"exclude": ["**/src/**/server/**", "auth.remote.ts", "admin.remote.ts"],
+		"isFileTemplate": true,
+		"description": "CRUD remote functions for per-user rows (only the user's own)",
+		"body": [
+			"import { error } from '@sveltejs/kit';",
+			"import { command, form, getRequestEvent, query } from '\\$app/server';",
+			"import { and, desc, eq } from 'drizzle-orm';",
+			"import { z } from 'zod';",
+			"import { db } from '#lib/server/db/index.ts';",
+			"import { ${1:${TM_FILENAME_BASE/([^.]*).*/$1/}}, ${1}InsertSchema, ${1}UpdateSchema } from '#lib/server/db/schema/${1}.ts';",
+			"",
+			"// TODO: the table needs a userId column (col::owner)",
+			"",
+			"function requireUser() {",
+			"\tconst { user } = getRequestEvent().locals;",
+			"\tif (!user) error(401, 'Unauthorized');",
+			"\treturn user;",
+			"}",
+			"",
+			"// someone else's row behaves like a missing one",
+			"const mine = (id: number, userId: string) => and(eq($1.id, id), eq($1.userId, userId));",
+			"",
+			"export const get${TM_FILENAME_BASE/([^.]*).*/${1:/pascalcase}/}s = query(async () => {",
+			"\tconst user = requireUser();",
+			"\treturn db.select().from($1).where(eq($1.userId, user.id)).orderBy(desc($1.createdAt));",
+			"});",
+			"",
+			"export const get${TM_FILENAME_BASE/([^.]*).*/${1:/pascalcase}/} = query(z.number(), async (id) => {",
+			"\tconst user = requireUser();",
+			"\tconst [row] = await db.select().from($1).where(mine(id, user.id));",
+			"\tif (!row) error(404, 'Not found');",
+			"\treturn row;",
+			"});",
+			"",
+			"export const create${TM_FILENAME_BASE/([^.]*).*/${1:/pascalcase}/} = form(${1}InsertSchema.omit({ userId: true }), async (data) => {",
+			"\tconst user = requireUser();",
+			"\tawait db.insert($1).values({ ...data, userId: user.id });",
+			"\tvoid get${TM_FILENAME_BASE/([^.]*).*/${1:/pascalcase}/}s().refresh();",
+			"});",
+			"",
+			"export const update${TM_FILENAME_BASE/([^.]*).*/${1:/pascalcase}/} = form(${1}UpdateSchema.omit({ userId: true }), async ({ id, ...data }) => {",
+			"\tconst user = requireUser();",
+			"\tawait db.update($1).set(data).where(mine(id, user.id));",
+			"\tvoid get${TM_FILENAME_BASE/([^.]*).*/${1:/pascalcase}/}s().refresh();",
+			"\tvoid get${TM_FILENAME_BASE/([^.]*).*/${1:/pascalcase}/}(id).refresh();",
+			"});",
+			"",
+			"export const delete${TM_FILENAME_BASE/([^.]*).*/${1:/pascalcase}/} = command(z.number(), async (id) => {",
+			"\tconst user = requireUser();",
+			"\tawait db.delete($1).where(mine(id, user.id));",
+			"\tvoid get${TM_FILENAME_BASE/([^.]*).*/${1:/pascalcase}/}s().refresh();",
+			"});",
+			""
+		]
+	}
+}

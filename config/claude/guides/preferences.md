@@ -1,3 +1,3 @@
-# Code
+# Preferences
 
 - Write commit messages in English.

@@ -1,25 +1,58 @@
 {
-  "skillListingMaxDescChars": 400,
-  "skillListingBudgetFraction": 0.05,
   "env": {
-    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "true",
-    "ENABLE_TOOL_SEARCH": "true",
-    "USE_BUILTIN_RIPGREP": "0",
     "CLAUDE_CODE_DISABLE_AUTO_MEMORY": "true",
     "CLAUDE_CODE_DISABLE_GIT_INSTRUCTIONS": "true",
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "true",
     "CLAUDE_CODE_ENABLE_TASKS": "true",
     "CLAUDE_CODE_NO_FLICKER": "true",
     "DISABLE_COMPACT": "false",
     "DISABLE_INSTALLATION_CHECKS": "true",
     "ENABLE_LSP_TOOL": "true",
+    "ENABLE_TOOL_SEARCH": "true",
     "FORCE_AUTOUPDATE_PLUGINS": "true",
     "MAX_MCP_OUTPUT_TOKENS": "19999",
-    "PONYTAIL_DEFAULT_MODE": "ultra"
+    "USE_BUILTIN_RIPGREP": "0"
   },
+  "alwaysThinkingEnabled": true,
   "attribution": {
     "commit": "",
     "pr": ""
   },
+  "autoCompactEnabled": false,
+  "autoDreamEnabled": false,
+  "autoMemoryEnabled": false,
+  "disableBundledSkills": true,
+  "disableClaudeAiConnectors": true,
+  "enabledPlugins": {
+    "cc-plugin-plugin-authoring@builtin": false,
+    "gopls-lsp@claude-plugins-official": true,
+    "svelte@svelte": false,
+    "typescript-lsp@claude-plugins-official": true
+  },
+  "extraKnownMarketplaces": {
+    "svelte": {
+      "source": {
+        "source": "github",
+        "repo": "sveltejs/ai-tools"
+      }
+    }
+  },
+  "hooks": {
+    "PreToolUse": []
+  },
+  "model": "opus",
+  "modelSettings": {
+    "claude-opus-5": {
+      "effortLevel": "xhigh"
+    },
+    "claude-opus-5-5": {
+      "effortLevel": "high"
+    },
+    "claude-sonnet-5-5": {
+      "effortLevel": "xhigh"
+    }
+  },
+  "outputStyle": "default",
   "permissions": {
     "allow": [
       "Bash(mkdir:*)",
@@ -53,78 +86,15 @@
     ],
     "defaultMode": "auto"
   },
-  "model": "opus",
-  "disableClaudeAiConnectors": true,
-  "skillOverrides": {
-    "dataviz": "user-invocable-only",
-    "artifact-design": "user-invocable-only",
-    "artifact-diagramming": "user-invocable-only",
-    "artifact-capabilities": "user-invocable-only",
-    "claude-api": "user-invocable-only",
-    "schedule": "user-invocable-only",
-    "workflow-authoring": "user-invocable-only",
-    "ponytail:ponytail-gain": "user-invocable-only",
-    "ponytail:ponytail-help": "user-invocable-only",
-    "ponytail:ponytail-debt": "user-invocable-only",
-    "keybindings-help": "user-invocable-only",
-    "fewer-permission-prompts": "user-invocable-only",
-    "loop": "user-invocable-only",
-    "init": "user-invocable-only"
-  },
-  "hooks": {
-    "PreToolUse": []
-  },
-  "enabledPlugins": {
-    "typescript-lsp@claude-plugins-official": true,
-    "gopls-lsp@claude-plugins-official": true,
-    "svelte-lsp@svelte-lsp": true,
-    "svelte@svelte": false,
-    "ponytail@ponytail": true,
-    "cc-plugin-plugin-authoring@builtin": false
-  },
-  "extraKnownMarketplaces": {
-    "svelte-lsp": {
-      "source": {
-        "source": "github",
-        "repo": "RA1NCS/svelte-lsp"
-      }
-    },
-    "svelte": {
-      "source": {
-        "source": "github",
-        "repo": "sveltejs/ai-tools"
-      }
-    },
-    "ponytail": {
-      "source": {
-        "source": "github",
-        "repo": "DietrichGebert/ponytail"
-      }
-    }
-  },
-  "outputStyle": "default",
-  "viewMode": "verbose",
-  "spinnerTipsEnabled": false,
-  "alwaysThinkingEnabled": true,
-  "modelSettings": {
-    "claude-opus-5": {
-      "effortLevel": "xhigh"
-    },
-    "claude-opus-5-5": {
-      "effortLevel": "xhigh"
-    },
-    "claude-sonnet-5-5": {
-      "effortLevel": "xhigh"
-    }
-  },
-  "prefersReducedMotion": true,
-  "autoMemoryEnabled": false,
-  "autoDreamEnabled": false,
-  "showThinkingSummaries": true,
-  "skipDangerousModePermissionPrompt": true,
-  "theme": "dark-ansi",
   "preferredNotifChannel": "auto",
-  "autoCompactEnabled": false,
+  "prefersReducedMotion": true,
+  "showThinkingSummaries": true,
   "showTurnDuration": true,
-  "terminalProgressBarEnabled": true
+  "skillListingBudgetFraction": 0.05,
+  "skillListingMaxDescChars": 400,
+  "skipDangerousModePermissionPrompt": true,
+  "spinnerTipsEnabled": false,
+  "terminalProgressBarEnabled": true,
+  "theme": "dark-ansi",
+  "viewMode": "default"
 }
