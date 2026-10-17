@@ -1,0 +1,2 @@
+# Scrape images with wget
+wget -nd -H -p -A jpg,jpeg,png,gif -e robots=off "$1"

@@ -1,8 +1,8 @@
 # Options
-setopt no_clobber extended_glob interactive_comments
+setopt no_clobber interactive_comments
 setopt share_history hist_ignore_all_dups hist_ignore_space
 setopt hist_reduce_blanks hist_verify
-setopt auto_cd auto_pushd pushd_ignore_dups cdable_vars
+setopt auto_cd auto_pushd pushd_ignore_dups
 setopt always_to_end
 
 # PATH
@@ -10,13 +10,14 @@ typeset -U path fpath
 path=(
   "/opt/homebrew/bin"
   "/opt/homebrew/sbin"
+  "/opt/homebrew/opt/rustup/bin"
+  $path
   "$HOME/.local/bin"
   "$HOME/.bun/bin"
   "$HOME/.cargo/bin"
   "$HOME/go/bin"
-  "$HOME/Library/pnpm"
+  "$XDG_DATA_HOME/pnpm/bin"
   "$SCRIPTS_DIR"
-  $path
 )
 
 # History
@@ -26,18 +27,20 @@ SAVEHIST=$HISTSIZE
 
 # Completion
 fpath=(
+  "$ZDOTDIR/functions"
   "/opt/homebrew/share/zsh-completions"
   "/opt/homebrew/share/zsh/site-functions"
   $fpath
 )
 autoload -Uz compinit
-if [[ -n $ZDOTDIR/.zcompdump(#qN.mh+24) ]]; then
-  compinit && touch $ZDOTDIR/.zcompdump
-else
-  compinit -C
-fi
+() {
+  local dump=($ZDOTDIR/.zcompdump(N.mh+24))
+  if (($#dump)); then compinit && touch $dump; else compinit -C; fi
+}
 zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh"
 zstyle ':completion:*:descriptions' format '%B%d%b'
 zstyle ':completion:*:warnings' format 'No matches: %d'
 
@@ -52,5 +55,5 @@ eval "$(/opt/homebrew/bin/starship init zsh)"
 eval "$(/opt/homebrew/bin/zoxide init zsh)"
 
 # Aliases & Functions
-[[ -f "$ZDOTDIR/.zsh_aliases" ]] && source "$ZDOTDIR/.zsh_aliases"
-[[ -f "$ZDOTDIR/.zsh_functions" ]] && source "$ZDOTDIR/.zsh_functions"
+[[ -f "$ZDOTDIR/aliases.zsh" ]] && source "$ZDOTDIR/aliases.zsh"
+autoload -Uz $ZDOTDIR/functions/*(.:t)

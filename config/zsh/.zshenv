@@ -18,6 +18,5 @@ export PROJECTS_DIR="$HOME/Projects"
 export SCRIPTS_DIR="$HOME/Scripts"
 
 # Homebrew
-export HOMEBREW_PREFIX="/opt/homebrew"
 export HOMEBREW_NO_ENV_HINTS=1
 export HOMEBREW_NO_ASK=1

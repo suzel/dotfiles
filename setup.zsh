@@ -2,7 +2,7 @@
 
 # Full install: curl -fsSL https://git.io/suzel-dotfiles | zsh -s
 # Single steps: ./setup.zsh config packages
-# Steps: homebrew repo config packages github macos
+# Steps: homebrew repo config packages shell github macos
 
 set -euo pipefail
 
@@ -26,9 +26,10 @@ readonly CODE_USER=~/Library/Application\ Support/Code/User
 
 links=(
   config/zsh/.zshenv ~/.zshenv
+  config/zsh/.zshenv ~/.config/zsh/.zshenv
   config/zsh/.zshrc ~/.config/zsh/.zshrc
-  config/zsh/.zsh_aliases ~/.config/zsh/.zsh_aliases
-  config/zsh/.zsh_functions ~/.config/zsh/.zsh_functions
+  config/zsh/aliases.zsh ~/.config/zsh/aliases.zsh
+  config/zsh/functions ~/.config/zsh/functions
 
   config/git ~/.config/git
 
@@ -87,11 +88,25 @@ packages() {
   local brewfile="$DOTFILES/config/brew/Brewfile"
   [[ $(mdutil -s /) == *"Indexing enabled"* ]] ||
     export HOMEBREW_BUNDLE_MAS_SKIP="$(awk '/^mas / {print $NF}' "$brewfile")"
-  brew bundle -q --file="$brewfile" ||
+  HOMEBREW_NO_AUTO_UPDATE=1 brew bundle -q --file="$brewfile" ||
     warn "Some packages failed, re-run: dotfiles packages"
-  brew cleanup -q --prune=all
+  brew cleanup --prune=all >/dev/null
   brew autoupdate delete >/dev/null
-  brew autoupdate start 03:00 --upgrade --cleanup --ac-only --notify-on-error
+  brew autoupdate start 03:00 --upgrade --cleanup --ac-only \
+    --notify-on-error &>/dev/null
+}
+
+# Homebrew zsh as login shell
+shell() {
+  info "Setting Homebrew zsh as login shell..."
+  local zsh=/opt/homebrew/bin/zsh
+  [[ -x $zsh ]] || {
+    warn "Homebrew zsh not found, skipping"
+    return
+  }
+  grep -qx $zsh /etc/shells ||
+    print -r -- $zsh | sudo tee -a /etc/shells >/dev/null
+  [[ $(dscl . -read ~ UserShell) == *$zsh ]] || chsh -s $zsh </dev/tty
 }
 
 # GitHub login, signing
@@ -114,7 +129,7 @@ macos() {
 
 # Run steps
 main() {
-  (($#)) || set -- homebrew repo config packages github macos
+  (($#)) || set -- homebrew repo config packages shell github macos
   local step
   for step; do
     ((${+functions[$step]})) || {

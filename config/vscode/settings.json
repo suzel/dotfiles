@@ -135,6 +135,9 @@
     "editor.unicodeHighlight.invisibleCharacters": false,
     "editor.wordWrap": "on"
   },
+  "[plaintext]": {
+    "workbench.editor.languageDetection": false
+  },
   "[svelte]": {
     "editor.defaultFormatter": "svelte.svelte-vscode"
   },
@@ -204,12 +207,9 @@
   "terminal.integrated.stickyScroll.enabled": true,
   "terminal.integrated.profiles.osx": {
     "zsh": {
-      "path": "/bin/zsh",
+      "path": "/opt/homebrew/bin/zsh",
       "args": ["-l"]
     }
-  },
-  "terminal.integrated.env.osx": {
-    "ZDOTDIR": "${env:HOME}/.config/zsh"
   },
 
   // Window

@@ -21,7 +21,7 @@ alias dotfiles='$PROJECTS_DIR/dotfiles/setup.zsh'
 alias top='top -o cpu'
 alias numFiles='find . -maxdepth 1 -type f | wc -l'
 alias path='print -l $path'
-alias today="date +'%m-%d-%Y'"
+alias today="date +'%d-%m-%Y'"
 alias aliases="alias | sed 's/=.*//'"
 alias count='find . -type f | wc -l'
 
@@ -33,13 +33,12 @@ alias localip='ipconfig getifaddr en0'
 alias ping='ping -c 5'
 alias ports='lsof -i -P -n | grep LISTEN'
 alias gen_pwd="LC_ALL=C tr -dc '[:alnum:]' < /dev/urandom | head -c 20 | pbcopy"
-alias wget='wget -c'
 alias pskill='pkill -f'
 alias extract='tar -xf'
 
 # Quick Edit
 alias zshrc='${=EDITOR} $ZDOTDIR/.zshrc'
-alias aliasedit='${=EDITOR} $ZDOTDIR/.zsh_aliases'
+alias aliasedit='${=EDITOR} $ZDOTDIR/aliases.zsh'
 
 # Brew
 alias bup='brew update && brew upgrade && brew cleanup'
@@ -63,6 +62,6 @@ alias pnup='pnpm upgrade --latest'
 
 # Claude
 alias cc='claude'
-alias ccd='claude --dangerously-skip-permissions'
+alias claude-yolo='claude --dangerously-skip-permissions'
 alias ccr='claude --resume'
 alias ccc='claude --continue'
