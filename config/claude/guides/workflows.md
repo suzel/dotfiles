@@ -7,5 +7,8 @@
   asking now, and don't go back over an earlier answer unless I ask about it, point out a problem
   with it, or a later step shows it was wrong.
 - Before changing code, read what the change touches, including callers, tests and config the task
-  doesn't mention.
+  doesn't mention, but change only what the task needs; mention unrelated issues instead of fixing
+  them.
+- Write the minimum code that solves the problem: no unrequested features, options or abstractions.
+- Decide up front how you'll check the result is correct, and check it before calling it done.
 - Create and edit files with Write/Edit, not Bash (`sed -i`, `>`, heredoc).
