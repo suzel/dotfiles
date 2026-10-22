@@ -44,6 +44,9 @@ go.work.sum
 __debug_bin*
 *.test
 
+# Rust
+target/
+
 # Environment
 .env
 .env.*

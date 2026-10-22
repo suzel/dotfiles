@@ -8,11 +8,37 @@
 # Usage: defaults.zsh (also run by: dotfiles macos)
 # =============================================================================
 
+set -uo pipefail
+
+failed=0
+readonly PB=/usr/libexec/PlistBuddy
+readonly WIN=$'\eWindow\e'
+readonly MR=$'\eWindow\eMove & Resize\e'
+
 # Log Functions
 info() { echo "\033[0;34mℹ️  $*\033[0m"; }
 warn() { echo "\033[0;33m⚠️  $*\033[0m" >&2; }
 error() { echo "\033[0;31m❌️ $*\033[0m" >&2; }
 success() { echo "\033[0;32m✅ $*\033[0m"; }
+
+# Error trap: report and continue
+TRAPZERR() { error "Error at ${funcfiletrace[1]}" && failed=1; }
+
+# Quits Terminal
+quit_terminal() {
+  osascript -e 'tell application "Terminal" to quit' 2>/dev/null || return 1
+  for _ in {1..50}; do
+    pgrep -xq Terminal || return 0
+    sleep 0.2
+  done
+  return 1
+}
+
+# Sets a Pro profile key
+pro() {
+  local key=":Window Settings:Pro:$1"
+  $PB -c "Set '$key' $3" "$tp" 2>/dev/null || $PB -c "Add '$key' $2 $3" "$tp"
+}
 
 # Close System Settings to prevent it from overriding changes
 osascript -e 'tell application "System Settings" to quit' 2>/dev/null
@@ -21,13 +47,13 @@ osascript -e 'tell application "System Settings" to quit' 2>/dev/null
 # Finder
 # =============================================================================
 
-# Show path bar at the bottom of Finder windows
+# Hide path bar at the bottom of Finder windows
 defaults write com.apple.finder ShowPathbar -bool false
 
-# Show status bar at the bottom of Finder windows
+# Hide status bar at the bottom of Finder windows
 defaults write com.apple.finder ShowStatusBar -bool false
 
-# Show hidden files
+# Don't show hidden files
 defaults write com.apple.finder AppleShowAllFiles -bool false
 
 # Show file extensions
@@ -58,10 +84,10 @@ defaults write com.apple.finder _FXSortFoldersFirst -bool true
 
 # Enable tap to click for the current user
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad \
-    Clicking -bool true
+  Clicking -bool true
 defaults write com.apple.AppleMultitouchTrackpad Clicking -bool true
 defaults -currentHost write NSGlobalDomain \
-    com.apple.mouse.tapBehavior -int 1
+  com.apple.mouse.tapBehavior -int 1
 defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 
 # Tracking speed (0.0 to 3.0, default: 1.0)
@@ -69,9 +95,9 @@ defaults write NSGlobalDomain com.apple.trackpad.scaling -float 0.875
 
 # Enable three-finger drag
 defaults write com.apple.AppleMultitouchTrackpad \
-    TrackpadThreeFingerDrag -bool true
+  TrackpadThreeFingerDrag -bool true
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad \
-    TrackpadThreeFingerDrag -bool true
+  TrackpadThreeFingerDrag -bool true
 
 # =============================================================================
 # Mouse
@@ -85,25 +111,25 @@ defaults write NSGlobalDomain com.apple.mouse.scaling -float 0.875
 
 # Enable smart zoom (double-tap with one finger)
 defaults write com.apple.driver.AppleBluetoothMultitouch.mouse \
-    MouseOneFingerDoubleTapGesture -int 1
+  MouseOneFingerDoubleTapGesture -int 1
 defaults write com.apple.AppleMultitouchMouse \
-    MouseOneFingerDoubleTapGesture -int 1
+  MouseOneFingerDoubleTapGesture -int 1
 
 # Swipe between pages with one finger (scroll left or right)
 defaults write NSGlobalDomain \
-    AppleEnableMouseSwipeNavigateWithScrolls -bool true
+  AppleEnableMouseSwipeNavigateWithScrolls -bool true
 
 # Mission Control (double-tap with two fingers)
 defaults write com.apple.driver.AppleBluetoothMultitouch.mouse \
-    MouseTwoFingerDoubleTapGesture -int 1
+  MouseTwoFingerDoubleTapGesture -int 1
 defaults write com.apple.AppleMultitouchMouse \
-    MouseTwoFingerDoubleTapGesture -int 1
+  MouseTwoFingerDoubleTapGesture -int 1
 
 # Swipe between full-screen apps (swipe left or right with two fingers)
 defaults write com.apple.driver.AppleBluetoothMultitouch.mouse \
-    MouseTwoFingerHorizSwipeGesture -int 2
+  MouseTwoFingerHorizSwipeGesture -int 2
 defaults write com.apple.AppleMultitouchMouse \
-    MouseTwoFingerHorizSwipeGesture -int 2
+  MouseTwoFingerHorizSwipeGesture -int 2
 
 # =============================================================================
 # Mission Control
@@ -121,9 +147,6 @@ defaults write com.apple.dock expose-group-apps -bool false
 
 # Enable Dark Mode
 defaults write NSGlobalDomain AppleInterfaceStyle -string "Dark"
-
-# Light font smoothing (for non-retina external monitors)
-defaults -currentHost write -g AppleFontSmoothing -int 1
 
 # Auto-hide menu bar
 defaults write NSGlobalDomain _HIHideMenuBar -bool true
@@ -186,6 +209,25 @@ defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
 
 # Disable period substitution (double space → period)
 defaults write NSGlobalDomain NSAutomaticPeriodSubstitutionEnabled -bool false
+
+# =============================================================================
+# Window Tiling
+# =============================================================================
+
+# Rectangle-style ⌃⌥ shortcuts for Window > Move & Resize
+defaults write NSGlobalDomain NSUserKeyEquivalents -dict-add \
+  "${MR}Left" $'^~\uF702' \
+  "${MR}Right" $'^~\uF703' \
+  "${MR}Top" $'^~\uF700' \
+  "${MR}Bottom" $'^~\uF701' \
+  "${MR}Top Left" '^~u' \
+  "${MR}Top Right" '^~i' \
+  "${MR}Bottom Left" '^~j' \
+  "${MR}Bottom Right" '^~k' \
+  "${MR}Left & Right" '^~2' \
+  "${MR}Return to Previous Size" $'^~\u232B' \
+  "${WIN}Fill" $'^~\u21A9' \
+  "${WIN}Center" '^~c'
 
 # =============================================================================
 # Screenshots
@@ -251,46 +293,47 @@ end tell'
 
 # Profile settings live under "Window Settings" → Pro, not at the top level.
 # Terminal must be closed, or it writes its in-memory profile back over them.
-if [[ $TERM_PROGRAM == Apple_Terminal ]]; then
-    warn "Running inside Terminal.app: Pro profile settings skipped, rerun from another terminal."
+if [[ ${TERM_PROGRAM-} == Apple_Terminal ]]; then
+  warn "Inside Terminal.app: Pro profile skipped, rerun from another terminal."
+elif ! quit_terminal; then
+  warn "Terminal did not quit: Pro profile skipped, close it and rerun."
+elif tp=$(mktemp) && ! defaults export com.apple.Terminal "$tp"; then
+  error "Terminal prefs export failed: Pro profile skipped."
+  rm -f -- "$tp"
+  failed=1
 else
-    osascript -e 'tell application "Terminal" to quit'
-    while pgrep -xq Terminal; do sleep 0.2; done
 
-    tp=$(mktemp)
-    defaults export com.apple.Terminal "$tp"
-    pro() {
-        /usr/libexec/PlistBuddy -c "Set ':Window Settings:Pro:$1' $3" "$tp" 2>/dev/null ||
-            /usr/libexec/PlistBuddy -c "Add ':Window Settings:Pro:$1' $2 $3" "$tp"
-    }
+  # Scroll-back buffer size
+  pro ShouldLimitScrollback bool true
+  pro ScrollbackLines integer 100000
 
-    # Scroll-back buffer size
-    pro ShouldLimitScrollback bool true
-    pro ScrollbackLines integer 100000
+  # Disable audible bell, use visual bell instead
+  pro Bell bool false
+  pro VisualBell bool true
+  pro VisualBellOnlyWhenMuted bool false
 
-    # Disable audible bell, use visual bell instead
-    pro Bell bool false
-    pro VisualBell bool true
-    pro VisualBellOnlyWhenMuted bool false
+  # Close window when the shell exits cleanly
+  pro shellExitAction integer 1
 
-    # Close window when the shell exits cleanly
-    pro shellExitAction integer 1
+  # Don't render bold text as bright colors
+  pro UseBrightBold bool false
 
-    # Don't render bold text as bright colors
-    pro UseBrightBold bool false
+  # Show active process and working directory in window title
+  pro ShowActiveProcessInTitle bool true
+  pro ShowRepresentedURLInTitle bool true
 
-    # Show active process and working directory in window title
-    pro ShowActiveProcessInTitle bool true
-    pro ShowRepresentedURLInTitle bool true
-
-    defaults import com.apple.Terminal "$tp" && rm "$tp"
+  defaults import com.apple.Terminal "$tp" || warn "Pro profile import failed."
+  rm -f -- "$tp"
 fi
+
 # =============================================================================
 # Restart affected services
 # =============================================================================
 
-killall Finder 2>/dev/null
-killall Dock 2>/dev/null
-killall SystemUIServer 2>/dev/null
+killall Finder 2>/dev/null || true
+killall Dock 2>/dev/null || true
+killall SystemUIServer 2>/dev/null || true
 
-success "macOS user defaults applied successfully."
+info "Log out for Dark Mode, relaunch apps for window shortcuts."
+((failed)) && warn "Some macOS defaults failed, see errors above." ||
+  success "macOS user defaults applied successfully."

@@ -1,6 +1,7 @@
 {
 	"Github Action - CI": {
 		"scope": "github-actions-workflow",
+		"include": "**/.github/workflows/*.yml",
 		"isFileTemplate": true,
 		"description": "CI workflow: lint, check and build on pushes and PRs to main and dev",
 		"body": [
@@ -53,6 +54,7 @@
 	},
 	"Github Action - Deploy": {
 		"scope": "github-actions-workflow",
+		"include": "**/.github/workflows/*.yml",
 		"isFileTemplate": true,
 		"description": "Deploy workflow: build on push to main, Cloudflare Pages deploy commented out",
 		"body": [
@@ -113,6 +115,7 @@
 	},
 	"Github Action - Check": {
 		"scope": "github-actions-workflow",
+		"include": "**/.github/workflows/*.yml",
 		"isFileTemplate": true,
 		"description": "Weekly + PR project check via suzel/dotfiles sv-check.yml; report in the job summary",
 		"body": [
@@ -145,6 +148,7 @@
 	},
 	"Github Action - SvelteKit Check": {
 		"scope": "github-actions-workflow",
+		"include": "**/.github/workflows/*.yml",
 		"isFileTemplate": true,
 		"description": "Standalone SvelteKit check workflow: every tool as a step or action, weekly status comment; no dotfiles dependency",
 		"body": [

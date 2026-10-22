@@ -9,26 +9,54 @@
 # Requires: admin rights. Calls sudo itself; run as your user, not with sudo.
 # =============================================================================
 
+set -uo pipefail
+
+failed=0
+readonly FW=/usr/libexec/ApplicationFirewall/socketfilterfw
+readonly DAEMONS=/System/Library/LaunchDaemons
+readonly ARD_DIR=/System/Library/CoreServices/RemoteManagement
+readonly KICKSTART="$ARD_DIR/ARDAgent.app/Contents/Resources/kickstart"
+readonly SU_PREF=/Library/Preferences/com.apple.SoftwareUpdate
+readonly NAT_PREF=/Library/Preferences/SystemConfiguration/com.apple.nat
+readonly CRASH_DIR="/Library/Application Support/CrashReporter"
+readonly DIAG_PREF="$CRASH_DIR/DiagnosticMessagesHistory.plist"
+readonly LOGIN_PREF=/Library/Preferences/com.apple.loginwindow
+readonly HANDOFF_PREF=com.apple.coreservices.useractivityd
+readonly HOST_NAME=MacBook
+
 # Log Functions
 info() { echo "\033[0;34mℹ️  $*\033[0m"; }
 warn() { echo "\033[0;33m⚠️  $*\033[0m" >&2; }
-error() { echo "\033[0;31m❌️ $*\033[0m" >&2; }
+error() { echo "\033[0;31m❌️ $*\033[0m" >&2 && failed=1; }
 success() { echo "\033[0;32m✅ $*\033[0m"; }
+
+# Error trap: report and continue
+TRAPZERR() { error "Error at ${funcfiletrace[1]}"; }
+
+((EUID == 0)) && error "Run as your user, not with sudo." && exit 1
 
 # Close System Settings to prevent it from overriding changes
 info "Closing System Settings..."
-osascript -e 'tell application "System Settings" to quit' 2>/dev/null
+osascript -e 'tell application "System Settings" to quit' 2>/dev/null || true
 
 # =============================================================================
 # Firewall
 # =============================================================================
 
 info "Configuring firewall..."
-fw="/usr/libexec/ApplicationFirewall/socketfilterfw"
-sudo $fw --setglobalstate on || error "Failed to enable firewall"
-sudo $fw --setstealthmode on || error "Failed to enable stealth mode"
-sudo $fw --setallowsigned on || error "Failed to allow signed apps"
-sudo $fw --setallowsignedapp on || error "Failed to allow signed app exceptions"
+
+# Enable the firewall
+sudo $FW --setglobalstate on || error "Failed to enable firewall"
+
+# Enable stealth mode (don't answer pings or port scans)
+sudo $FW --setstealthmode on || error "Failed to enable stealth mode"
+
+# Allow built-in software to accept incoming connections
+sudo $FW --setallowsigned on || error "Failed to allow signed apps"
+
+# Ask before downloaded signed apps accept incoming connections
+sudo $FW --setallowsignedapp off ||
+  error "Failed to disable signed app exceptions"
 
 # =============================================================================
 # Network Ports & Services
@@ -36,38 +64,42 @@ sudo $fw --setallowsignedapp on || error "Failed to allow signed app exceptions"
 
 info "Disabling network services..."
 
-# Disable built-in Apache HTTP server
-httpd_plist="/System/Library/LaunchDaemons/org.apache.httpd.plist"
-sudo launchctl bootout system "$httpd_plist" 2>/dev/null
-sudo launchctl disable system/org.apache.httpd 2>/dev/null
+# Disable the built-in Apache HTTP server
+sudo launchctl bootout system $DAEMONS/org.apache.httpd.plist 2>/dev/null ||
+  true
+sudo launchctl disable system/org.apache.httpd 2>/dev/null || true
 
-# Disable NFS server
-nfsd_plist="/System/Library/LaunchDaemons/com.apple.nfsd.plist"
-sudo launchctl bootout system "$nfsd_plist" 2>/dev/null
-sudo launchctl disable system/com.apple.nfsd 2>/dev/null
+# Disable the NFS server
+sudo launchctl bootout system $DAEMONS/com.apple.nfsd.plist 2>/dev/null || true
+sudo launchctl disable system/com.apple.nfsd 2>/dev/null || true
 
-# Disable mDNS multicast advertisements (Bonjour)
+# Disable NetBIOS (announces the host name on UDP 137/138)
+sudo launchctl bootout system/com.apple.netbiosd 2>/dev/null || true
+sudo launchctl disable system/com.apple.netbiosd ||
+  error "Failed to disable NetBIOS"
+
+# Disable Bonjour multicast advertisements
 sudo defaults write /Library/Preferences/com.apple.mDNSResponder.plist \
   NoMulticastAdvertisements -bool true
 
 # =============================================================================
-# DNS Security
+# Host Name
 # =============================================================================
 
-info "Setting DNS to Quad9..."
-# Set DNS to Quad9 (malware blocking) on all network services.
-# Plain DNS, not encrypted: encrypted DNS needs Quad9's .mobileconfig profile.
-# Disabled services are listed with a leading "*", which networksetup rejects.
-while IFS= read -r iface; do
-  sudo networksetup -setdnsservers "${iface#\*}" 9.9.9.9 149.112.112.112
-done < <(networksetup -listallnetworkservices | tail -n +2)
+info "Setting a generic host name..."
+
+# Use a generic host name (the default contains your user name)
+for key in ComputerName LocalHostName HostName; do
+  sudo scutil --set $key $HOST_NAME
+done
 
 # =============================================================================
 # Captive Portal
 # =============================================================================
 
 info "Disabling captive portal assistant..."
-# Don't auto-open hotspot login pages (log in via the browser instead)
+
+# Don't auto-open hotspot login pages
 sudo defaults write \
   /Library/Preferences/SystemConfiguration/com.apple.captive.control \
   Active -bool false
@@ -77,6 +109,8 @@ sudo defaults write \
 # =============================================================================
 
 info "Enabling FileVault..."
+
+# Enable FileVault disk encryption
 fdesetup isactive >/dev/null || sudo fdesetup enable
 
 # =============================================================================
@@ -84,6 +118,8 @@ fdesetup isactive >/dev/null || sudo fdesetup enable
 # =============================================================================
 
 info "Enabling Gatekeeper..."
+
+# Only allow apps from the App Store and identified developers
 sudo spctl --global-enable || error "Failed to enable Gatekeeper"
 
 # =============================================================================
@@ -91,14 +127,27 @@ sudo spctl --global-enable || error "Failed to enable Gatekeeper"
 # =============================================================================
 
 info "Enabling automatic updates..."
-# softwareupdated reads the system domain, not the user one
-su_pref="/Library/Preferences/com.apple.SoftwareUpdate"
-sudo defaults write "$su_pref" AutomaticCheckEnabled -bool true
-sudo defaults write "$su_pref" AutomaticDownload -bool true
-sudo defaults write "$su_pref" CriticalUpdateInstall -bool true
-sudo defaults write "$su_pref" ConfigDataInstall -bool true
-sudo defaults write "$su_pref" AutomaticallyInstallMacOSUpdates -bool true
-sudo defaults write /Library/Preferences/com.apple.commerce AutoUpdate -bool true
+
+# Check for updates automatically (softwareupdated reads the system domain)
+sudo defaults write $SU_PREF AutomaticCheckEnabled -bool true
+
+# Download new updates in the background
+sudo defaults write $SU_PREF AutomaticDownload -bool true
+
+# Install security responses and system files
+sudo defaults write $SU_PREF CriticalUpdateInstall -bool true
+
+# Install XProtect and malware definition updates
+sudo defaults write $SU_PREF ConfigDataInstall -bool true
+
+# Install macOS updates
+sudo defaults write $SU_PREF AutomaticallyInstallMacOSUpdates -bool true
+
+# Install App Store app updates
+sudo defaults write /Library/Preferences/com.apple.commerce \
+  AutoUpdate -bool true
+
+# Turn on scheduled update checks
 softwareupdate --schedule on
 
 # =============================================================================
@@ -106,23 +155,32 @@ softwareupdate --schedule on
 # =============================================================================
 
 info "Configuring screen lock..."
+
 # Require password immediately after sleep or screen saver
 # (com.apple.screensaver askForPassword is ignored since macOS 10.13.4)
 sysadminctl -screenLock status 2>&1 | grep -q immediate ||
   sudo sysadminctl -screenLock immediate -password - ||
   error "Failed to set screen lock"
 
+# Start the screen saver after 5 minutes of inactivity
+defaults -currentHost write com.apple.screensaver idleTime -int 300
+
 # =============================================================================
 # Remote Access
 # =============================================================================
 
 info "Disabling remote access..."
-# Note: Requires Full Disk Access for Terminal (macOS Catalina+)
-sudo systemsetup -f -setremotelogin off ||
-  error "Failed to disable remote login"
-ard_path="/System/Library/CoreServices/RemoteManagement"
-ard_path+="/ARDAgent.app/Contents/Resources/kickstart"
-sudo "$ard_path" -deactivate -stop 2>/dev/null
+
+# Disable Remote Login (SSH), Screen Sharing and Remote Apple Events
+for svc in com.openssh.sshd com.apple.screensharing com.apple.AEServer; do
+  sudo launchctl bootout system/$svc 2>/dev/null || true
+  sudo launchctl disable system/$svc || error "Failed to disable $svc"
+done
+
+# Disable Remote Management (Apple Remote Desktop)
+sudo "$KICKSTART" -deactivate -stop 2>/dev/null || true
+
+# Disable Wake for network access
 sudo pmset -a womp 0 || error "Failed to disable Wake-on-LAN"
 
 # =============================================================================
@@ -130,30 +188,53 @@ sudo pmset -a womp 0 || error "Failed to disable Wake-on-LAN"
 # =============================================================================
 
 info "Disabling sharing services..."
-smbd_plist="/System/Library/LaunchDaemons/com.apple.smbd.plist"
-sudo launchctl bootout system "$smbd_plist" 2>/dev/null
-sudo launchctl disable system/com.apple.smbd 2>/dev/null
-cupsctl --no-share-printers 2>/dev/null
+
+# Disable File Sharing (SMB)
+sudo launchctl bootout system $DAEMONS/com.apple.smbd.plist 2>/dev/null || true
+sudo launchctl disable system/com.apple.smbd 2>/dev/null || true
+
+# Disable Printer Sharing
+cupsctl --no-share-printers 2>/dev/null || true
+
 # Disable AirDrop (legacy key + modern method)
 defaults write com.apple.NetworkBrowser DisableAirDrop -bool true
-defaults write com.apple.sharingd DiscoverableMode -string "Off" 2>/dev/null
-nat_pref="/Library/Preferences/SystemConfiguration/com.apple.nat"
-sudo defaults write "$nat_pref" NAT -dict Enabled -int 0 2>/dev/null
+defaults write com.apple.sharingd DiscoverableMode -string "Off" 2>/dev/null ||
+  true
+
+# Disable Internet Sharing
+sudo defaults write $NAT_PREF NAT -dict Enabled -int 0 2>/dev/null || true
+
+# Disable Content Caching
+[[ $(AssetCacheManagerUtil isActivated 2>&1) == *deactivated* ]] ||
+  sudo AssetCacheManagerUtil deactivate ||
+  error "Failed to disable content caching"
+
+# Disable AirPlay Receiver (listens on *:5000 and *:7000)
+defaults -currentHost write com.apple.controlcenter \
+  AirplayReceiverEnabled -bool false
+
+# Disable Handoff
+defaults -currentHost write $HANDOFF_PREF ActivityAdvertisingAllowed -bool false
+defaults -currentHost write $HANDOFF_PREF ActivityReceivingAllowed -bool false
 
 # =============================================================================
 # Privacy & Analytics
 # =============================================================================
 
 info "Configuring privacy & analytics..."
+
+# Don't show the crash reporter dialog
 defaults write com.apple.CrashReporter DialogType none
+
 # Don't share Mac analytics with Apple or app developers
-diag_pref="/Library/Application Support/CrashReporter/DiagnosticMessagesHistory.plist"
-sudo defaults write "$diag_pref" AutoSubmit -bool false
-sudo defaults write "$diag_pref" ThirdPartyDataSubmit -bool false
+sudo defaults write "$DIAG_PREF" AutoSubmit -bool false
+sudo defaults write "$DIAG_PREF" ThirdPartyDataSubmit -bool false
+
+# Disable personalized ads
 defaults write com.apple.AdLib \
   allowApplePersonalizedAdvertising -bool false
-defaults write com.apple.AdLib \
-  allowIdentifierForAdvertising -bool false
+
+# Disable suggestions in Look Up
 defaults write com.apple.lookup.shared \
   LookupSuggestionsDisabled -bool true
 
@@ -162,17 +243,26 @@ defaults write com.apple.lookup.shared \
 # =============================================================================
 
 info "Configuring login window..."
-login_pref="/Library/Preferences/com.apple.loginwindow"
-sudo defaults write "$login_pref" GuestEnabled -bool false
-sudo defaults delete "$login_pref" autoLoginUser 2>/dev/null
-sudo defaults write "$login_pref" RetriesUntilHint -int 0
-sudo defaults write "$login_pref" AdminHostInfo HostName
+
+# Disable the guest account
+sudo defaults write $LOGIN_PREF GuestEnabled -bool false
+
+# Disable automatic login
+sudo defaults delete $LOGIN_PREF autoLoginUser 2>/dev/null || true
+
+# Never show the password hint
+sudo defaults write $LOGIN_PREF RetriesUntilHint -int 0
+
+# Don't show host name, IP and OS build when the clock is clicked
+sudo defaults delete $LOGIN_PREF AdminHostInfo 2>/dev/null || true
 
 # =============================================================================
 # Terminal Security
 # =============================================================================
 
 info "Enabling secure keyboard entry..."
+
+# Enable Secure Keyboard Entry in Terminal
 defaults write com.apple.terminal SecureKeyboardEntry -bool true
 
 # =============================================================================
@@ -180,16 +270,27 @@ defaults write com.apple.terminal SecureKeyboardEntry -bool true
 # =============================================================================
 
 info "Configuring Finder security..."
+
+# Don't create .DS_Store files on network volumes
 defaults write com.apple.desktopservices \
   DSDontWriteNetworkStores -bool true
-defaults write com.apple.desktopservices \
-  DSDontWriteUSBStores -bool true
+
+# =============================================================================
+# Home Folder
+# =============================================================================
+
+info "Making the home folder private..."
+
+# Make the home folder private (default 750 lets the staff group list it)
+chmod 700 "$HOME"
 
 # =============================================================================
 # Bluetooth
 # =============================================================================
 
 info "Disabling Bluetooth sharing..."
+
+# Disable Bluetooth sharing
 defaults -currentHost write com.apple.Bluetooth \
   PrefKeyServicesEnabled -bool false
 
@@ -198,18 +299,36 @@ defaults -currentHost write com.apple.Bluetooth \
 # =============================================================================
 
 info "Disabling Siri..."
+
+# Disable Siri
 defaults write com.apple.assistant.support "Assistant Enabled" -bool false
+
+# Don't share audio recordings with Apple
 defaults write com.apple.assistant.support \
   "Siri Data Sharing Opt-In Status" -int 2
-defaults write com.apple.Siri StatusMenuVisible -bool false
 
+# Hide Siri in the menu bar
+defaults write com.apple.Siri StatusMenuVisible -bool false
 
 # =============================================================================
 # Restart affected services
 # =============================================================================
 
 info "Restarting affected services..."
-killall SystemUIServer 2>/dev/null
-killall Finder 2>/dev/null
+killall SystemUIServer 2>/dev/null || true
+killall Finder 2>/dev/null || true
+killall ControlCenter 2>/dev/null || true
 
-success "macOS security defaults applied successfully."
+# =============================================================================
+# Manual Steps
+# =============================================================================
+
+info "Checking steps the script can't do..."
+[[ $(systemextensionsctl list 2>/dev/null) == *lulu*'activated enabled'* ]] ||
+  warn "LuLu is not filtering: allow it in Login Items & Extensions"
+[[ $(tmutil destinationinfo 2>&1) != *"No destinations"* ]] ||
+  warn "No Time Machine destination: add an encrypted backup disk"
+
+info "Restart the Mac to apply all network and sharing changes."
+((failed)) && warn "Some security settings failed, see errors above." ||
+  success "macOS security defaults applied successfully."

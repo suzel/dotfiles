@@ -150,21 +150,8 @@ export default {
   '*.{css,html,json,md,yaml,yml}': ['prettier --write']
 };" >lint-staged.config.js
 
-# Env Files
-# snippet template kontrol edilceek.
-# web adresi, post, proje adı gibi değerler eklenebilir.
-# Docker tarfında okunacak verilere de dikkat edilmesi gerekir.
-
 # Docker
 # https://www.docker.com
-# env. bağlantısı
-# compose.dev.yaml → template geliştirlmesi proje tipine göre → snippetler if
-# compose.yml → proje tipine göre hazırlanması
-# Dockerfile.web → proje tipine göre hazırlanması
-# Dcokerignore → proje tipine göre hazırlanması
-# pnpm scripleri ve sv-setup docker ı aya kadlırp servisleri çalıştırmaıs gerek.
-# docker için olan snippetleri kontrol et güncellemeler yap.
-# Dockerfile en küçük çıktıyı vermesi gerekiyor.
 if [[ -f compose.yaml ]]; then
   info "Configuring Docker..."
   mkdir -p docker && mv compose.yaml docker/
@@ -202,42 +189,8 @@ if [[ -f compose.yaml ]]; then
     warn "Start the Docker services: pnpm docker:up"
 fi
 
-# | `bits-ui` | Headless component primitives
-# | `embla-carousel-svelte` | Ürün slider/carousel
-# | Custom RBAC middleware | Admin / Editor / Customer rol yönetimi
-# | `@stripe/stripe-js` | Client-side Stripe Elements
-# | Webhook handler (custom) | Ödeme durumu senkronizasyonu
-# | `@uploadthing/svelte` veya `@aws-sdk/client-s3` | Dosya upload
-# | Custom image pipeline | Otomatik thumbnail, responsive srcset üretimi
-# | `resend` veya `nodemailer` | Transactional email
-# | `svelte-email` | Email template'leri
-# | `web-push`   | Push notification (sipariş durumu vb.)
-# | `meilisearch` veya `minisearch`  | Full-text ürün arama
-# | Custom faceted filter  | URL-based çoklu filtre (fiyat, renk, beden vb.)
-# | Rate Limiting | `@upstash/ratelimit` — API abuse koruması
-# | Queue / Background Jobs | `bullmq` veya `inngest` — email gönderimi, stok güncelleme, rapor oluşturma
-# | Error Tracking | `@sentry/sveltekit` — hata izleme
-# | A/B Testing | Banner, fiyat, layout denemeleri — feature flag sistemi (`@vercel/flags` veya custom)
-
 # Database
 # https://orm.drizzle.team
-# Postgres için snippet var ama sqlite için özellikle CF ortamında ? (drizzle::table for sqlite)
-# Ne oacak ? (cols > title:200!, createdOn:date=now, authorId>user)
-# Drizzle Seed için snipetler ve nasıl kullanılacak ?
-# Drizzle ORM de transaction nasık kullanılacak ? (snippets)
-# sql > snippet kullanımının son haline getirilmesi.
-# Drizzle ORM cache kullanımı nasıl oluyor ? (CF + Non redis)
-# VSCode da Drizzle ORM için hazır taskların hazırlanması.
-# PostgreSQL için RLS yapısı ve snippetlerinin hazırlanması.
-# Zod entegrasyonunun mantığının öğrenilmesi.
-# Drizzle ORM Relations mantığı ve snippetlerinin hazırlanması.
-# Drizzle ORM dökümanlarının okunması.
-
-# https://orm.drizzle.team/docs/overview
-# https://orm.drizzle.team/docs/seed-overview
-# https://orm.drizzle.team/docs/cache
-# https://orm.drizzle.team/docs/zod
-# https://orm.drizzle.team/docs/rls
 if has_dep drizzle-kit; then
   info "Configuring Drizzle..."
   pnpm add -s -D drizzle-zod drizzle-seed
@@ -255,9 +208,6 @@ fi
 
 # Better-Auth
 # https://www.better-auth.com
-# https://better-auth.com/docs/infrastructure/services/email
-# https://better-auth.com/docs/plugins/admin
-# https://better-auth.com/docs/plugins/stripe
 if has_dep better-auth; then
   info "Configuring Better Auth..."
   [[ -f $db/auth.schema.ts ]] && mv $db/auth.schema.ts $db/schema/auth.ts
@@ -277,21 +227,17 @@ if has_dep drizzle-kit; then
 fi
 
 # Web Files
-# https://vite-pwa-org.netlify.app/assets-generator/
-# TODO: app.html içine meta taglerin eklenmesi ?
-# TODO: manifest.json ın prettier tarafından formatlanması için güncelle yap.
-# TODO: https://www.sopyo.com/llms.txt ???
-# TODO: OG images ?
-# fonts: not static/fonts, Vite hashes and preloads them
-# img: images, favicons
+info "Creating web files..."
 rm -f static/robots.txt
 mkdir -p \
   'src/routes/(meta)/robots.txt' \
   'src/routes/(meta)/sitemap.xml' \
   src/lib/fonts \
   static/img
-touch \
+touch static/{manifest.json,humans.txt,llms.txt} \
   'src/routes/(meta)/'{robots.txt,sitemap.xml}/+server.ts
+has_dep prettier && sed_patch .prettierignore \
+  -e 's|^/static/$|/static/*\n!/static/manifest.json|'
 if [[ -f src/lib/assets/favicon.svg ]]; then
   info "Generating favicons..."
   mkdir -p static/img/favicons
@@ -299,24 +245,12 @@ if [[ -f src/lib/assets/favicon.svg ]]; then
   rmdir src/lib/assets 2>/dev/null || true
   sed_patch src/routes/+layout.svelte \
     -e '/favicon/d' -e '/<svelte:head>/,/<\/svelte:head>/d'
-  pnpm dlx -s @vite-pwa/assets-generator@2.0.0 --preset minimal-2023 \
+  pnpm dlx -s @vite-pwa/assets-generator@2 --preset minimal-2023 \
     static/img/favicons/favicon.svg >/dev/null
 fi
 
 # Cloudflare
 # https://svelte.dev/docs/kit/adapter-cloudflare
-# CF project init
-# CF README.md badget, section
-# CF test
-# CF log, analytics
-# CF DB, KV, Workflow, R2, AI, DO
-# VSCode tasks
-# VSCode snippets for CF
-# .env, secret ve dev,prod,stage
-# domain redirect
-# Drizzle ORM settings
-# Assets caching
-# SSL ?
 if has_dep @sveltejs/adapter-cloudflare; then
   info "Configuring Cloudflare..."
   export WRANGLER_SEND_METRICS=false WRANGLER_LOG=error
@@ -338,34 +272,8 @@ if has_dep @sveltejs/adapter-cloudflare; then
     warn "Generate the Cloudflare types: pnpm gen"
 fi
 
-# TODO: ???
-# Head links (prettier reformats app.html at the end, tag breaks are fine)
-# a=%sveltekit.assets%
-# fav=$a/img/favicons
-# sed_patch src/app.html -e "/%sveltekit.head%/i\\
-# <link rel=\"icon\" href=\"$fav/favicon.ico\" sizes=\"48x48\" />\\
-# <link rel=\"icon\" href=\"$fav/favicon.svg\" sizes=\"any\"\\
-# type=\"image/svg+xml\" />\\
-# <link rel=\"apple-touch-icon\" href=\"$fav/apple-touch-icon-180x180.png\" />\\
-# <link rel=\"manifest\" href=\"$a/manifest.json\" />\\
-# <link rel=\"sitemap\" href=\"$a/sitemap.xml\" />\\
-# <link rel=\"author\" type=\"text/plain\" href=\"$a/humans.txt\" />
-# "
-# rm -f static/robots.txt # served by src/routes/(meta)/robots.txt
-# # Empty on purpose: Cmd+. in an empty file offers the seo:: file templates
-# touch static/{manifest.json,humans.txt,llms.txt}
-# # sv ignores all of static/; keep formatting manifest.json
-# sed_patch .prettierignore -e 's|^/static/$|/static/*|' -e '/^\/static\/\*$/a\
-# !/static/manifest.json
-# '
-
 # Vite
 # https://vite.dev
-# TODO: paths: { origin: (pkg as { homepage?: string }).homepage }, ???
-# TODO: `adapter: adapter({ fallback: '404.html' }),` düzenleme ve eklemeler ?(chunk ve diğer eklemeler)
-# TODO: `Icons({ compiler: 'svelte' }),` sveltekir den sora gelmesi gerekiyor.
-# TODO: Static site için veya site performansu için chunk ayarlarının yapılması.
-# TODO: Obsidian dökümanlarına bak
 if [[ -f vite.config.ts ]]; then
   pnpm pkg set scripts.dev="vite dev --open"
   # Quieter output: warnings only, no gzip size report on build
@@ -386,21 +294,14 @@ if [[ -f vite.config.ts ]]; then
   # https://github.com/unplugin/unplugin-icons
   sed_patch vite.config.ts \
     -e "s|^import { sveltekit }.*|&\nimport Icons from 'unplugin-icons/vite';|"
+  icons="Icons({ compiler: 'svelte' })"
   sed_patch vite.config.ts \
-    -e "s|^\([[:space:]]*\)plugins: \[|&\n\1\1Icons({ compiler: 'svelte' }),|"
+    -e "/sveltekit({/,/^[[:space:]]*})/s|^\([[:space:]]*\)})|&,\n\1$icons|"
   sed_patch src/app.d.ts -e "1s|^|import 'unplugin-icons/types/svelte';\n\n|"
 fi
 
 # VSCode
 # https://code.visualstudio.com
-# TODO: settings.json snippetin güncellenmesi.
-# TODO: settings.json problem var.
-# setting.json yorum satırları ve order olabilir mi ?
-# extensions.json da çif kayıt olabilir mi ? order ?
-# taskların geliştirilmesi
-# 	isimlendirme ve filtreleme mekanizması kurulması.
-# 	Diğer tasklar mesela cf ile bir de db ille iligi beliki docker bir performace için scripts deki çağıran
-
 info "Configuring VS Code..."
 readonly DOTFILES=${0:A:h:h}
 tasks=SvelteKit
@@ -436,9 +337,7 @@ add_vscode_ext \
   github.vscode-github-actions \
   humao.rest-client
 
-# Docs (public projects only: remove "private" from package.json before running)
-# TODO: Static sitede MIT lisansı nasıl aktive edilir ?
-# TODO: README.md hazırlanması. Tüm modüller için snippet hazırlanması.
+# Docs
 # https://github.com/rafazafar/gh-scaffold
 if [[ $(pnpm pkg get private) != true ]]; then
   info "Generating docs..."
@@ -463,15 +362,21 @@ fi
 if [[ -d .claude ]]; then
   info "Configuring Claude..."
   [[ -f AGENTS.md ]] && mv AGENTS.md .claude/ && touch .claude/CLAUDE.md
-  yq -oj '
-    pick(["enabledPlugins", "extraKnownMarketplaces"]) |
-    .[] |= with_entries(select(.key | test("typescript|svelte"))) |
-    .enabledPlugins[] = true
-  ' ~/.claude/settings.json >.claude/settings.json
+  jq -n '{
+    enabledPlugins: {
+      "svelte@svelte": true,
+      "typescript-lsp@claude-plugins-official": true
+    },
+    extraKnownMarketplaces: {
+      svelte: {source: {source: "github", repo: "sveltejs/ai-tools"}}
+    }
+  }' >.claude/settings.json
   yq -oj 'del(.mcpServers[] | select(to_json | contains("${")))' \
     $DOTFILES/config/claude/mcp.json >.mcp.json
   echo "/.claude/skills/" >>.prettierignore
   add_vscode_ext anthropic.claude-code
+  # LSP plugins don't ship their binaries; each teammate installs them once:
+  # npm i -g svelte-language-server typescript-language-server typescript
 fi
 
 # Tests
@@ -482,13 +387,10 @@ if has_dep vitest || has_dep @playwright/test; then
 fi
 
 # Github Actions
-# TODO: Versioning
-# TODO: Performans ve güvenlik için workflowların eklenmesi.
 info "Creating GitHub workflows..."
 mkdir -p .github/workflows
-touch \
-  .github/workflows/ci.yml \
-  .github/workflows/deploy.yml
+touch .github/dependabot.yml \
+  .github/workflows/{ci,deploy,check,release}.yml
 
 # Last Check
 info "Updating dependencies & formatting..."

@@ -10,6 +10,9 @@
   // This can help in cases where you see rendering issues in VS Code.
   "disable-hardware-acceleration": false,
 
+  // Render colors in sRGB so wide-gamut/HDR displays match the theme.
+  "force-color-profile": "srgb",
+
   // Allows to disable crash reporting.
   // Should restart the app if the value is changed.
   "enable-crash-reporter": false

@@ -1,15 +1,44 @@
 {
   // Auto Snippets
+  // prettier-ignore
   "auto-snippets.snippets": [
-    {
-      "pattern": "**/+page.svelte",
-      "commands": ["workbench.action.populateFileFromSnippet"]
-    },
-    { "pattern": "**/+layout.svelte", "snippet": "Kit Layout" },
-    { "pattern": "**/+error.svelte", "snippet": "Kit Error" },
-    { "pattern": "**/+page.server.ts", "snippet": "Kit Load" },
-    { "pattern": "**/+layout.server.ts", "snippet": "Kit Layout Load" },
-    { "pattern": "**/+server.ts", "snippet": "Kit Server" }
+    // SvelteKit
+    { "pattern": "**/+{page,layout,error}.svelte", "commands": ["workbench.action.populateFileFromSnippet"] },
+    { "regex": "/lib/components/.*(?<!/Seo|/Analytics)\\.svelte$", "commands": ["workbench.action.populateFileFromSnippet"] },
+    { "pattern": "**/+{page,layout}{,.server}.ts", "commands": ["workbench.action.populateFileFromSnippet"] },
+    { "pattern": "**/!(robots.txt|sitemap.xml|rss.xml|og.png)/+server.ts", "commands": ["workbench.action.populateFileFromSnippet"] },
+    { "pattern": "**/*.remote.ts", "commands": ["workbench.action.populateFileFromSnippet"] },
+    { "pattern": "**/*.svelte.ts", "commands": ["workbench.action.populateFileFromSnippet"] },
+    { "regex": "/lib/server/(?!db/).*(?<!\\.test|\\.spec|\\.e2e|\\.svelte)\\.ts$", "commands": ["workbench.action.populateFileFromSnippet"] },
+    { "pattern": "**/{hooks.client,instrumentation.server}.ts", "commands": ["workbench.action.populateFileFromSnippet"] },
+    { "pattern": "**/service-worker.ts", "snippet": "Kit Service Worker" },
+    { "pattern": "**/*.{spec,test,e2e}.ts", "commands": ["workbench.action.populateFileFromSnippet"] },
+    { "pattern": "**/*.http", "commands": ["workbench.action.populateFileFromSnippet"] },
+
+    // Drizzle
+    { "pattern": "**/db/schema/common.ts", "snippet": "Drizzle Common Columns" },
+    { "regex": "/db/schema/.*(?<!/common)\\.ts$", "commands": ["workbench.action.populateFileFromSnippet"] },
+    { "pattern": "**/db/seed.ts", "snippet": "Drizzle Seed" },
+
+    // SEO
+    { "pattern": "**/robots.txt/+server.ts", "snippet": "SEO Robots" },
+    { "pattern": "**/sitemap.xml/+server.ts", "snippet": "SEO Sitemap" },
+    { "pattern": "**/rss.xml/+server.ts", "snippet": "SEO RSS" },
+    { "pattern": "**/og.png/+server.ts", "snippet": "SEO OG Image" },
+    { "pattern": "**/static/manifest.json", "snippet": "Manifest File" },
+    { "pattern": "**/static/humans.txt", "snippet": "Humans.txt" },
+    { "pattern": "**/static/llms.txt", "snippet": "Llms.txt" },
+    { "pattern": "**/static/browserconfig.xml", "snippet": "Browser Config File" },
+    { "pattern": "**/Seo.svelte", "snippet": "SEO Head" },
+    { "pattern": "**/Analytics.svelte", "snippet": "SEO Analytics" },
+
+    // GitHub
+    { "pattern": "**/.github/workflows/ci.yml", "snippet": "Github Action - CI" },
+    { "pattern": "**/.github/workflows/deploy.yml", "snippet": "Github Action - Deploy" },
+    { "pattern": "**/.github/workflows/check.yml", "snippet": "Github Action - Check" },
+    { "pattern": "**/.github/workflows/sv-check.yml", "snippet": "Github Action - SvelteKit Check" },
+    { "pattern": "**/.github/dependabot.yml", "snippet": "Dependabot for Github Actions" },
+    { "pattern": "**/renovate.json", "snippet": "Renovate for Github Action" }
   ],
 
   // Breadcrumbs
@@ -25,7 +54,14 @@
   "claudeCode.initialPermissionMode": "bypassPermissions",
   "claudeCode.preferredLocation": "panel",
 
+  // Code Spell Checker
+  "cSpell.diagnosticLevel": "Hint",
+
+  // Diff Editor
+  "diffEditor.experimental.showMoves": true,
+
   // Editor
+  "editor.acceptSuggestionOnCommitCharacter": false,
   "editor.bracketPairColorization.enabled": false,
   "editor.codeActionsOnSave": {
     "source.addMissingImports": "explicit",
@@ -33,49 +69,67 @@
     "source.organizeImports": "explicit",
     "source.sortImports": "always"
   },
+  "editor.copyWithSyntaxHighlighting": false,
+  "editor.cursorBlinking": "phase",
+  "editor.cursorWidth": 1,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.emptySelectionClipboard": false,
+  "editor.find.seedSearchStringFromSelection": "selection",
+  "editor.foldingStrategy": "indentation",
+  "editor.fontFamily": "'Ioskeley Mono', monospace",
+  "editor.fontLigatures": "'calt', 'zero'",
+  "editor.fontSize": 14.5,
+  "editor.fontWeight": "400",
+  "editor.formatOnPaste": true,
+  "editor.formatOnSave": true,
+  "editor.gotoLocation.multipleDeclarations": "goto",
+  "editor.gotoLocation.multipleDefinitions": "goto",
+  "editor.gotoLocation.multipleImplementations": "goto",
+  "editor.gotoLocation.multipleReferences": "goto",
+  "editor.gotoLocation.multipleTypeDefinitions": "goto",
+  "editor.guides.indentation": false,
+  "editor.inlineSuggest.suppressSuggestions": true,
+  "editor.letterSpacing": 0.3,
+  "editor.lineHeight": 1.55,
+  "editor.matchBrackets": "never",
+  "editor.minimap.enabled": false,
+  "editor.mouseWheelZoom": true,
+  "editor.pasteAs.preferences": ["text.updateImports"],
   "editor.quickSuggestions": {
     "other": "on",
     "strings": "on",
     "comments": "off"
   },
   "editor.quickSuggestionsDelay": 0,
-  "editor.snippetSuggestions": "top",
-  "editor.tabCompletion": "onlySnippets",
-  "editor.tabSize": 2,
-  "editor.wordBasedSuggestions": "off",
-  "editor.foldingStrategy": "indentation",
-  "editor.cursorBlinking": "phase",
-  "editor.cursorWidth": 1,
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.fontFamily": "'Ioskeley Mono', monospace",
-  "editor.fontWeight": "400",
-  "editor.fontSize": 14.5,
-  "editor.lineHeight": 1.55,
-  "editor.fontLigatures": "'calt', 'zero'",
-  "editor.formatOnPaste": true,
-  "editor.formatOnSave": true,
-  "editor.guides.indentation": false,
-  "editor.inlineSuggest.suppressSuggestions": true,
-  "editor.letterSpacing": 0.3,
-  "editor.matchBrackets": "never",
-  "editor.minimap.enabled": false,
-  "editor.mouseWheelZoom": true,
   "editor.renderLineHighlight": "none",
   "editor.scrollbar.horizontal": "hidden",
   "editor.scrollbar.vertical": "hidden",
   "editor.semanticHighlighting.enabled": false,
   "editor.smoothScrolling": true,
-  "editor.suggestSelection": "first",
-  "editor.suggest.selectionMode": "always",
+  "editor.snippetSuggestions": "top",
   "editor.suggest.preview": true,
+  "editor.suggest.selectionMode": "always",
+  "editor.suggest.snippetsPreventQuickSuggestions": false,
+  "editor.suggestSelection": "first",
+  "editor.tabCompletion": "onlySnippets",
+  "editor.tabSize": 2,
   "editor.unicodeHighlight.allowedLocales": {
     "tr": true
   },
+  "editor.wordBasedSuggestions": "off",
+
+  // ESLint
+  // Hide issues that are auto-fixed on save
+  "eslint.rules.customizations": [
+    { "rule": "*", "fixable": true, "severity": "off" }
+  ],
+  "eslint.validate": ["javascript", "typescript", "svelte"],
 
   // Explorer
   "explorer.compactFolders": false,
   "explorer.confirmDelete": false,
   "explorer.confirmDragAndDrop": false,
+  "explorer.confirmPasteNative": false,
   "explorer.expandSingleFolderWorkspaces": false,
   "explorer.fileNesting.enabled": true,
   "explorer.fileNesting.expand": false,
@@ -90,7 +144,11 @@
     "+layout.svelte": "+layout.ts, +layout.server.ts"
   },
 
-  // Exclude files
+  // Files
+  "files.associations": {
+    "*.css": "tailwindcss",
+    ".env*": "dotenv"
+  },
   "files.exclude": {
     "**/.DS_Store": true,
     "**/.git": true,
@@ -106,10 +164,123 @@
     ".wrangler": true,
     "src/cf-worker.d.ts": true
   },
-  "files.associations": {
-    "*.css": "tailwindcss",
-    ".env*": "dotenv"
+  "files.insertFinalNewline": true,
+  "files.simpleDialog.enable": true,
+  "files.trimFinalNewlines": true,
+  "files.trimTrailingWhitespace": true,
+
+  // Git
+  "git.autofetch": true,
+  "git.closeDiffOnOperation": true,
+  "git.confirmSync": false,
+  "git.enableSmartCommit": true,
+  "git.ignoreMissingGitWarning": true,
+
+  // GitHub Pull Requests
+  "githubPullRequests.defaultMergeMethod": "squash",
+  "githubPullRequests.pullPullRequestBranchBeforeCheckout": "pull",
+  "githubPullRequests.pushBranch": "always",
+
+  // JavaScript & TypeScript
+  "js/ts.experimental.useTsgo": false,
+  "js/ts.inlayHints.parameterNames.enabled": "none",
+  "js/ts.preferGoToSourceDefinition": true,
+  "js/ts.preferences.autoImportFileExcludePatterns": [
+    "**/node_modules/@types/node/console.d.ts",
+    "**/node_modules/zod/**",
+    "**/node_modules/better-auth/dist/index.d.*ts"
+  ],
+  "js/ts.preferences.autoImportSpecifierExcludeRegexes": [
+    "^drizzle-orm/(mysql|singlestore|gel)-core"
+  ],
+  "js/ts.preferences.importModuleSpecifier": "non-relative",
+  "js/ts.preferences.includePackageJsonAutoImports": "on",
+  "js/ts.preferences.preferTypeOnlyAutoImports": true,
+  "js/ts.suggest.autoImports": true,
+  "js/ts.tsdk.path": "./node_modules/typescript/lib",
+  "js/ts.updateImportsOnFileMove.enabled": "always",
+
+  // Markdown
+  "markdown.preview.fontFamily": "'Figtree'",
+  "markdown.preview.fontSize": 15,
+
+  // Security
+  "security.promptForLocalFileProtocolHandling": false,
+
+  // Snippet Studio
+  "snippetstudio.shell.snippets": [],
+  "snippetstudio.statusBar.showItem": false,
+
+  // Svelte
+  "svelte.enable-ts-plugin": true,
+  "svelte.plugin.svelte.defaultScriptLanguage": "ts",
+  "svelte.plugin.svelte.runesLegacyModeCodeLens.enable": false,
+
+  // TailwindCSS
+  "tailwindCSS.experimental.classRegex": [["clsx\\(([^)]*)\\)", "'([^']*)'"]],
+
+  // Tasks
+  "task.allowAutomaticTasks": "on",
+  "task.problemMatchers.neverPrompt": { "npm": true },
+
+  // Terminal
+  "terminal.external.osxExec": "Ghostty.app",
+  "terminal.integrated.cursorBlinking": true,
+  "terminal.integrated.cursorStyle": "line",
+  "terminal.integrated.fontFamily": "'Ioskeley Mono Term', 'Symbols Nerd Font Mono'",
+  "terminal.integrated.fontLigatures.enabled": true,
+  "terminal.integrated.profiles.osx": {
+    "zsh": {
+      "path": "/opt/homebrew/bin/zsh",
+      "args": ["-l"]
+    }
   },
+  "terminal.integrated.shellIntegration.history": 100,
+  "terminal.integrated.shellIntegration.showCommandGuide": true,
+  "terminal.integrated.stickyScroll.enabled": true,
+  "terminal.integrated.suggest.suggestOnTriggerCharacters": true,
+
+  // Window
+  "window.autoDetectColorScheme": true,
+  "window.density.layout": "compact",
+
+  // Workbench
+  "workbench.activityBar.compact": true,
+  "workbench.activityBar.location": "top",
+  "workbench.browser.openLocalhostLinks": true,
+  "workbench.browser.showInTitleBar": true,
+  "workbench.colorCustomizations": {
+    "tab.activeBorderTop": "#00000000",
+    "tab.activeBorder": "#00000000",
+    "tab.border": "#00000000",
+    "editorGroupHeader.tabsBorder": "#00000000",
+    "focusBorder": "#00000000",
+    "notebook.focusedCellBorder": "#00000000"
+  },
+  "workbench.editor.customLabels.patterns": {
+    "**/routes/**/+page.svelte": "${dirname(1)}/${dirname}",
+    "**/routes/**/+page.server.ts": "${dirname(1)}/${dirname} [server]",
+    "**/routes/**/+layout.svelte": "${dirname(1)}/${dirname} [layout]",
+    "**/routes/**/+layout.server.ts": "${dirname(1)}/${dirname} [layout server]",
+    "**/routes/**/+server.ts": "${dirname(1)}/${dirname} [api]"
+  },
+  "workbench.editor.editorActionsLocation": "titleBar",
+  "workbench.editor.empty.hint": "hidden",
+  "workbench.editor.enablePreview": false,
+  "workbench.editor.labelFormat": "short",
+  "workbench.editor.preferHistoryBasedLanguageDetection": true,
+  "workbench.editor.revealIfOpen": true,
+  "workbench.enableExperiments": false,
+  "workbench.experimental.modernUI": true,
+  "workbench.experimental.modernUIUppercaseViewHeaders": true,
+  "workbench.fontAliasing": "auto",
+  "workbench.iconTheme": "symbols",
+  "workbench.preferredDarkColorTheme": "Cursor Dark Midnight",
+  "workbench.settings.editor": "json",
+  "workbench.settings.enableNaturalLanguageSearch": false,
+  "workbench.startupEditor": "none",
+  "workbench.tips.enabled": false,
+  "workbench.tree.enableStickyScroll": false,
 
   // Language Overrides
   "[shellscript]": {
@@ -121,6 +292,7 @@
   },
   "[markdown]": {
     "diffEditor.ignoreTrimWhitespace": false,
+    "files.trimTrailingWhitespace": false,
     "editor.defaultFormatter": "DavidAnson.vscode-markdownlint",
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
@@ -148,101 +320,9 @@
     "editor.defaultFormatter": "tamasfe.even-better-toml"
   },
 
-  // ESLint
-  "eslint.validate": ["javascript", "typescript", "svelte"],
-
-  // TailwindCSS
-  "tailwindCSS.experimental.classRegex": [["clsx\\(([^)]*)\\)", "'([^']*)'"]],
-
-  // JavaScript & TypeScript
-  "js/ts.tsdk.path": "./node_modules/typescript/lib",
-  "js/ts.updateImportsOnFileMove.enabled": "always",
-  "js/ts.preferences.preferTypeOnlyAutoImports": true,
-  "js/ts.preferences.importModuleSpecifier": "non-relative",
-  "js/ts.preferences.includePackageJsonAutoImports": "on",
-  "js/ts.preferences.autoImportFileExcludePatterns": [
-    "**/node_modules/@types/node/console.d.ts",
-    "**/node_modules/zod/**",
-    "**/node_modules/better-auth/dist/index.d.*ts"
-  ],
-  "js/ts.preferences.autoImportSpecifierExcludeRegexes": [
-    "^drizzle-orm/(mysql|singlestore|gel)-core"
-  ],
-  "js/ts.inlayHints.parameterNames.enabled": "none",
-  "js/ts.suggest.autoImports": true,
-  "js/ts.experimental.useTsgo": false,
-
-  // Svelte
-  "svelte.enable-ts-plugin": true,
-  "svelte.plugin.svelte.runesLegacyModeCodeLens.enable": false,
-  "svelte.plugin.svelte.defaultScriptLanguage": "ts",
-
-  // Git
-  "git.confirmSync": false,
-  "git.enableSmartCommit": true,
-  "git.ignoreMissingGitWarning": true,
-
-  // Markdown
-  "markdown.preview.fontFamily": "'Figtree'",
-  "markdown.preview.fontSize": 15,
-
-  // Security
-  "security.promptForLocalFileProtocolHandling": false,
-
-  // Snippet Studio
-  "snippetstudio.shell.snippets": [],
-  "snippetstudio.statusBar.showItem": false,
-
-  // Tasks
-  "task.allowAutomaticTasks": "on",
-
-  // Terminal
-  "terminal.integrated.cursorBlinking": true,
-  "terminal.integrated.cursorStyle": "line",
-  "terminal.integrated.fontFamily": "'Ioskeley Mono Term'",
-  "terminal.integrated.fontLigatures.enabled": true,
-  "terminal.integrated.suggest.suggestOnTriggerCharacters": true,
-  "terminal.integrated.shellIntegration.showCommandGuide": true,
-  "terminal.integrated.shellIntegration.history": 100,
-  "terminal.integrated.stickyScroll.enabled": true,
-  "terminal.integrated.profiles.osx": {
-    "zsh": {
-      "path": "/opt/homebrew/bin/zsh",
-      "args": ["-l"]
-    }
-  },
-
-  // Window
-  "window.autoDetectColorScheme": true,
-  "window.density.layout": "compact",
-
-  // Workbench
-  "workbench.colorCustomizations": {
-    "tab.activeBorderTop": "#00000000",
-    "tab.activeBorder": "#00000000",
-    "tab.border": "#00000000",
-    "editorGroupHeader.tabsBorder": "#00000000",
-    "focusBorder": "#00000000",
-    "notebook.focusedCellBorder": "#00000000"
-  },
-  "workbench.editor.editorActionsLocation": "titleBar",
-  "workbench.editor.empty.hint": "hidden",
-  "workbench.editor.labelFormat": "short",
-  "workbench.editor.preferHistoryBasedLanguageDetection": true,
-  "workbench.editor.revealIfOpen": true,
-  "workbench.settings.editor": "json",
-  "workbench.startupEditor": "none",
-  "workbench.tree.enableStickyScroll": false,
-  "workbench.browser.showInTitleBar": true,
-  "workbench.browser.openLocalhostLinks": true,
-  "workbench.experimental.modernUI": true,
-  "workbench.experimental.modernUIUppercaseViewHeaders": true,
-  "workbench.activityBar.compact": true,
-  "workbench.activityBar.location": "top",
-  "workbench.iconTheme": "symbols",
-
   // Others
+  "extensions.ignoreRecommendations": true,
   "telemetry.telemetryLevel": "off",
   "update.showReleaseNotes": false,
-  "workbench.preferredDarkColorTheme": "Cursor Dark Midnight"
+  "terminal.integrated.fontSize": 19
 }

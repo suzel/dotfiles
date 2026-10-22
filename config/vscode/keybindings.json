@@ -1,21 +1,19 @@
 [
+  // Editor
   {
     "key": "cmd+d",
     "command": "editor.action.copyLinesDownAction",
     "when": "editorTextFocus && !editorReadonly"
   },
   {
-    "key": "cmd+shift+l",
-    "command": "editor.action.format",
+    "key": "shift+alt+down",
+    "command": "-editor.action.copyLinesDownAction",
     "when": "editorTextFocus && !editorReadonly"
   },
   {
-    "key": "ctrl+shift+delete",
-    "command": "editor.action.fontZoomReset"
-  },
-  {
-    "key": "ctrl+shift+down",
-    "command": "editor.action.fontZoomOut"
+    "key": "cmd+shift+l",
+    "command": "editor.action.format",
+    "when": "editorTextFocus && !editorReadonly"
   },
   {
     "key": "ctrl+shift+i",
@@ -26,19 +24,173 @@
     }
   },
   {
+    "key": "cmd+right",
+    "command": "editor.action.insertCursorAtEndOfEachLineSelected",
+    "when": "editorTextFocus && editorHasSelection"
+  },
+  {
+    "key": "cmd+4",
+    "command": "copyRelativeFilePath"
+  },
+
+  // Font Zoom
+  {
     "key": "ctrl+shift+up",
     "command": "editor.action.fontZoomIn"
   },
   {
-    "key": "shift+alt+down",
-    "command": "-editor.action.copyLinesDownAction",
-    "when": "editorTextFocus && !editorReadonly"
+    "key": "ctrl+shift+down",
+    "command": "editor.action.fontZoomOut"
   },
+  {
+    "key": "ctrl+shift+delete",
+    "command": "editor.action.fontZoomReset"
+  },
+
+  // Terminal
   {
     "key": "cmd+enter",
     "command": "workbench.action.terminal.runSelectedText",
     "when": "editorTextFocus && !notebookEditorFocused"
   },
+  {
+    "key": "cmd+numpad2",
+    "command": "workbench.action.terminal.fontZoomIn",
+    "when": "terminalProcessSupported"
+  },
+  {
+    "key": "cmd+numpad3",
+    "command": "workbench.action.terminal.fontZoomOut",
+    "when": "terminalProcessSupported"
+  },
+  {
+    "key": "cmd+n",
+    "command": "workbench.action.terminal.new",
+    "when": "terminalFocus"
+  },
+  {
+    "key": "ctrl+1",
+    "command": "workbench.action.terminal.focusAtIndex1",
+    "when": "terminalFocus"
+  },
+  {
+    "key": "ctrl+2",
+    "command": "workbench.action.terminal.focusAtIndex2",
+    "when": "terminalFocus"
+  },
+  {
+    "key": "ctrl+3",
+    "command": "workbench.action.terminal.focusAtIndex3",
+    "when": "terminalFocus"
+  },
+  {
+    "key": "ctrl+4",
+    "command": "workbench.action.terminal.focusAtIndex4",
+    "when": "terminalFocus"
+  },
+  {
+    "key": "ctrl+5",
+    "command": "workbench.action.terminal.focusAtIndex5",
+    "when": "terminalFocus"
+  },
+  {
+    "key": "ctrl+6",
+    "command": "workbench.action.terminal.focusAtIndex6",
+    "when": "terminalFocus"
+  },
+  {
+    "key": "ctrl+7",
+    "command": "workbench.action.terminal.focusAtIndex7",
+    "when": "terminalFocus"
+  },
+  {
+    "key": "ctrl+8",
+    "command": "workbench.action.terminal.focusAtIndex8",
+    "when": "terminalFocus"
+  },
+  {
+    "key": "ctrl+9",
+    "command": "workbench.action.terminal.focusAtIndex9",
+    "when": "terminalFocus"
+  },
+
+  // Emmet
+  {
+    "key": "cmd+m cmd+i",
+    "command": "editor.emmet.action.balanceIn",
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "cmd+m cmd+o",
+    "command": "editor.emmet.action.balanceOut",
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "cmd+m cmd+w",
+    "command": "editor.emmet.action.wrapWithAbbreviation",
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "cmd+m cmd+m",
+    "command": "editor.emmet.action.matchTag",
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "cmd+m cmd+r",
+    "command": "editor.emmet.action.updateTag",
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "cmd+m cmd+backspace",
+    "command": "editor.emmet.action.removeTag",
+    "when": "editorTextFocus"
+  },
+
+  // Explorer
+  {
+    "key": "cmd+n",
+    "command": "explorer.newFile",
+    "when": "explorerViewletVisible && filesExplorerFocus && !inputFocus"
+  },
+  {
+    "key": "shift+cmd+n",
+    "command": "explorer.newFolder",
+    "when": "explorerViewletVisible && filesExplorerFocus && !inputFocus"
+  },
+  {
+    "key": "shift+alt+cmd+r",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        "workbench.files.action.showActiveFileInExplorer",
+        "renameFile"
+      ]
+    },
+    "when": "editorFocus && resourceScheme == file"
+  },
+  {
+    "key": "shift+alt+cmd+backspace",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        "workbench.files.action.showActiveFileInExplorer",
+        "moveFileToTrash"
+      ]
+    },
+    "when": "editorFocus && resourceScheme == file"
+  },
+
+  // Settings
+  {
+    "key": "cmd+,",
+    "command": "workbench.action.openSettingsJson"
+  },
+  {
+    "key": "alt+cmd+,",
+    "command": "workbench.action.openSettings"
+  },
+
+  // Drizzle
   {
     "key": "ctrl+cmd+enter",
     "command": "runCommands",
@@ -69,32 +221,8 @@
     },
     "when": "!editorHasSelection && editorLangId == typescript"
   },
-  {
-    "key": "ctrl+cmd+enter",
-    "command": "runCommands",
-    "args": {
-      "commands": [
-        "cursorHome",
-        "cursorEndSelect",
-        "editor.action.clipboardCopyAction",
-        {
-          "command": "editor.action.insertSnippet",
-          "args": { "langId": "typescript", "name": "Drizzle To Table" }
-        }
-      ]
-    },
-    "when": "!editorHasSelection && editorLangId == typescript && resourcePath =~ /\\/db\\/schema\\//"
-  },
-  {
-    "key": "cmd+numpad2",
-    "command": "workbench.action.terminal.fontZoomIn",
-    "when": "terminalProcessSupported"
-  },
-  {
-    "key": "cmd+numpad3",
-    "command": "workbench.action.terminal.fontZoomOut",
-    "when": "terminalProcessSupported"
-  },
+
+  // Layout
   {
     "key": "f16",
     "command": "workbench.action.toggleSidebarVisibility"

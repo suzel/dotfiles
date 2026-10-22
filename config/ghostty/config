@@ -1,21 +1,14 @@
-# Shell integration
-shell-integration-features = no-cursor,sudo,title,ssh-env,ssh-terminfo
-
 # Font
 font-family = Ioskeley Mono Term
 font-size = 14
 font-feature = zero
 
 # Theme
-theme = light:GitHub Light Default,dark:GitHub Dark Default
+theme = light:Cursor Light,dark:Cursor Dark Midnight
 background-blur = 10
 background-opacity = 0.95
 
-# Low latency
-window-vsync = false
-
 # Cursor
-cursor-style = block
 cursor-style-blink = true
 
 # Window
@@ -28,23 +21,30 @@ window-padding-balance = true
 window-theme = system
 
 # Titlebar
-macos-titlebar-style = transparent
 macos-titlebar-proxy-icon = hidden
 
-# Behavior
-working-directory = home
-confirm-close-surface = false
+# App icon
+macos-icon = custom
+macos-custom-icon = ~/.config/ghostty/ayu-dark.png
+
+# Shell integration
+shell-integration-features = no-cursor,sudo,title,ssh-env,ssh-terminfo
 
 # Mouse
 mouse-hide-while-typing = true
+
+# Option key
+macos-option-as-alt = left
 
 # Splits
 keybind = ctrl+shift+z=toggle_split_zoom
 keybind = ctrl+shift+equal=equalize_splits
 
-# Option key
-macos-option-as-alt = left
+# Behavior
+confirm-close-surface = false
 
-# App icon
-macos-icon = custom
-macos-custom-icon = ~/.config/ghostty/ayu-dark.png
+# Low latency
+window-vsync = false
+
+# Updates
+auto-update = download

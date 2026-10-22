@@ -1,0 +1,23 @@
+# Terminal colors from VS Code "Cursor Light"
+palette = 0=#141414
+palette = 1=#be1744
+palette = 2=#007041
+palette = 3=#8b5700
+palette = 4=#0064b0
+palette = 5=#92156a
+palette = 6=#176c74
+palette = 7=#fcfcfc
+palette = 8=#4e4e4e
+palette = 9=#ce405b
+palette = 10=#00854c
+palette = 11=#a46700
+palette = 12=#2778c1
+palette = 13=#b54e90
+palette = 14=#3b7e84
+palette = 15=#ffffff
+background = #f3f3f3
+foreground = #141414
+cursor-color = #141414
+cursor-text = #f3f3f3
+selection-background = #d4d4d4
+selection-foreground = #141414

@@ -18,17 +18,12 @@ error() { echo "\033[0;31m❌️ $*\033[0m" >&2; }
 success() { echo "\033[0;32m✅ $*\033[0m"; }
 
 # Error trap
-TRAPZERR() {
-  error "Error at ${funcfiletrace[1]}"
-  exit 1
-}
+TRAPZERR() { die "Error at ${funcfiletrace[1]}"; }
 
-die() {
-  error "$*"
-  exit 1
-}
+# Prints an error and exits
+die() { error "$*" && exit 1; }
 
-# Sets $disk. Asked first: a wrong disk fails in seconds, not after ~15 GB
+# Asks for the USB disk
 pick_disk() {
   info "External disks:"
   diskutil list external physical
@@ -40,7 +35,6 @@ pick_disk() {
   local plist
   plist=$(diskutil info -plist $disk 2>/dev/null) ||
     die "/dev/$disk does not exist."
-  # Internal flag, not a boot-disk name: on Apple Silicon / is disk3, SSD disk0
   [[ $(plutil -extract Internal raw - <<<$plist) == false ]] ||
     die "/dev/$disk is an internal disk."
 
@@ -54,9 +48,9 @@ pick_disk() {
   }
 }
 
+# Downloads the installer
 download() {
   local version
-  # awk reads to the end, so pipefail never sees a SIGPIPE from softwareupdate
   version=$(softwareupdate --list-full-installers | awk -F'Version: ' '
     NF > 1 && !v { split($2, a, ","); v = a[1] }
     END { print v }')
@@ -65,12 +59,11 @@ download() {
   softwareupdate --fetch-full-installer --full-installer-version $version
 }
 
+# Writes the installer to the disk
 create() {
-  # newest installer
   local installer=(/Applications/Install\ macOS*.app(N/om[1]))
   (($#installer)) || die "macOS installer not found in /Applications."
 
-  # createinstallmedia reformats it itself; this just gives it a volume
   info "Erasing /dev/$disk..."
   diskutil eraseDisk JHFS+ Installer GPT $disk
   local volume
@@ -81,6 +74,7 @@ create() {
     --volume "$volume" --nointeraction --downloadassets
 }
 
+# Runs the steps in order
 main() {
   pick_disk
   download

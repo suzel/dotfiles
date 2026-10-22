@@ -1,8 +1,13 @@
 #!/usr/bin/env zsh
 
-# Full install: curl -fsSL https://git.io/suzel-dotfiles | zsh -s
-# Single steps: ./setup.zsh config packages
-# Steps: homebrew repo config packages shell github macos
+# =============================================================================
+# Dotfiles Setup
+# =============================================================================
+# Installs Homebrew and packages, links configs and applies macOS defaults.
+# Usage: curl -fsSL https://git.io/suzel-dotfiles | zsh -s (full install)
+#        ./setup.zsh config packages (single steps)
+# Steps: homebrew repo config packages shell github secrets macos
+# =============================================================================
 
 set -euo pipefail
 
@@ -13,16 +18,15 @@ error() { echo "\033[0;31m❌️ $*\033[0m" >&2; }
 success() { echo "\033[0;32m✅ $*\033[0m"; }
 
 # Error trap
-TRAPZERR() {
-  error "Error at ${funcfiletrace[1]}"
-  exit 1
-}
+TRAPZERR() { error "Error at ${funcfiletrace[1]}" && exit 1; }
 
 readonly DOTFILES="$HOME/Projects/dotfiles"
 readonly REPO_URL="https://github.com/suzel/dotfiles.git"
 readonly GH_RAW="https://raw.githubusercontent.com"
 readonly BREW_URL="$GH_RAW/Homebrew/install/HEAD/install.sh"
-readonly CODE_USER=~/Library/Application\ Support/Code/User
+readonly CODE_USER="$HOME/Library/Application Support/Code/User"
+readonly ICLOUD="$HOME/Library/Mobile Documents/com~apple~CloudDocs"
+readonly SECRETS=$ICLOUD/Secrets/secrets.env
 
 links=(
   config/zsh/.zshenv ~/.zshenv
@@ -109,7 +113,7 @@ shell() {
   [[ $(dscl . -read ~ UserShell) == *$zsh ]] || chsh -s $zsh </dev/tty
 }
 
-# GitHub login, signing
+# GitHub login, signing, SSH key passphrase in Keychain
 github() {
   info "Setting up GitHub (approve in the browser)..."
   local scope=admin:ssh_signing_key
@@ -119,6 +123,23 @@ github() {
     gh auth refresh -h github.com -s $scope </dev/tty
   gh ssh-key add ~/.ssh/id_ed25519.pub --type signing \
     --title "$(scutil --get ComputerName)"
+  chmod 700 ~/.ssh
+  grep -qx '  UseKeychain yes' ~/.ssh/config 2>/dev/null ||
+    print -r -- $'\nHost *\n  UseKeychain yes\n  AddKeysToAgent yes' \
+      >>~/.ssh/config
+  ssh-add --apple-use-keychain ~/.ssh/id_ed25519 </dev/tty
+}
+
+# iCloud secrets file: permissions, one-time reminder
+secrets() {
+  info "Checking iCloud secrets file..."
+  [[ -f $SECRETS ]] || {
+    warn "Missing $SECRETS (wait for iCloud sync, or create it)"
+    return
+  }
+  chmod 600 "$SECRETS"
+  info "Once: Finder > Control-click Secrets > Keep Downloaded"
+  open -R "${SECRETS:h}"
 }
 
 # macOS defaults
@@ -129,13 +150,10 @@ macos() {
 
 # Run steps
 main() {
-  (($#)) || set -- homebrew repo config packages shell github macos
+  (($#)) || set -- homebrew repo config packages shell github secrets macos
   local step
   for step; do
-    ((${+functions[$step]})) || {
-      error "Unknown step: $step"
-      exit 1
-    }
+    ((${+functions[$step]} == 0)) && error "Unknown step: $step" && exit 1
     $step
   done
   success "Completed!"

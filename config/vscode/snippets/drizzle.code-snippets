@@ -40,20 +40,6 @@
 			""
 		]
 	},
-	// drizzle::to-table: a schema file from a copied column list, e.g. title:200!*, body?, authorId>user~, views:int=0
-	// Item: name[:type][flags][>table][=default]; items are split by commas, spaces, newlines or --
-	// Flags, anywhere before =: ? nullable, ! .unique(), * index(), ~ onDelete cascade (with >table)
-	// Types: 200 varchar(200), 10.2 numeric(10, 2), int, bool, date (timestamp), dateonly (date), json (jsonb),
-	//   float (doublePrecision), decimal (numeric(10, 2)), bigint; any other drizzle type is used as written
-	// No type: text, or integer for a >table other than user; =value gets quotes on string columns
-	// Each ${CLIPBOARD/…} does one job: an import, a table import, the columns, the indexes or the zod refinements.
-	// Their output is not re-indented by VS Code, so it is written with 2 spaces.
-	// Every regex starts with ^(?=[\s\S]*[^\w\s,:.?!*~>='"-])[\s\S]*| : copied code matches once and adds nothing.
-	// Column regex groups: 1 index layout (+2 spaces); 2-9 line breaks before .notNull(), .unique(), .references(),
-	//   .default() (each without/with the index layout); 10 not null; 11 no type and >table: integer; 12 no type: text;
-	//   13 ~; 14/15 =value quoted/raw; 16 name; 17 !; 18/19 numeric precision/scale; 20 varchar length;
-	//   21-28 int, bool, date, dateonly, json, float, decimal, bigint; 29 other type; 30 >table;
-	//   31-33 =now, ='quoted', =plain; 34 another item follows
 	"Drizzle To Table": {
 		"scope": "typescript",
 		"prefix": "drizzle::to-table",
@@ -91,8 +77,6 @@
 			""
 		]
 	},
-	// drizzle::cols: the drizzle::to-table column regex (same groups, index layout off) for an existing pgTable.
-	// Lines after the first get 2 spaces; every column ends with a comma; VS Code's quick fix adds the imports.
 	"Drizzle Columns Paste": {
 		"scope": "typescript",
 		"prefix": ["drizzle::cols", "cols"],

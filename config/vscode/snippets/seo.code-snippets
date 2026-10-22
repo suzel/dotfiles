@@ -106,6 +106,7 @@
 	},
 	"SEO Logo": {
 		"scope": "xml",
+		"include": "*.svg",
 		"isFileTemplate": true,
 		"description": "Placeholder SVG logo",
 		"body": [

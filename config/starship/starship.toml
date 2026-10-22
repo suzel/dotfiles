@@ -1,6 +1,9 @@
 # Compact prompt
 add_newline = false
 
+# Command timeout (ms)
+command_timeout = 1000
+
 # Shown modules
 format = """$directory$git_branch$golang$nodejs${custom.svelte}$character"""
 
@@ -18,11 +21,11 @@ format = '[$symbol$branch(:$remote_branch)]($style) '
 [aws]
 format = '[$symbol(profile: "$profile" )(\(region: $region\) )]($style)'
 style = 'bold blue'
-symbol = " "
+symbol = "\ue33d "
 
 # Go icon
 [golang]
-format = '[ ](bold cyan)'
+format = "[\ue627 ](bold cyan)"
 
 # Node icon
 [nodejs]
@@ -32,7 +35,7 @@ format = '[$symbol]($style)'
 # Svelte icon
 [custom.svelte]
 detect_folders = ['.svelte-kit']
-symbol = " "
+symbol = "\ue8b7 "
 style = 'bold #ff3e00'
 format = '[$symbol]($style)'
 

@@ -35,7 +35,6 @@
 [init]
 	defaultBranch = main
 
-# Fetch stays on https (no login needed), push uses the SSH key
 [url "git@github.com:"]
 	pushInsteadOf = https://github.com/
 
@@ -76,12 +75,10 @@
 	sb = status -s -b
 	w = show
 	wr = show -p --no-color
-	# Utility aliases
 	amend = commit --amend
 	unstage = reset HEAD --
 	undo = reset --soft HEAD^
 	stash-all = stash push --include-untracked
-	up = "!git switch $(git symbolic-ref refs/remotes/origin/HEAD --short | sed 's|origin/||') && git pull"
 
 [merge]
 	conflictstyle = zdiff3

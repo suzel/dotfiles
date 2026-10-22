@@ -4,26 +4,36 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "_SvelteKit: build",
-      "hide": true,
+      "label": "SvelteKit: build",
       "type": "shell",
+      "icon": {
+        "color": "terminal.ansiRed",
+        "id": "build"
+      },
       "command": "pnpm",
       "args": ["build"],
       "group": {
         "kind": "build",
         "isDefault": true
       },
-      "presentation": { "panel": "dedicated", "clear": true },
+      "presentation": {
+        "panel": "dedicated",
+        "reveal": "silent",
+        "clear": true
+      },
       "problemMatcher": []
     },
     {
-      "label": "_SvelteKit: dev",
-      "hide": true,
+      "label": "SvelteKit: dev",
       "type": "shell",
+      "icon": {
+        "color": "terminal.ansiRed",
+        "id": "play"
+      },
       "command": "pnpm",
       "args": ["dev"],
       "isBackground": true,
-      "presentation": { "panel": "dedicated", "reveal": "always" },
+      "presentation": { "panel": "dedicated", "reveal": "silent" },
       "problemMatcher": {
         "owner": "vite",
         "fileLocation": ["relative", "${workspaceFolder}"],
@@ -43,80 +53,142 @@
       }
     },
     {
-      "label": "_SvelteKit: check",
-      "hide": true,
+      "label": "SvelteKit: check",
       "type": "shell",
+      "icon": {
+        "color": "terminal.ansiRed",
+        "id": "check-all"
+      },
       "command": "pnpm",
       "args": ["check"],
       "group": { "kind": "test", "isDefault": true },
-      "presentation": { "panel": "dedicated" },
+      "presentation": {
+        "panel": "dedicated",
+        "reveal": "silent",
+        "clear": true
+      },
       "problemMatcher": ["$tsc"]
     },
     {
-      "label": "_SvelteKit: lint",
-      "hide": true,
+      "label": "SvelteKit: lint",
       "type": "shell",
+      "icon": {
+        "color": "terminal.ansiRed",
+        "id": "checklist"
+      },
       "command": "pnpm",
       "args": ["lint"],
-      "presentation": { "panel": "dedicated" },
+      "presentation": {
+        "panel": "dedicated",
+        "reveal": "silent",
+        "clear": true
+      },
       "problemMatcher": ["$eslint-stylish"]
     },
-    // Cloudflare: npx picks the project's wrangler if installed, else downloads latest.
-    // --update-config writes the binding into the workspace's wrangler config, then types regenerates Env.
     {
-      "label": "_Cloudflare: D1 create",
-      "hide": true,
+      "label": "SvelteKit: favicons",
       "type": "shell",
+      "icon": {
+        "color": "terminal.ansiRed",
+        "id": "symbol-color"
+      },
+      "command": "pnpm",
+      "args": [
+        "dlx",
+        "@vite-pwa/assets-generator@2",
+        "--preset",
+        "minimal-2023",
+        "static/img/favicons/favicon.svg"
+      ],
+      "presentation": { "panel": "shared", "reveal": "silent" },
+      "problemMatcher": []
+    },
+    {
+      "label": "Cloudflare: D1 create",
+      "type": "shell",
+      "icon": {
+        "color": "terminal.ansiYellow",
+        "id": "database"
+      },
       "command": "npx -y wrangler d1 create ${input:cfName} --binding ${input:cfBinding} --update-config && npx -y wrangler types",
       "presentation": { "panel": "shared", "focus": true },
       "problemMatcher": []
     },
     {
-      "label": "_Cloudflare: R2 bucket create",
-      "hide": true,
+      "label": "Cloudflare: R2 bucket create",
       "type": "shell",
+      "icon": {
+        "color": "terminal.ansiYellow",
+        "id": "archive"
+      },
       "command": "npx -y wrangler r2 bucket create ${input:cfName} --binding ${input:cfBinding} --update-config && npx -y wrangler types",
       "presentation": { "panel": "shared", "focus": true },
       "problemMatcher": []
     },
     {
-      "label": "_Cloudflare: KV namespace create",
-      "hide": true,
+      "label": "Cloudflare: KV namespace create",
       "type": "shell",
+      "icon": {
+        "color": "terminal.ansiYellow",
+        "id": "key"
+      },
       "command": "npx -y wrangler kv namespace create ${input:cfName} --binding ${input:cfBinding} --update-config && npx -y wrangler types",
       "presentation": { "panel": "shared", "focus": true },
       "problemMatcher": []
     },
     {
-      "label": "_Cloudflare: types",
-      "hide": true,
+      "label": "Cloudflare: types",
       "type": "shell",
+      "icon": {
+        "color": "terminal.ansiYellow",
+        "id": "symbol-interface"
+      },
       "command": "npx -y wrangler types",
-      "presentation": { "panel": "shared" },
+      "presentation": { "panel": "shared", "reveal": "silent" },
       "problemMatcher": []
     },
     {
-      "label": "_Cloudflare: D1 migrate",
-      "hide": true,
+      "label": "Cloudflare: D1 migrate",
       "type": "shell",
+      "icon": {
+        "color": "terminal.ansiYellow",
+        "id": "versions"
+      },
       "command": "npx -y wrangler d1 migrations apply ${input:cfDb} ${input:cfTarget}",
       "presentation": { "panel": "shared", "focus": true },
       "problemMatcher": []
     },
     {
-      "label": "_Cloudflare: D1 backup",
-      "hide": true,
+      "label": "Cloudflare: D1 backup",
       "type": "shell",
+      "icon": {
+        "color": "terminal.ansiYellow",
+        "id": "cloud-download"
+      },
       "command": "mkdir -p backups && npx -y wrangler d1 export ${input:cfDb} --remote --output backups/${input:cfDb}-$(date +%F-%H%M).sql",
       "presentation": { "panel": "shared", "focus": true },
       "problemMatcher": []
     },
     {
-      "label": "_Cloudflare: tail",
-      "hide": true,
+      "label": "Cloudflare: tail",
       "type": "shell",
+      "icon": {
+        "color": "terminal.ansiYellow",
+        "id": "output"
+      },
       "command": "npx -y wrangler tail --format pretty",
       "presentation": { "panel": "dedicated", "reveal": "always" },
+      "problemMatcher": []
+    },
+    {
+      "label": "GitHub: open",
+      "type": "shell",
+      "icon": {
+        "color": "terminal.ansiWhite",
+        "id": "github"
+      },
+      "command": "gh browse",
+      "presentation": { "reveal": "never" },
       "problemMatcher": []
     }
   ],
