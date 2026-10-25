@@ -16,9 +16,10 @@
     { "pattern": "**/*.http", "commands": ["workbench.action.populateFileFromSnippet"] },
 
     // Drizzle
-    { "pattern": "**/db/schema/common.ts", "snippet": "Drizzle Common Columns" },
+    { "pattern": "**/db/schema/common.ts", "commands": ["workbench.action.populateFileFromSnippet"] },
     { "regex": "/db/schema/.*(?<!/common)\\.ts$", "commands": ["workbench.action.populateFileFromSnippet"] },
-    { "pattern": "**/db/seed.ts", "snippet": "Drizzle Seed" },
+    { "pattern": "**/db/seed.ts", "commands": ["workbench.action.populateFileFromSnippet"] },
+    { "pattern": "**/db/rls.ts", "snippet": "Drizzle RLS" },
 
     // SEO
     { "pattern": "**/robots.txt/+server.ts", "snippet": "SEO Robots" },
@@ -38,8 +39,20 @@
     { "pattern": "**/.github/workflows/check.yml", "snippet": "Github Action - Check" },
     { "pattern": "**/.github/workflows/sv-check.yml", "snippet": "Github Action - SvelteKit Check" },
     { "pattern": "**/.github/dependabot.yml", "snippet": "Dependabot for Github Actions" },
-    { "pattern": "**/renovate.json", "snippet": "Renovate for Github Action" }
+    { "pattern": "**/renovate.json", "snippet": "Renovate for Github Action" },
+
+    // Docker
+    { "pattern": "**/{Dockerfile,*.Dockerfile}", "commands": ["workbench.action.populateFileFromSnippet"] },
+    { "pattern": "**/compose.yaml", "commands": ["workbench.action.populateFileFromSnippet"] },
+    { "pattern": "**/compose.dev.yaml", "snippet": "Docker Compose for Svelte - Dev" },
+    { "pattern": "**/{.dockerignore,*.dockerignore}", "snippet": "Docker ignore for Svelte" },
+    { "pattern": "**/docker/sql/init.sql", "snippet": "PostgREST init.sql" }
   ],
+  // Alternative to the list above: one rule, matching moves to each snippet's include/exclude
+  // "auto-snippets.snippets": [
+  //   // Every new empty file: VS Code offers the templates whose include/exclude match
+  //   { "regex": ".", "commands": ["workbench.action.populateFileFromSnippet"] }
+  // ],
 
   // Breadcrumbs
   "breadcrumbs.enabled": false,
@@ -147,7 +160,8 @@
   // Files
   "files.associations": {
     "*.css": "tailwindcss",
-    ".env*": "dotenv"
+    ".env*": "dotenv",
+    "*.dockerignore": "ignore"
   },
   "files.exclude": {
     "**/.DS_Store": true,
@@ -200,9 +214,68 @@
   "js/ts.tsdk.path": "./node_modules/typescript/lib",
   "js/ts.updateImportsOnFileMove.enabled": "always",
 
+  // Launch
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "SvelteKit: Server (vite dev)",
+        "type": "node-terminal",
+        "request": "launch",
+        "command": "pnpm exec vite dev --logLevel info",
+        "cwd": "${workspaceFolder}",
+        "serverReadyAction": {
+          "pattern": "Local:\\s+(https?://\\S+)",
+          "uriFormat": "%s",
+          "action": "debugWithChrome",
+          "webRoot": "${workspaceFolder}"
+        }
+      },
+      {
+        "name": "SvelteKit: SSR Debug (Node)",
+        "type": "node",
+        "request": "launch",
+        "runtimeExecutable": "pnpm",
+        "runtimeArgs": ["exec", "vite", "dev", "--logLevel", "info"],
+        "cwd": "${workspaceFolder}",
+        "console": "integratedTerminal",
+        "autoAttachChildProcesses": true,
+        "skipFiles": ["<node_internals>/**", "**/node_modules/**"],
+        "sourceMaps": true,
+        "resolveSourceMapLocations": [
+          "${workspaceFolder}/**",
+          "!**/node_modules/**"
+        ],
+        "serverReadyAction": {
+          "pattern": "Local:\\s+(https?://\\S+)",
+          "uriFormat": "%s",
+          "action": "debugWithChrome",
+          "webRoot": "${workspaceFolder}"
+        }
+      },
+      {
+        "name": "SvelteKit: Browser Only (Chrome attach)",
+        "type": "chrome",
+        "request": "launch",
+        "url": "http://localhost:5173",
+        "webRoot": "${workspaceFolder}",
+        "sourceMaps": true,
+        "sourceMapPathOverrides": {
+          "/@fs/*": "*"
+        }
+      }
+    ]
+  },
+
   // Markdown
   "markdown.preview.fontFamily": "'Figtree'",
   "markdown.preview.fontSize": 15,
+
+  // Rust Analyzer
+  // Own target dir: no build lock waits or rebuilds with terminal cargo
+  "rust-analyzer.cargo.targetDir": true,
+  // Lint with clippy on save instead of plain cargo check
+  "rust-analyzer.check.command": "clippy",
 
   // Security
   "security.promptForLocalFileProtocolHandling": false,
@@ -309,6 +382,9 @@
   },
   "[plaintext]": {
     "workbench.editor.languageDetection": false
+  },
+  "[rust]": {
+    "editor.defaultFormatter": "rust-lang.rust-analyzer"
   },
   "[svelte]": {
     "editor.defaultFormatter": "svelte.svelte-vscode"

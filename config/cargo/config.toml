@@ -1,0 +1,3 @@
+# Reuse compiled dependencies across projects and after `cargo clean`
+[build]
+rustc-wrapper = "sccache"

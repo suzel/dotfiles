@@ -170,6 +170,20 @@
       "problemMatcher": []
     },
     {
+      "label": "Cloudflare: D1 execute selection",
+      "detail": "Runs the SQL selected in the editor",
+      // process, not shell: the selection goes in as one argument, so quotes and $() stay literal
+      "type": "process",
+      "icon": {
+        "color": "terminal.ansiYellow",
+        "id": "play-circle"
+      },
+      "command": "npx",
+      "args": ["-y", "wrangler", "d1", "execute", "${input:cfDb}", "${input:cfTarget}", "--command", "${selectedText}"],
+      "presentation": { "panel": "shared", "focus": true },
+      "problemMatcher": []
+    },
+    {
       "label": "Cloudflare: tail",
       "type": "shell",
       "icon": {
@@ -178,6 +192,97 @@
       },
       "command": "npx -y wrangler tail --format pretty",
       "presentation": { "panel": "dedicated", "reveal": "always" },
+      "problemMatcher": []
+    },
+    {
+      "label": "Drizzle: generate",
+      "type": "shell",
+      "icon": {
+        "color": "terminal.ansiGreen",
+        "id": "diff-added"
+      },
+      "command": "pnpm db:generate --name ${input:drizzleName}",
+      "presentation": { "panel": "shared", "focus": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "Drizzle: migrate",
+      "type": "shell",
+      "icon": {
+        "color": "terminal.ansiGreen",
+        "id": "arrow-circle-up"
+      },
+      "command": "pnpm db:migrate",
+      "presentation": { "panel": "shared", "focus": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "Drizzle: generate + migrate",
+      "icon": {
+        "color": "terminal.ansiGreen",
+        "id": "run-all"
+      },
+      "dependsOn": ["Drizzle: generate", "Drizzle: migrate"],
+      "dependsOrder": "sequence",
+      "problemMatcher": []
+    },
+    {
+      "label": "Drizzle: push",
+      "detail": "Prototyping only: skips migrations, so the history drifts from the schema",
+      "type": "shell",
+      "icon": {
+        "color": "terminal.ansiGreen",
+        "id": "repo-push"
+      },
+      "command": "pnpm db:push",
+      "presentation": { "panel": "shared", "focus": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "Drizzle: studio",
+      "detail": "D1 (d1-http driver): opens the remote production database, not the local one",
+      "type": "shell",
+      "icon": {
+        "color": "terminal.ansiGreen",
+        "id": "table"
+      },
+      "command": "pnpm db:studio",
+      "isBackground": true,
+      "presentation": { "panel": "dedicated", "reveal": "always" },
+      "problemMatcher": []
+    },
+    {
+      "label": "Drizzle: seed",
+      "type": "shell",
+      "icon": {
+        "color": "terminal.ansiGreen",
+        "id": "beaker"
+      },
+      "command": "pnpm db:seed --count ${input:seedRows} ${input:seedMode}",
+      "presentation": { "panel": "shared", "focus": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "Drizzle: check",
+      "type": "shell",
+      "icon": {
+        "color": "terminal.ansiGreen",
+        "id": "verified"
+      },
+      "command": "pnpm drizzle-kit check",
+      "presentation": { "panel": "shared", "focus": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "Drizzle: table snippet (example)",
+      "detail": "Inserts the Drizzle Table snippet into the active editor; echo only lets the input run",
+      "type": "shell",
+      "icon": {
+        "color": "terminal.ansiGreen",
+        "id": "symbol-snippet"
+      },
+      "command": "echo ${input:drizzleTableSnippet}",
+      "presentation": { "reveal": "never" },
       "problemMatcher": []
     },
     {
@@ -215,6 +320,33 @@
       "description": "Apply migrations to",
       "options": ["--local", "--remote"],
       "default": "--local"
+    },
+    {
+      "id": "drizzleName",
+      "type": "promptString",
+      "description": "Migration name (e.g. add_tags)"
+    },
+    {
+      "id": "seedRows",
+      "type": "promptString",
+      "description": "Rows per table",
+      "default": "10"
+    },
+    {
+      "id": "seedMode",
+      "type": "pickString",
+      "description": "Tables to seed",
+      "options": [
+        { "label": "Empty tables only", "value": "" },
+        { "label": "Every table (--reset deletes all rows first)", "value": "--reset" }
+      ],
+      "default": ""
+    },
+    {
+      "id": "drizzleTableSnippet",
+      "type": "command",
+      "command": "editor.action.insertSnippet",
+      "args": { "langId": "typescript", "name": "Drizzle Table" }
     }
   ]
 }

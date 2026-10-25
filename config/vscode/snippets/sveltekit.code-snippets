@@ -1279,7 +1279,7 @@
 		"body": [
 			"// TODO: export const handle = sequence(handleRateLimit, handleBetterAuth, ...)",
 			"// TODO: behind a proxy set adapter-node's ADDRESS_HEADER, otherwise every client shares one IP",
-			"// in-memory: works on a single server; with several instances use Redis",
+			"// in-memory: works on a single server; with several instances use Redis, on Cloudflare cf::rate-limit",
 			"const hits = new Map<string, { count: number; reset: number }>();",
 			"",
 			"const handleRateLimit: Handle = ({ event, resolve }) => {",

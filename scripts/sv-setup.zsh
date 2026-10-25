@@ -15,7 +15,7 @@
 
 set -euo pipefail
 
-# includeIf needs a repo, so read the file
+readonly DOTFILES=${0:A:h:h}
 readonly GIT_ID=~/.config/git/config.local
 readonly AUTHOR_NAME=$(git config -f $GIT_ID user.name || true)
 readonly AUTHOR_EMAIL=$(git config -f $GIT_ID user.email || true)
@@ -35,6 +35,10 @@ has_dep() { [[ $(pnpm pkg get {d,devD}ependencies"['$1']") == *:* ]]; }
 add_vscode_ext() { yq -i ".recommendations += [${(j:,:)${(qqq)@}}]" .vscode/extensions.json; }
 set_dotenv() { touch $3 && sed -i '' "/^$1=/d" $3 && print -r -- "$1=$2" >>$3; }
 sed_patch() { local b=$(<$1) && sed -i '' "${@:2}" $1 && [[ $(<$1) != "$b" ]]; }
+jsonc() { grep -v '^\s*//' $1; }
+pick_tasks() { yq -py -oj ".tasks |= filter(.label == (${(j:,:)${(qqq)@}}))"; }
+pick_keys() { yq -py -oj "with_entries(select(.key == (${(j:,:)${(qqq)@}})))"; }
+merge_json() { touch $1 && yq -i -py -oj '. * load("/dev/stdin")' $1; }
 
 # Error trap
 TRAPZERR() { error "Error at ${funcfiletrace[-1]}"; }
@@ -155,34 +159,21 @@ export default {
 if [[ -f compose.yaml ]]; then
   info "Configuring Docker..."
   mkdir -p docker && mv compose.yaml docker/
-  if has_dep postgres; then
-    port=5432
-    while lsof -iTCP:$port -sTCP:LISTEN >/dev/null; do ((port++)); done
-    if ((port != 5432)); then
-      for f in .env .env.example; do
-        sed_patch $f -e "s|@localhost:5432/|@localhost:$port/|"
-      done
-    fi
-    port=$port yq -i '.services.db |= (
-      .image = "postgres:18-alpine" |
-      .ports = ["127.0.0.1:" + strenv(port) + ":5432"] |
-      .healthcheck = {
-        "test": ("pg_isready -h 127.0.0.1" +
-          " -U $${POSTGRES_USER} -d $${POSTGRES_DB}"),
-        "interval": "2s",
-        "retries": 15
-      }
-    )' docker/compose.yaml
-  fi
+  touch docker/{compose.dev.yaml,Dockerfile,Dockerfile.dockerignore}
+  has_dep postgres && yq -i '.services.db |= (
+    .image = "postgres:18-alpine" | .ports = ["127.0.0.1:5432:5432"] |
+    .healthcheck = {
+      "test": "pg_isready -h 127.0.0.1", "interval": "2s", "retries": 15
+    }
+  )' docker/compose.yaml
   pnpm dlx -s dclint@3.1.0 -q --fix docker/compose.yaml ||
     warn "Fix compose lint errors: pnpm dlx dclint docker/compose.yaml"
   pnpm pkg delete 'scripts["db:start"]'
   pnpm pkg set \
     'scripts["docker:up"]'="docker compose up -d --wait" \
     'scripts["docker:down"]'="docker compose down"
-  # .env.example too: a fresh clone copies it to .env
   for f in .env .env.example; do
-    set_dotenv COMPOSE_FILE "docker/compose.yaml" $f
+    set_dotenv COMPOSE_FILE "docker/compose.yaml:docker/compose.dev.yaml" $f
     set_dotenv COMPOSE_PROJECT_NAME "${${${PWD:t}:l}//[^a-z0-9_-]/-}" $f
   done
   COMPOSE_PROGRESS=quiet pnpm -s docker:up >/dev/null 2>&1 ||
@@ -254,9 +245,10 @@ fi
 if has_dep @sveltejs/adapter-cloudflare; then
   info "Configuring Cloudflare..."
   export WRANGLER_SEND_METRICS=false WRANGLER_LOG=error
-  yq -i -oj '
+  domain=${${HOMEPAGE#*://}%%/*} yq -i -oj '
     .compatibility_flags = ["nodejs_compat"] |
-    .vars.NODE_ENV = "production"
+    .vars.NODE_ENV = "production" |
+    .routes = [{"pattern": strenv(domain), "custom_domain": true}]
   ' wrangler.jsonc
   if grep -qs d1-http drizzle.config.ts; then
     yq -i -oj '.d1_databases = [{
@@ -272,6 +264,17 @@ if has_dep @sveltejs/adapter-cloudflare; then
     warn "Generate the Cloudflare types: pnpm gen"
 fi
 
+# Cache Headers
+# https://developers.cloudflare.com/workers/static-assets/headers/
+if [[ -z $is_dynamic ]]; then
+  info "Creating cache headers..."
+  print -r -- '/_app/immutable/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/img/*
+  Cache-Control: public, max-age=86400' >static/_headers
+fi
+
 # Vite
 # https://vite.dev
 if [[ -f vite.config.ts ]]; then
@@ -282,12 +285,17 @@ if [[ -f vite.config.ts ]]; then
   if [[ -z $is_dynamic ]]; then
     sed_patch vite.config.ts \
       -e "s/adapter: adapter()/adapter: adapter({ fallback: '404.html' })/"
-    # paths.origin: url.origin when prerendering robots.txt and sitemap.xml
+    # homepage: its origin is url.origin when prerendering robots.txt and
+    # sitemap.xml, its path the base (e.g. /repo on GitHub Pages)
     sed_patch vite.config.ts \
-      -e "1s|^|import pkg from './package.json' with { type: 'json' };\n|"
-    origin='paths: { origin: (pkg as { homepage?: string }).homepage },'
+      -e "1s|^|import pkg from './package.json' with { type: 'json' };\n|" \
+      -e "s|^export default|const site = new URL(pkg.homepage);\n\n&|"
+    base="\`/\${site.pathname.split('/').filter(Boolean).join('/')}\`"
+    paths="paths: { origin: site.origin, base: process.argv.includes('dev')"
+    paths+=" || site.pathname === '/' ? '' : $base },"
+    css='inlineStyleThreshold: 4096,'
     sed_patch vite.config.ts \
-      -e "s|^\([[:space:]]*\)adapter: adapter(|\1$origin\n&|"
+      -e "s#^\([[:space:]]*\)adapter: adapter(#\1$paths\n\1$css\n&#"
     grep -qs 'prerender' src/routes/+layout.ts ||
       echo "export const prerender = true;" >>src/routes/+layout.ts
   fi
@@ -300,35 +308,39 @@ if [[ -f vite.config.ts ]]; then
   sed_patch src/app.d.ts -e "1s|^|import 'unplugin-icons/types/svelte';\n\n|"
 fi
 
-# VSCode
+# VSCode Tasks
 # https://code.visualstudio.com
 info "Configuring VS Code..."
-readonly DOTFILES=${0:A:h:h}
-tasks=SvelteKit
-has_dep @sveltejs/adapter-cloudflare && tasks+='|Cloudflare'
-grep -v '^\s*//' $DOTFILES/config/vscode/tasks.json >.vscode/tasks.json
-# -py: the YAML parser also reads JSONC trailing commas
-yq -i -py -oj '
-  .tasks |= map(
-    select(.label | test("^_('$tasks'):")) |
-    .label |= sub("^_", "") |
-    del(.hide)
-  ) |
-  (.tasks | to_json) as $used |
-  .inputs |= ((. // []) | map(select($used | contains("input:" + .id))))
-' .vscode/tasks.json
-[[ -s .vscode/settings.json ]] || echo '{}' >.vscode/settings.json
-grep -v '^\s*//' $DOTFILES/config/vscode/settings.json |
-  yq -i -py -oj ea 'select(fi == 0) * (select(fi == 1) | with_entries(select(
-    .key == ("files.*", "explorer.fileNesting.*", "tailwindCSS.*",
-      "editor.codeActionsOnSave", "editor.quickSuggestions",
-      "editor.defaultFormatter", "editor.foldingStrategy", "editor.format*",
-      "js/ts.*", "svelte.*", "[svelte]", "eslint.*")
-  )))' .vscode/settings.json -
+tasks=('SvelteKit:*')
+has_dep @sveltejs/adapter-cloudflare && tasks+=('Cloudflare:*')
+jsonc $DOTFILES/config/vscode/tasks.json | pick_tasks $tasks >.vscode/tasks.json
+
+# VSCode Launch
+# TODO: copy $DOTFILES/config/vscode/launch.json to .vscode/launch.json
+
+# VSCode Settings
+settings=(
+  'editor.codeActionsOnSave'
+  'editor.defaultFormatter'
+  'editor.foldingStrategy'
+  'editor.format*'
+  'editor.quickSuggestions'
+  'eslint.*'
+  'explorer.fileNesting.*'
+  'files.*'
+  'js/ts.*'
+  'svelte.*'
+  '[svelte]'
+)
+has_dep tailwindcss && settings+=('tailwindCSS.*')
+jsonc $DOTFILES/config/vscode/settings.json | pick_keys $settings |
+  merge_json .vscode/settings.json
+# Without Tailwind, drop its *.css file association
 has_dep tailwindcss || yq -i -oj '
-  with_entries(select(.key | test("^tailwindCSS") | not)) |
   del(.["files.associations"][] | select(. == "tailwindcss"))
 ' .vscode/settings.json
+
+# VSCode Extensions
 add_vscode_ext \
   antfu.iconify \
   christian-kohler.path-intellisense \

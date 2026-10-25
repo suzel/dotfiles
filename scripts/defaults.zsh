@@ -11,9 +11,6 @@
 set -uo pipefail
 
 failed=0
-readonly PB=/usr/libexec/PlistBuddy
-readonly WIN=$'\eWindow\e'
-readonly MR=$'\eWindow\eMove & Resize\e'
 
 # Log Functions
 info() { echo "\033[0;34mℹ️  $*\033[0m"; }
@@ -27,18 +24,12 @@ TRAPZERR() { error "Error at ${funcfiletrace[1]}" && failed=1; }
 # Quits Terminal
 quit_terminal() {
   osascript -e 'tell application "Terminal" to quit' 2>/dev/null || return 1
-  for _ in {1..50}; do
-    pgrep -xq Terminal || return 0
-    sleep 0.2
-  done
+  for _ in {1..50}; do pgrep -xq Terminal && sleep 0.2 || return 0; done
   return 1
 }
 
 # Sets a Pro profile key
-pro() {
-  local key=":Window Settings:Pro:$1"
-  $PB -c "Set '$key' $3" "$tp" 2>/dev/null || $PB -c "Add '$key' $2 $3" "$tp"
-}
+pro() { plutil -replace "Window Settings.Pro.$1" -$2 $3 "$tp"; }
 
 # Close System Settings to prevent it from overriding changes
 osascript -e 'tell application "System Settings" to quit' 2>/dev/null
@@ -214,20 +205,34 @@ defaults write NSGlobalDomain NSAutomaticPeriodSubstitutionEnabled -bool false
 # Window Tiling
 # =============================================================================
 
-# Rectangle-style ⌃⌥ shortcuts for Window > Move & Resize
+# Drag to screen edges or menu bar to tile, or hold ⌥ while dragging
+defaults write com.apple.WindowManager EnableTilingByEdgeDrag -bool true
+defaults write com.apple.WindowManager EnableTopTilingByEdgeDrag -bool true
+defaults write com.apple.WindowManager EnableTilingOptionAccelerator -bool true
+
+# No margins between tiled windows
+defaults write com.apple.WindowManager EnableTiledWindowMargins -bool false
+
+# Rectangle-style ⌃⌥ shortcuts for Window > Move & Resize, Full Screen Tile
+# Menu paths use / here, macOS needs ESC instead
+shortcuts=(
+  "/Window/Move & Resize/Left" $'^~\uF702'
+  "/Window/Move & Resize/Right" $'^~\uF703'
+  "/Window/Move & Resize/Top" $'^~\uF700'
+  "/Window/Move & Resize/Bottom" $'^~\uF701'
+  "/Window/Move & Resize/Top Left" '^~u'
+  "/Window/Move & Resize/Top Right" '^~i'
+  "/Window/Move & Resize/Bottom Left" '^~j'
+  "/Window/Move & Resize/Bottom Right" '^~k'
+  "/Window/Move & Resize/Left & Right" '^~2'
+  "/Window/Move & Resize/Return to Previous Size" $'^~\u232B'
+  "/Window/Fill" $'^~\u21A9'
+  "/Window/Center" '^~c'
+  "/Window/Full Screen Tile/Left of Screen" $'^~$\uF702'
+  "/Window/Full Screen Tile/Right of Screen" $'^~$\uF703'
+)
 defaults write NSGlobalDomain NSUserKeyEquivalents -dict-add \
-  "${MR}Left" $'^~\uF702' \
-  "${MR}Right" $'^~\uF703' \
-  "${MR}Top" $'^~\uF700' \
-  "${MR}Bottom" $'^~\uF701' \
-  "${MR}Top Left" '^~u' \
-  "${MR}Top Right" '^~i' \
-  "${MR}Bottom Left" '^~j' \
-  "${MR}Bottom Right" '^~k' \
-  "${MR}Left & Right" '^~2' \
-  "${MR}Return to Previous Size" $'^~\u232B' \
-  "${WIN}Fill" $'^~\u21A9' \
-  "${WIN}Center" '^~c'
+  ${shortcuts//\//$'\e'}
 
 # =============================================================================
 # Screenshots

@@ -281,8 +281,8 @@
 	"Docker ignore for Svelte": {
 		"scope": "ignore",
 		"isFileTemplate": true,
-		"include": ".dockerignore",
-		"description": ".dockerignore for a SvelteKit project",
+		"include": [".dockerignore", "*.dockerignore"],
+		"description": ".dockerignore for a SvelteKit project; docker/Dockerfile.dockerignore when the Dockerfile is in docker/",
 		"body": [
 			"# Docker",
 			"Dockerfile",

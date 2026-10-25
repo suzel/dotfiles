@@ -5,7 +5,7 @@ add_newline = false
 command_timeout = 1000
 
 # Shown modules
-format = """$directory$git_branch$golang$nodejs${custom.svelte}$character"""
+format = """$directory$git_branch$golang$nodejs$rust${custom.svelte}$character"""
 
 # Prompt arrow
 [character]
@@ -31,6 +31,11 @@ format = "[\ue627 ](bold cyan)"
 [nodejs]
 detect_folders = ['node_modules', '!.svelte-kit']
 format = '[$symbol]($style)'
+
+# Rust icon and version
+[rust]
+symbol = "\ue7a8 "
+format = '[$symbol($version )]($style)'
 
 # Svelte icon
 [custom.svelte]

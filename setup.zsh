@@ -29,23 +29,31 @@ readonly ICLOUD="$HOME/Library/Mobile Documents/com~apple~CloudDocs"
 readonly SECRETS=$ICLOUD/Secrets/secrets.env
 
 links=(
+  # Zsh
   config/zsh/.zshenv ~/.zshenv
   config/zsh/.zshenv ~/.config/zsh/.zshenv
   config/zsh/.zshrc ~/.config/zsh/.zshrc
   config/zsh/aliases.zsh ~/.config/zsh/aliases.zsh
   config/zsh/functions ~/.config/zsh/functions
 
+  # Git
   config/git ~/.config/git
 
+  # Cargo
+  config/cargo/config.toml ~/.cargo/config.toml
+
+  # Terminal
   config/ghostty ~/.config/ghostty
   config/starship/starship.toml ~/.config/starship.toml
 
+  # Claude Code
   config/claude/CLAUDE.md ~/.claude/CLAUDE.md
   config/claude/settings.json ~/.claude/settings.json
   config/claude/guides ~/.claude/guides
   config/claude/skills ~/.claude/skills
   config/claude/agents ~/.claude/agents
 
+  # VS Code
   config/vscode/argv.json ~/.vscode/argv.json
   config/vscode/settings.json $CODE_USER/settings.json
   config/vscode/keybindings.json $CODE_USER/keybindings.json
@@ -90,10 +98,12 @@ config() {
 packages() {
   info "Installing Brewfile packages (quiet, may take a while)..."
   local brewfile="$DOTFILES/config/brew/Brewfile"
+  local rustup=/opt/homebrew/opt/rustup/bin/rustup
   [[ $(mdutil -s /) == *"Indexing enabled"* ]] ||
     export HOMEBREW_BUNDLE_MAS_SKIP="$(awk '/^mas / {print $NF}' "$brewfile")"
   HOMEBREW_NO_AUTO_UPDATE=1 brew bundle -q --file="$brewfile" ||
     warn "Some packages failed, re-run: dotfiles packages"
+  [[ -x $rustup ]] && $rustup -q default stable
   brew cleanup --prune=all >/dev/null
   brew autoupdate delete >/dev/null
   brew autoupdate start 03:00 --upgrade --cleanup --ac-only \
