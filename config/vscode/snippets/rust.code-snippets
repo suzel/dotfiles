@@ -1,6 +1,7 @@
 {
   "Rust Cargo.toml": {
     "scope": "toml",
+    "prefix": "rust::Cargo.toml",
     "isFileTemplate": true,
     "include": "Cargo.toml",
     "description": "Cargo.toml: package on edition 2024 with a clippy lint for undocumented unsafe",
@@ -17,10 +18,10 @@
       "undocumented_unsafe_blocks = \"warn\"",
       "",
     ],
-    "prefix": "rust::Cargo.toml",
   },
   "Rust Main": {
     "scope": "rust",
+    "prefix": "rust::main",
     "description": "fn main returning anyhow::Result for a binary",
     "body": [
       "// TODO: cargo add anyhow",
@@ -31,10 +32,10 @@
       "\tOk(())",
       "}",
     ],
-    "prefix": "rust::main",
   },
   "Rust Error": {
     "scope": "rust",
+    "prefix": "rust::error",
     "description": "thiserror Error enum with a crate Result alias for a library",
     "body": [
       "// TODO: cargo add thiserror",
@@ -47,10 +48,10 @@
       "",
       "pub type Result<T, E = Error> = std::result::Result<T, E>;",
     ],
-    "prefix": "rust::error",
   },
   "Rust Test": {
     "scope": "rust",
+    "prefix": "rust::test",
     "description": "#[cfg(test)] tests module with one test function",
     "body": [
       "#[cfg(test)]",
@@ -63,6 +64,5 @@
       "\t}",
       "}",
     ],
-    "prefix": "rust::test",
   },
 }

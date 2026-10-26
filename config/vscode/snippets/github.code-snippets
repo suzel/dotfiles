@@ -1,6 +1,7 @@
 {
   "Github Action - CI": {
     "scope": "github-actions-workflow",
+    "prefix": "github::ci.yml",
     "include": "**/.github/workflows/*.yml",
     "isFileTemplate": true,
     "description": "CI workflow: lint, check and build on pushes and PRs to main and dev",
@@ -50,10 +51,10 @@
       "        run: pnpm build",
       "",
     ],
-    "prefix": "github::ci.yml",
   },
   "Github Action - Deploy": {
     "scope": "github-actions-workflow",
+    "prefix": "github::deploy.yml",
     "include": "**/.github/workflows/*.yml",
     "isFileTemplate": true,
     "description": "Deploy workflow: build on push to main, Cloudflare Workers deploy (D1 migrations, then wrangler deploy) commented out",
@@ -112,10 +113,10 @@
       "      #       --data '{\"purge_everything\":true}'",
       "",
     ],
-    "prefix": "github::deploy.yml",
   },
   "Github Action - Check": {
     "scope": "github-actions-workflow",
+    "prefix": "github::check.yml",
     "include": "**/.github/workflows/*.yml",
     "isFileTemplate": true,
     "description": "Weekly + PR project check via suzel/dotfiles sv-check.yml; report in the job summary",
@@ -145,10 +146,10 @@
       "    # secrets: inherit # org repos: passes GITLEAKS_LICENSE",
       "",
     ],
-    "prefix": "github::check.yml",
   },
   "Github Action - SvelteKit Check": {
     "scope": "github-actions-workflow",
+    "prefix": "github::sv-check.yml",
     "include": "**/.github/workflows/*.yml",
     "isFileTemplate": true,
     "description": "Standalone SvelteKit check workflow: every tool as a step or action, weekly status comment; no dotfiles dependency",
@@ -343,10 +344,10 @@
       "          gh issue comment \"\\$n\" --body \"\\$BODY\"",
       "",
     ],
-    "prefix": "github::sv-check.yml",
   },
   "Dependabot for Github Actions": {
     "scope": "yaml",
+    "prefix": "github::dependabot.yml",
     "isFileTemplate": true,
     "include": "dependabot.yml",
     "description": "dependabot.yml: grouped weekly npm updates, monthly Actions, Docker base image",
@@ -453,10 +454,10 @@
       "        update-types: [\"version-update:semver-major\"]",
       "",
     ],
-    "prefix": "github::dependabot.yml",
   },
   "Renovate for Github Action": {
     "scope": "json",
+    "prefix": "github::renovate.json",
     "isFileTemplate": true,
     "include": "renovate.json",
     "description": "renovate.json: weekly updates, pinned Action digests, minor/patch automerge",
@@ -472,6 +473,5 @@
       "  ]",
       "}",
     ],
-    "prefix": "github::renovate.json",
   },
 }

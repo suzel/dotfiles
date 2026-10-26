@@ -1,6 +1,7 @@
 {
   "CONTRIBUTING.md": {
     "scope": "markdown",
+    "prefix": "doc::contributing",
     "isFileTemplate": true,
     "include": "CONTRIBUTING.md",
     "description": "CONTRIBUTING.md: local setup, branching, commit conventions and PR process",
@@ -116,10 +117,10 @@
       "By contributing, you agree that your contributions will be licensed under the project's MIT license.",
       "",
     ],
-    "prefix": "doc::contributing",
   },
   "Docs README": {
     "scope": "markdown",
+    "prefix": "doc::documentation",
     "isFileTemplate": true,
     "include": "**/docs/README.md",
     "description": "docs/README.md: intro for the project's docs folder",
@@ -129,10 +130,10 @@
       "This folder hosts the project's technical documentation. Content is under active development and will be updated over time.",
       "",
     ],
-    "prefix": "doc::documentation",
   },
   "Security Policy": {
     "scope": "markdown",
+    "prefix": "doc::security",
     "isFileTemplate": true,
     "include": "SECURITY.md",
     "description": "SECURITY.md: supported versions and how to report a vulnerability",
@@ -195,10 +196,10 @@
       "- Report vulnerabilities promptly and do not exploit them beyond what is necessary to demonstrate impact.",
       "- Give us reasonable time to remediate before public disclosure.",
     ],
-    "prefix": "doc::security",
   },
   "README for Svelte": {
     "scope": "markdown",
+    "prefix": "doc::readme",
     "isFileTemplate": true,
     "include": "README.md",
     "description": "README.md for a SvelteKit project, with badges",
@@ -268,10 +269,10 @@
       "[license-icon]: https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square",
       "[license-url]: LICENSE",
     ],
-    "prefix": "doc::readme",
   },
   "LICENSE": {
     "scope": "plaintext",
+    "prefix": "doc::license",
     "isFileTemplate": true,
     "include": "LICENSE",
     "description": "LICENSE: MIT license with the current year",
@@ -298,10 +299,10 @@
       "OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE",
       "SOFTWARE.",
     ],
-    "prefix": "doc::license",
   },
   ".editorconfig": {
     "scope": "editorconfig",
+    "prefix": "doc::editorconfig",
     "isFileTemplate": true,
     "include": ".editorconfig",
     "description": ".editorconfig: shared editor settings",
@@ -326,10 +327,10 @@
       "# [*.md]",
       "# trim_trailing_whitespace = false",
     ],
-    "prefix": "doc::editorconfig",
   },
   "Humans.txt": {
     "scope": "plaintext",
+    "prefix": "doc::humans.txt",
     "isFileTemplate": true,
     "include": "humans.txt",
     "description": "humans.txt: team and site credits",
@@ -346,10 +347,10 @@
       "Software: Visual Studio Code",
       "",
     ],
-    "prefix": "doc::humans.txt",
   },
   "Llms.txt": {
     "scope": "plaintext",
+    "prefix": "doc::llms.txt",
     "isFileTemplate": true,
     "include": "llms.txt",
     "description": "llms.txt: site summary for LLMs",
@@ -373,6 +374,5 @@
       "- /: ${3:Homepage and general introduction}$0",
       "",
     ],
-    "prefix": "doc::llms.txt",
   },
 }

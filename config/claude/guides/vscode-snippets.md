@@ -19,6 +19,7 @@ Snippets live in ~/Library/Application Support/Code/User/snippets/, one file per
 
 ## Fields
 
+- Key order: `scope`, `prefix`, the other fields, then `body` last.
 - Always set `scope`. Without it the snippet shows in every language.
 - Give every snippet a one-line `description` of what it inserts.
 - A file template for a fixed file name sets `isFileTemplate: true` and `include` to that name,

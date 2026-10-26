@@ -1,6 +1,7 @@
 {
   "DESIGN.md": {
     "scope": "markdown",
+    "prefix": "claude::design.md",
     "isFileTemplate": true,
     "include": "DESIGN.md",
     "description": "DESIGN.md: design system spec for the SvelteKit app",
@@ -166,10 +167,10 @@
       "- Don't add dark-mode styles yet — the app is light-mode only.",
       "",
     ],
-    "prefix": "claude::design.md",
   },
   "CLAUDE.md": {
     "scope": "markdown",
+    "prefix": "claude::claude.md",
     "isFileTemplate": true,
     "include": "CLAUDE.md",
     "description": "CLAUDE.md: tech stack and project conventions for Claude Code",
@@ -235,10 +236,10 @@
       "- @DESIGN.md — UI / styling / visual. MUST follow, single source for design rules.",
       "",
     ],
-    "prefix": "claude::claude.md",
   },
   "MCP JSON Config": {
     "scope": "json",
+    "prefix": "claude::.mcp.json",
     "isFileTemplate": true,
     "include": ".mcp.json",
     "description": ".mcp.json: project MCP servers for Claude Code (context7, grep, …)",
@@ -276,10 +277,10 @@
       "}",
       "",
     ],
-    "prefix": "claude::.mcp.json",
   },
   "LSP Config": {
     "scope": "json",
+    "prefix": "claude::.lsp.json",
     "isFileTemplate": true,
     "include": ".lsp.json",
     "description": ".lsp.json: Svelte and TypeScript language servers for Claude Code",
@@ -307,10 +308,10 @@
       "}",
       "",
     ],
-    "prefix": "claude::.lsp.json",
   },
   "Settings for Claude": {
     "scope": "jsonc",
+    "prefix": "claude::settings.json",
     "isFileTemplate": true,
     "include": "**/.claude/settings*.json",
     "description": ".claude/settings.json: project settings for Claude Code",
@@ -369,7 +370,6 @@
       "}",
       "",
     ],
-    "prefix": "claude::settings.json",
   },
   "Claude Project Rules": {
     "scope": "markdown",

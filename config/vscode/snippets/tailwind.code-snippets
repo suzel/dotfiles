@@ -1,6 +1,7 @@
 {
   "Design Token": {
     "scope": "tailwindcss",
+    "prefix": "tw::layout.css",
     "isFileTemplate": true,
     "include": "layout.css",
     "description": "layout.css: Tailwind import, plugins and design tokens",
@@ -53,7 +54,6 @@
       "}",
       "",
     ],
-    "prefix": "tw::layout.css",
   },
   "Tailwind Header": {
     "scope": "svelte",
