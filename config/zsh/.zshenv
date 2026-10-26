@@ -25,8 +25,8 @@ export HOMEBREW_NO_INSECURE_REDIRECT=1
 export HOMEBREW_NO_UPDATE_REPORT_NEW=1
 export HOMEBREW_BUNDLE_FILE="$PROJECTS_DIR/dotfiles/config/brew/Brewfile"
 
-# GitHub CLI
-export GH_TELEMETRY=false
-
 # pnpm
 export PNPM_CONFIG_UPDATE_NOTIFIER=false
+
+# GitHub CLI
+export GH_TELEMETRY=false

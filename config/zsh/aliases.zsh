@@ -46,9 +46,9 @@ alias bout='brew outdated'
 alias bclean='brew cleanup -s && brew autoremove'
 
 # Docker
-alias docker_stop='docker ps -q | xargs docker stop'
-alias docker_remove='docker ps -aq | xargs docker rm -f'
-alias docker_clean='docker system prune -af'
+alias dstop='docker ps -q | xargs docker stop'
+alias drm='docker ps -aq | xargs docker rm -f'
+alias dclean='docker system prune -af'
 
 # PNPM
 alias pni='pnpm install'

@@ -93,6 +93,7 @@ brew "osv-scanner"
 brew "pi-coding-agent"
 brew "pnpm"
 brew "python"
+brew "rust-analyzer"
 brew "rustup"
 brew "sccache"
 brew "sqlc"
@@ -121,9 +122,6 @@ npm "svelte-language-server"
 npm "typescript"
 npm "typescript-language-server"
 npm "yaml"
-
-# Go Packages
-go "github.com/air-verse/air"
 
 # VS Code Extensions
 vscode "alexdombroski.snippetstudio"

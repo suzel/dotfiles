@@ -32,7 +32,6 @@
     "key": "cmd+4",
     "command": "copyRelativeFilePath"
   },
-
   // Font Zoom
   {
     "key": "ctrl+shift+up",
@@ -46,7 +45,6 @@
     "key": "ctrl+shift+delete",
     "command": "editor.action.fontZoomReset"
   },
-
   // Terminal
   {
     "key": "cmd+enter",
@@ -113,7 +111,6 @@
     "command": "workbench.action.terminal.focusAtIndex9",
     "when": "terminalFocus"
   },
-
   // Emmet
   {
     "key": "cmd+m cmd+i",
@@ -145,7 +142,6 @@
     "command": "editor.emmet.action.removeTag",
     "when": "editorTextFocus"
   },
-
   // Explorer
   {
     "key": "cmd+n",
@@ -179,7 +175,6 @@
     },
     "when": "editorFocus && resourceScheme == file"
   },
-
   // Settings
   {
     "key": "cmd+,",
@@ -189,7 +184,6 @@
     "key": "alt+cmd+,",
     "command": "workbench.action.openSettings"
   },
-
   // Drizzle
   {
     "key": "alt+cmd+enter",
@@ -199,38 +193,15 @@
         "editor.action.clipboardCopyAction",
         {
           "command": "editor.action.insertSnippet",
-          "args": { "langId": "typescript", "name": "Drizzle From SQL" }
+          "args": {
+            "langId": "typescript",
+            "name": "Drizzle From SQL"
+          }
         }
       ]
     },
     "when": "editorTextFocus && editorHasSelection && editorLangId == typescript"
   },
-  {
-    // copies the schema file, then appends its relations at the end
-    "key": "ctrl+cmd+r",
-    "command": "runCommands",
-    "args": {
-      "commands": [
-        "editor.action.selectAll",
-        "editor.action.clipboardCopyAction",
-        "cursorBottom",
-        {
-          "command": "editor.action.insertSnippet",
-          "args": { "langId": "typescript", "name": "Drizzle To Relations" }
-        }
-      ]
-    },
-    "when": "editorTextFocus && editorLangId == typescript && resourcePath =~ /\\/db\\/schema\\//"
-  },
-
-  // Cloudflare
-  {
-    "key": "ctrl+cmd+enter",
-    "command": "workbench.action.tasks.runTask",
-    "args": "Cloudflare: D1 execute selection",
-    "when": "editorTextFocus && editorHasSelection"
-  },
-
   // Layout
   {
     "key": "f16",
@@ -243,7 +214,9 @@
   {
     "key": "f18",
     "command": "workbench.action.browser.open",
-    "args": { "openToSide": true }
+    "args": {
+      "openToSide": true
+    }
   },
   {
     "key": "f19",

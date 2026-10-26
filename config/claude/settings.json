@@ -59,7 +59,10 @@
   },
   "enabledPlugins": {
     "cc-plugin-agents-md@builtin": false,
-    "cc-plugin-plugin-authoring@builtin": false
+    "cc-plugin-plugin-authoring@builtin": false,
+    "gopls-lsp@claude-plugins-official": false,
+    "rust-analyzer-lsp@claude-plugins-official": false,
+    "svelte@svelte": false
   },
   "outputStyle": "default",
   "viewMode": "default",
@@ -67,7 +70,7 @@
   "alwaysThinkingEnabled": true,
   "modelSettings": {
     "claude-opus-5-5": {
-      "effortLevel": "xhigh"
+      "effortLevel": "high"
     },
     "claude-sonnet-5-5": {
       "effortLevel": "xhigh"

@@ -25,7 +25,7 @@ indent_style = tab
 shell_variant = zsh
 switch_case_indent = true
 
-# Zsh autoload functions, no extension (shfmt)
+# Zsh autoload functions
 [config/zsh/functions/*]
 shell_variant = zsh
 switch_case_indent = true

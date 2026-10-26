@@ -2,36 +2,37 @@
   // Auto Snippets
   // prettier-ignore
   "auto-snippets.snippets": [
+
     // SvelteKit
-    { "pattern": "**/+{page,layout,error}.svelte", "commands": ["workbench.action.populateFileFromSnippet"] },
-    { "regex": "/lib/components/.*(?<!/Seo|/Analytics)\\.svelte$", "commands": ["workbench.action.populateFileFromSnippet"] },
-    { "pattern": "**/+{page,layout}{,.server}.ts", "commands": ["workbench.action.populateFileFromSnippet"] },
-    { "pattern": "**/!(robots.txt|sitemap.xml|rss.xml|og.png)/+server.ts", "commands": ["workbench.action.populateFileFromSnippet"] },
-    { "pattern": "**/*.remote.ts", "commands": ["workbench.action.populateFileFromSnippet"] },
-    { "pattern": "**/*.svelte.ts", "commands": ["workbench.action.populateFileFromSnippet"] },
-    { "regex": "/lib/server/(?!db/).*(?<!\\.test|\\.spec|\\.e2e|\\.svelte)\\.ts$", "commands": ["workbench.action.populateFileFromSnippet"] },
-    { "pattern": "**/{hooks.client,instrumentation.server}.ts", "commands": ["workbench.action.populateFileFromSnippet"] },
+    { "pattern": "**/+{page,layout,error}.svelte", "commands": [ "workbench.action.populateFileFromSnippet" ] },
+    { "regex": "/lib/components/.*(?<!/Seo|/Analytics)\\.svelte$", "commands": [ "workbench.action.populateFileFromSnippet" ] },
+    { "pattern": "**/+{page,layout}{,.server}.ts", "commands": [ "workbench.action.populateFileFromSnippet" ] },
+    { "pattern": "**/!(robots.txt|sitemap.xml|rss.xml|og.png)/+server.ts", "commands": [ "workbench.action.populateFileFromSnippet" ] },
+    { "pattern": "**/*.remote.ts", "commands": [ "workbench.action.populateFileFromSnippet" ] },
+    { "pattern": "**/*.svelte.ts", "commands": [ "workbench.action.populateFileFromSnippet" ] },
+    { "regex": "/lib/server/(?!db/).*(?<!\\.test|\\.spec|\\.e2e|\\.svelte)\\.ts$", "commands": [ "workbench.action.populateFileFromSnippet" ] },
+    { "pattern": "**/{hooks.client,instrumentation.server}.ts", "commands": [ "workbench.action.populateFileFromSnippet" ] },
     { "pattern": "**/service-worker.ts", "snippet": "Kit Service Worker" },
-    { "pattern": "**/*.{spec,test,e2e}.ts", "commands": ["workbench.action.populateFileFromSnippet"] },
-    { "pattern": "**/*.http", "commands": ["workbench.action.populateFileFromSnippet"] },
+    { "pattern": "**/*.{spec,test,e2e}.ts", "commands": [ "workbench.action.populateFileFromSnippet" ] },
+    { "pattern": "**/*.http", "commands": [ "workbench.action.populateFileFromSnippet" ] },
 
     // Drizzle
-    { "pattern": "**/db/schema/common.ts", "commands": ["workbench.action.populateFileFromSnippet"] },
-    { "regex": "/db/schema/.*(?<!/common)\\.ts$", "commands": ["workbench.action.populateFileFromSnippet"] },
-    { "pattern": "**/db/seed.ts", "commands": ["workbench.action.populateFileFromSnippet"] },
+    { "pattern": "**/db/schema/common.ts", "commands": [ "workbench.action.populateFileFromSnippet" ] },
+    { "regex": "/db/schema/.*(?<!/common)\\.ts$", "commands": [ "workbench.action.populateFileFromSnippet" ] },
+    { "pattern": "**/db/seed.ts", "commands": [ "workbench.action.populateFileFromSnippet" ] },
     { "pattern": "**/db/rls.ts", "snippet": "Drizzle RLS" },
 
     // SEO
-    { "pattern": "**/robots.txt/+server.ts", "snippet": "SEO Robots" },
-    { "pattern": "**/sitemap.xml/+server.ts", "snippet": "SEO Sitemap" },
-    { "pattern": "**/rss.xml/+server.ts", "snippet": "SEO RSS" },
-    { "pattern": "**/og.png/+server.ts", "snippet": "SEO OG Image" },
+    { "pattern": "**/robots.txt/+server.ts", "snippet": "Kit Robots" },
+    { "pattern": "**/sitemap.xml/+server.ts", "snippet": "Kit Sitemap" },
+    { "pattern": "**/rss.xml/+server.ts", "snippet": "Kit RSS" },
+    { "pattern": "**/og.png/+server.ts", "snippet": "Kit OG Image" },
     { "pattern": "**/static/manifest.json", "snippet": "Manifest File" },
     { "pattern": "**/static/humans.txt", "snippet": "Humans.txt" },
     { "pattern": "**/static/llms.txt", "snippet": "Llms.txt" },
     { "pattern": "**/static/browserconfig.xml", "snippet": "Browser Config File" },
-    { "pattern": "**/Seo.svelte", "snippet": "SEO Head" },
-    { "pattern": "**/Analytics.svelte", "snippet": "SEO Analytics" },
+    { "pattern": "**/Seo.svelte", "snippet": "Kit SEO" },
+    { "pattern": "**/Analytics.svelte", "snippet": "Kit Analytics" },
 
     // GitHub
     { "pattern": "**/.github/workflows/ci.yml", "snippet": "Github Action - CI" },
@@ -42,8 +43,8 @@
     { "pattern": "**/renovate.json", "snippet": "Renovate for Github Action" },
 
     // Docker
-    { "pattern": "**/{Dockerfile,*.Dockerfile}", "commands": ["workbench.action.populateFileFromSnippet"] },
-    { "pattern": "**/compose.yaml", "commands": ["workbench.action.populateFileFromSnippet"] },
+    { "pattern": "**/{Dockerfile,*.Dockerfile}", "commands": [ "workbench.action.populateFileFromSnippet" ] },
+    { "pattern": "**/compose.yaml", "commands": [ "workbench.action.populateFileFromSnippet" ] },
     { "pattern": "**/compose.dev.yaml", "snippet": "Docker Compose for Svelte - Dev" },
     { "pattern": "**/{.dockerignore,*.dockerignore}", "snippet": "Docker ignore for Svelte" },
     { "pattern": "**/docker/sql/init.sql", "snippet": "PostgREST init.sql" }
@@ -107,7 +108,9 @@
   "editor.matchBrackets": "never",
   "editor.minimap.enabled": false,
   "editor.mouseWheelZoom": true,
-  "editor.pasteAs.preferences": ["text.updateImports"],
+  "editor.pasteAs.preferences": [
+    "text.updateImports"
+  ],
   "editor.quickSuggestions": {
     "other": "on",
     "strings": "on",
@@ -134,9 +137,17 @@
   // ESLint
   // Hide issues that are auto-fixed on save
   "eslint.rules.customizations": [
-    { "rule": "*", "fixable": true, "severity": "off" }
+    {
+      "rule": "*",
+      "fixable": true,
+      "severity": "off"
+    }
   ],
-  "eslint.validate": ["javascript", "typescript", "svelte"],
+  "eslint.validate": [
+    "javascript",
+    "typescript",
+    "svelte"
+  ],
 
   // Explorer
   "explorer.compactFolders": false,
@@ -156,6 +167,9 @@
     "+page.svelte": "+page.ts, +page.server.ts",
     "+layout.svelte": "+layout.ts, +layout.server.ts"
   },
+
+  // Extensions
+  "extensions.ignoreRecommendations": true,
 
   // Files
   "files.associations": {
@@ -198,7 +212,6 @@
   // JavaScript & TypeScript
   "js/ts.experimental.useTsgo": false,
   "js/ts.inlayHints.parameterNames.enabled": "none",
-  "js/ts.preferGoToSourceDefinition": true,
   "js/ts.preferences.autoImportFileExcludePatterns": [
     "**/node_modules/@types/node/console.d.ts",
     "**/node_modules/zod/**",
@@ -210,9 +223,13 @@
   "js/ts.preferences.importModuleSpecifier": "non-relative",
   "js/ts.preferences.includePackageJsonAutoImports": "on",
   "js/ts.preferences.preferTypeOnlyAutoImports": true,
+  "js/ts.preferGoToSourceDefinition": true,
   "js/ts.suggest.autoImports": true,
   "js/ts.tsdk.path": "./node_modules/typescript/lib",
   "js/ts.updateImportsOnFileMove.enabled": "always",
+
+  // JSON
+  "json.format.keepLines": true,
 
   // Launch
   "launch": {
@@ -236,11 +253,20 @@
         "type": "node",
         "request": "launch",
         "runtimeExecutable": "pnpm",
-        "runtimeArgs": ["exec", "vite", "dev", "--logLevel", "info"],
+        "runtimeArgs": [
+          "exec",
+          "vite",
+          "dev",
+          "--logLevel",
+          "info"
+        ],
         "cwd": "${workspaceFolder}",
         "console": "integratedTerminal",
         "autoAttachChildProcesses": true,
-        "skipFiles": ["<node_internals>/**", "**/node_modules/**"],
+        "skipFiles": [
+          "<node_internals>/**",
+          "**/node_modules/**"
+        ],
         "sourceMaps": true,
         "resolveSourceMapLocations": [
           "${workspaceFolder}/**",
@@ -272,16 +298,14 @@
   "markdown.preview.fontSize": 15,
 
   // Rust Analyzer
-  // Own target dir: no build lock waits or rebuilds with terminal cargo
   "rust-analyzer.cargo.targetDir": true,
-  // Lint with clippy on save instead of plain cargo check
   "rust-analyzer.check.command": "clippy",
 
   // Security
   "security.promptForLocalFileProtocolHandling": false,
 
   // Snippet Studio
-  "snippetstudio.shell.snippets": [],
+  "snippetstudio.shell.snippets": [ ],
   "snippetstudio.statusBar.showItem": false,
 
   // Svelte
@@ -290,11 +314,21 @@
   "svelte.plugin.svelte.runesLegacyModeCodeLens.enable": false,
 
   // TailwindCSS
-  "tailwindCSS.experimental.classRegex": [["clsx\\(([^)]*)\\)", "'([^']*)'"]],
+  "tailwindCSS.experimental.classRegex": [
+    [
+      "clsx\\(([^)]*)\\)",
+      "'([^']*)'"
+    ]
+  ],
 
   // Tasks
   "task.allowAutomaticTasks": "on",
-  "task.problemMatchers.neverPrompt": { "npm": true },
+  "task.problemMatchers.neverPrompt": {
+    "npm": true
+  },
+
+  // Telemetry
+  "telemetry.telemetryLevel": "off",
 
   // Terminal
   "terminal.external.osxExec": "Ghostty.app",
@@ -302,16 +336,22 @@
   "terminal.integrated.cursorStyle": "line",
   "terminal.integrated.fontFamily": "'Ioskeley Mono Term', 'Symbols Nerd Font Mono'",
   "terminal.integrated.fontLigatures.enabled": true,
+  "terminal.integrated.fontSize": 19,
   "terminal.integrated.profiles.osx": {
     "zsh": {
       "path": "/opt/homebrew/bin/zsh",
-      "args": ["-l"]
+      "args": [
+        "-l"
+      ]
     }
   },
   "terminal.integrated.shellIntegration.history": 100,
   "terminal.integrated.shellIntegration.showCommandGuide": true,
   "terminal.integrated.stickyScroll.enabled": true,
   "terminal.integrated.suggest.suggestOnTriggerCharacters": true,
+
+  // Update
+  "update.showReleaseNotes": false,
 
   // Window
   "window.autoDetectColorScheme": true,
@@ -356,21 +396,19 @@
   "workbench.tree.enableStickyScroll": false,
 
   // Language Overrides
-  "[shellscript]": {
-    "editor.defaultFormatter": "mkhl.shfmt",
-    "editor.formatOnSave": true
+  "[go]": {
+    "editor.defaultFormatter": "golang.go"
   },
-  "[html, javascript, typescript, json, jsonc]": {
+  "[html][javascript][json][jsonc][typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[markdown]": {
     "diffEditor.ignoreTrimWhitespace": false,
-    "files.trimTrailingWhitespace": false,
-    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint",
-    "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
       "source.fixAll.markdownlint": "explicit"
     },
+    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint",
+    "editor.formatOnSave": true,
     "editor.quickSuggestions": {
       "comments": "off",
       "other": "off",
@@ -378,7 +416,8 @@
     },
     "editor.unicodeHighlight.ambiguousCharacters": true,
     "editor.unicodeHighlight.invisibleCharacters": false,
-    "editor.wordWrap": "on"
+    "editor.wordWrap": "on",
+    "files.trimTrailingWhitespace": false
   },
   "[plaintext]": {
     "workbench.editor.languageDetection": false
@@ -386,19 +425,14 @@
   "[rust]": {
     "editor.defaultFormatter": "rust-lang.rust-analyzer"
   },
+  "[shellscript]": {
+    "editor.defaultFormatter": "mkhl.shfmt",
+    "editor.formatOnSave": true
+  },
   "[svelte]": {
     "editor.defaultFormatter": "svelte.svelte-vscode"
   },
-  "[go]": {
-    "editor.defaultFormatter": "golang.go"
-  },
   "[toml]": {
     "editor.defaultFormatter": "tamasfe.even-better-toml"
-  },
-
-  // Others
-  "extensions.ignoreRecommendations": true,
-  "telemetry.telemetryLevel": "off",
-  "update.showReleaseNotes": false,
-  "terminal.integrated.fontSize": 19
+  }
 }
