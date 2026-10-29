@@ -31,6 +31,20 @@ quit_terminal() {
 # Sets a Pro profile key
 pro() { plutil -replace "Window Settings.Pro.$1" -$2 $3 "$tp"; }
 
+# Adds an app to the Dock once, spacer first if $2 is spacer
+dock_app() {
+  local dock=$(defaults read com.apple.dock persistent-apps)
+  [[ -d $1 ]] || return 0
+  [[ $dock == *"$1"* || $dock == *"${1// /%20}"* ]] && return
+  [[ ${2-} == spacer ]] && defaults write com.apple.dock persistent-apps \
+    -array-add '<dict><key>tile-type</key>
+    <string>small-spacer-tile</string></dict>'
+  defaults write com.apple.dock persistent-apps -array-add "<dict>
+    <key>tile-data</key><dict><key>file-data</key><dict>
+    <key>_CFURLString</key><string>$1</string>
+    <key>_CFURLStringType</key><integer>0</integer></dict></dict></dict>"
+}
+
 # Close System Settings to prevent it from overriding changes
 osascript -e 'tell application "System Settings" to quit' 2>/dev/null
 
@@ -176,6 +190,12 @@ defaults write com.apple.dock launchanim -bool false
 
 # Make hidden app icons translucent
 defaults write com.apple.dock showhidden -bool true
+
+# Apps after macOS's own, with a small gap before Xcode
+dock_app /Applications/Obsidian.app
+dock_app /Applications/Xcode.app spacer
+dock_app "/Applications/Visual Studio Code.app"
+dock_app /Applications/Firefox.app
 
 # =============================================================================
 # Keyboard

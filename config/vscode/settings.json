@@ -93,7 +93,7 @@
   "editor.fontFamily": "'Ioskeley Mono', monospace",
   "editor.fontLigatures": "'calt', 'zero'",
   "editor.fontSize": 14.5,
-  "editor.fontWeight": "400",
+  "editor.fontWeight": "500",
   "editor.formatOnPaste": true,
   "editor.formatOnSave": true,
   "editor.gotoLocation.multipleDeclarations": "goto",
@@ -129,6 +129,11 @@
   "editor.suggestSelection": "first",
   "editor.tabCompletion": "onlySnippets",
   "editor.tabSize": 2,
+  "editor.tokenColorCustomizations": {
+    "[Cursor Dark Midnight]": {
+      "comments": "#8597BC"
+    }
+  },
   "editor.unicodeHighlight.allowedLocales": {
     "tr": true
   },
@@ -389,6 +394,7 @@
   "workbench.fontAliasing": "auto",
   "workbench.iconTheme": "symbols",
   "workbench.preferredDarkColorTheme": "Cursor Dark Midnight",
+  "workbench.preferredLightColorTheme": "Cursor Light",
   "workbench.settings.editor": "json",
   "workbench.settings.enableNaturalLanguageSearch": false,
   "workbench.startupEditor": "none",

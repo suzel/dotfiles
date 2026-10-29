@@ -1,0 +1,147 @@
+{
+  "policies": {
+    "3rdparty": {
+      "Extensions": {
+        "uBlock0@raymondhill.net": {
+          "toOverwrite": {
+            "filterLists": [
+              "user-filters",
+              "ublock-filters",
+              "ublock-badware",
+              "ublock-privacy",
+              "ublock-unbreak",
+              "ublock-quick-fixes",
+              "easylist",
+              "easyprivacy",
+              "adguard-spyware-url",
+              "https://raw.githubusercontent.com/DandelionSprout/adfilt/master/LegitimateURLShortener.txt",
+              "urlhaus-1",
+              "curben-phishing",
+              "plowe-0",
+              "fanboy-cookiemonster",
+              "ublock-cookies-easylist",
+              "TUR-0"
+            ]
+          }
+        }
+      }
+    },
+    "AIControls": {
+      "Translations": {
+        "Value": "available"
+      },
+      "PDFAltText": {
+        "Value": "blocked"
+      },
+      "SmartTabGroups": {
+        "Value": "blocked"
+      },
+      "LinkPreviewKeyPoints": {
+        "Value": "blocked"
+      },
+      "SidebarChatbot": {
+        "Value": "blocked"
+      },
+      "SmartWindow": {
+        "Value": "blocked"
+      },
+      "SpeechRecognition": {
+        "Value": "blocked"
+      }
+    },
+    "ContentAnalysis": {
+      "Enabled": false,
+      "InterceptionPoints": {
+        "Clipboard": {
+          "Enabled": false
+        },
+        "ClipboardCopy": {
+          "Enabled": false
+        },
+        "Download": {
+          "Enabled": false
+        },
+        "DragAndDrop": {
+          "Enabled": false
+        },
+        "FileUpload": {
+          "Enabled": false
+        },
+        "Print": {
+          "Enabled": false
+        }
+      }
+    },
+    "DisableFeedbackCommands": true,
+    "DisableFirefoxStudies": true,
+    "DisableRemoteImprovements": true,
+    "DisableTelemetry": true,
+    "DontCheckDefaultBrowser": true,
+    "EncryptedMediaExtensions": {
+      "Enabled": false
+    },
+    "ExtensionSettings": {
+      "uBlock0@raymondhill.net": {
+        "install_url": "https://addons.mozilla.org/firefox/downloads/latest/uBlock0@raymondhill.net/latest.xpi",
+        "installation_mode": "normal_installed",
+        "private_browsing": true
+      }
+    },
+    "FirefoxHome": {
+      "Weather": false,
+      "TopSites": false,
+      "SponsoredTopSites": false,
+      "Highlights": false,
+      "Stories": false,
+      "SponsoredStories": false
+    },
+    "FirefoxSuggest": {
+      "WebSuggestions": false,
+      "SponsoredSuggestions": false,
+      "ImproveSuggest": false
+    },
+    "HttpsOnlyMode": "enabled",
+    "LocalNetworkAccess": {
+      "Enabled": true,
+      "BlockTrackers": true,
+      "EnablePrompting": true
+    },
+    "NoDefaultBookmarks": true,
+    "OverridePostUpdatePage": "",
+    "Preferences": {
+      "network.cookie.cookieBehavior.optInPartitioning": {
+        "Value": true,
+        "Status": "default"
+      },
+      "network.cookie.cookieBehavior.optInPartitioning.pbmode": {
+        "Value": true,
+        "Status": "default"
+      }
+    },
+    "SearchEngines": {
+      "Add": [
+        {
+          "Name": "DuckDuckGo No-AI",
+          "URLTemplate": "https://noai.duckduckgo.com/?q={searchTerms}",
+          "IconURL": "https://noai.duckduckgo.com/favicon.ico"
+        }
+      ],
+      "Default": "DuckDuckGo No-AI",
+      "DefaultPrivate": "DuckDuckGo No-AI",
+      "Remove": [
+        "Google",
+        "Bing",
+        "eBay",
+        "Perplexity"
+      ],
+      "PreventInstalls": true
+    },
+    "SkipTermsOfUse": true,
+    "UserMessaging": {
+      "UrlbarInterventions": false,
+      "SkipOnboarding": true,
+      "MoreFromMozilla": false,
+      "FirefoxLabs": false
+    }
+  }
+}

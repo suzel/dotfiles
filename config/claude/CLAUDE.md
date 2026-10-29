@@ -12,6 +12,8 @@ already in context.
 - Rust (`.rs`, `Cargo.toml`): ~/.claude/guides/rust.md
 - GitHub Actions workflows: ~/.claude/guides/ci.md
 - Dockerfiles: ~/.claude/guides/docker.md
+- REST APIs (designing or changing endpoints): ~/.claude/guides/api.md
+- HTTP scenarios (`.http`, writing or running them): ~/.claude/guides/http.md
 - VS Code snippets (`.code-snippets`): ~/.claude/guides/vscode-snippets.md
 
 @~/.claude/guides/workflows.md

@@ -347,7 +347,7 @@ add_vscode_ext \
   usernamehw.errorlens \
   formulahendry.auto-rename-tag \
   github.vscode-github-actions \
-  humao.rest-client
+  anweber.vscode-httpyac
 
 # Docs
 # https://github.com/rafazafar/gh-scaffold

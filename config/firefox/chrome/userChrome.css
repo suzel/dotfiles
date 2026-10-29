@@ -1,0 +1,103 @@
+/* Cursor Dark Midnight inspired theme, with macOS vibrancy behind the chrome */
+
+:root {
+  --cursor-bg: #191c22;
+  --cursor-glass: rgb(25 28 34 / 0.2);
+  --cursor-surface: #1e2127;
+  --cursor-field: #272c3655;
+  --cursor-hover: rgb(255 255 255 / 0.05);
+  --cursor-selected: rgb(255 255 255 / 0.09);
+  --cursor-border: #ffffff0d;
+  --cursor-fg: #d8dee9;
+  --cursor-fg-muted: #7c818e;
+  --cursor-fg-bright: #eceff4;
+  --cursor-accent: #88c0d0;
+  --cursor-selection: #434c5e99;
+
+  color-scheme: dark !important;
+  /* Requires widget.macos.titlebar-blend-mode.behind-window */
+  appearance: -moz-sidebar !important;
+
+  /* Window frame and toolbars: tinted glass painted once on body, everything
+     on top of it stays transparent */
+  --toolbox-background-color: var(--cursor-glass) !important;
+  --toolbox-background-color-inactive: var(--cursor-glass) !important;
+  --toolbox-text-color: var(--cursor-fg) !important;
+  --toolbox-text-color-inactive: var(--cursor-fg-muted) !important;
+  --toolbar-background-color: transparent !important;
+  --toolbar-text-color: var(--cursor-fg) !important;
+  --toolbarbutton-icon-fill: var(--cursor-fg) !important;
+  --toolbarbutton-background-color-hover: var(--cursor-hover) !important;
+  --toolbarbutton-background-color-active: var(--cursor-selected) !important;
+  --chrome-content-separator-color: var(--cursor-border) !important;
+  --tabs-navbar-separator-color: var(--cursor-border) !important;
+  --focus-outline-color: var(--cursor-accent) !important;
+
+  /* Address bar */
+  --toolbar-field-background-color: var(--cursor-field) !important;
+  --toolbar-field-background-color-focus: var(--cursor-surface) !important;
+  --toolbar-field-text-color: var(--cursor-fg) !important;
+  --toolbar-field-text-color-focus: var(--cursor-fg) !important;
+  --toolbar-field-border-color: var(--cursor-selected) !important;
+  --toolbar-field-border-color-focus: var(--cursor-selected) !important;
+  --urlbarview-background-color-hover: var(--cursor-hover) !important;
+  --urlbarview-background-color-selected: var(--cursor-selected) !important;
+  --urlbarview-text-color-selected: var(--cursor-fg-bright) !important;
+
+  /* Tabs */
+  --tab-background-color-selected: var(--cursor-selected) !important;
+  --tab-text-color-selected: var(--cursor-fg-bright) !important;
+  --tab-background-color-hover: var(--cursor-hover) !important;
+  --tab-text-color: var(--cursor-fg-muted) !important;
+  --tab-text-color-hover: var(--cursor-fg) !important;
+  --tab-border-radius: 8px !important;
+
+  /* Popups and menus */
+  --panel-background-color: var(--cursor-bg) !important;
+  --panel-text-color: var(--cursor-fg) !important;
+  --panel-border-color: var(--cursor-selected) !important;
+  --panel-separator-color: var(--cursor-border) !important;
+
+  /* Background behind pages */
+  --tabpanel-background-color: var(--cursor-surface) !important;
+}
+
+#navigator-toolbox,
+#nav-bar,
+#browser {
+  background: transparent !important;
+}
+
+/* Page as a floating card on the glass, edge to edge in video fullscreen */
+:root:not([inDOMFullscreen]) .browserContainer {
+  margin: 0 6px 6px 0 !important;
+  border-radius: 8px !important;
+  overflow: clip !important;
+  box-shadow:
+    0 0 0 1px var(--cursor-border),
+    0 2px 8px rgb(0 0 0 / 0.3) !important;
+}
+
+#navigator-toolbox {
+  border-bottom-color: transparent !important;
+}
+
+/* Toolbar a bit taller than compact density's */
+#nav-bar {
+  min-height: 40px !important;
+}
+
+/* No search engine switcher in the address bar, the default engine is used */
+#urlbar .searchmode-switcher {
+  display: none !important;
+}
+
+/* No focus ring around the address bar */
+#urlbar {
+  --urlbar-background-outline-focused: none !important;
+}
+
+/* Address bar selection highlight */
+#urlbar-input::selection {
+  background-color: var(--cursor-selection) !important;
+}
