@@ -8,8 +8,6 @@
 //
 // Related files in this folder:
 //   policies.json  Policies: extensions, search engine, AI, telemetry
-//   dev.js         Developer Edition overrides, appended to a copy of this
-//                  file by ./setup.zsh config (re-run it after editing)
 //   chrome/        Theme for the browser UI (userChrome.css) and for pages
 //                  (userContent.css)
 //

@@ -27,7 +27,6 @@ readonly BREW_URL="$GH_RAW/Homebrew/install/HEAD/install.sh"
 readonly CODE_USER="$HOME/Library/Application Support/Code/User"
 readonly FIREFOX="$HOME/Library/Application Support/Firefox/Profiles"
 readonly FF_POLICIES=/Library/Preferences/org.mozilla.firefox
-readonly FF_DEV_POLICIES=${FF_POLICIES}developeredition
 readonly ICLOUD="$HOME/Library/Mobile Documents/com~apple~CloudDocs"
 readonly SECRETS=$ICLOUD/Secrets/secrets.env
 
@@ -86,22 +85,15 @@ repo() {
 config() {
   info "Linking config files and scripts..."
   local i src dst f ff=($FIREFOX/*.default-release(N/))
-  local dev=($FIREFOX/*.dev-edition-default(N/))
   ((${#ff})) || warn "Open Firefox once, then re-run: dotfiles config"
-  ((${#ff})) && links+=(config/firefox/user.js $ff[1]/user.js)
-  for f in ${ff[1]-} ${dev[1]-}; do
-    links+=(
-      config/firefox/customKeys.json $f/customKeys.json
-      config/firefox/chrome $f/chrome
-    )
-  done
-  ((${#dev})) && rm -f $dev[1]/user.js &&
-    cat $DOTFILES/config/firefox/{user,dev}.js >$dev[1]/user.js
-  for f in $FF_POLICIES $FF_DEV_POLICIES; do
-    plutil -extract policies xml1 -o - $DOTFILES/config/firefox/policies.json |
-      sudo defaults import $f -
-    sudo defaults write $f EnterprisePoliciesEnabled -bool true
-  done
+  ((${#ff})) && links+=(
+    config/firefox/user.js $ff[1]/user.js
+    config/firefox/customKeys.json $ff[1]/customKeys.json
+    config/firefox/chrome $ff[1]/chrome
+  )
+  plutil -extract policies xml1 -o - $DOTFILES/config/firefox/policies.json |
+    sudo defaults import $FF_POLICIES -
+  sudo defaults write $FF_POLICIES EnterprisePoliciesEnabled -bool true
   for ((i = 1; i < ${#links}; i += 2)); do
     src=${links[i]} dst=${links[i + 1]}
     mkdir -p "${dst:h}"
