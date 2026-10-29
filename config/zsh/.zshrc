@@ -16,7 +16,6 @@ path=(
   "$HOME/.local/bin"
   "$HOME/.bun/bin"
   "$HOME/.cargo/bin"
-  "$HOME/go/bin"
   "$XDG_DATA_HOME/pnpm/bin"
   "$SCRIPTS_DIR"
 )

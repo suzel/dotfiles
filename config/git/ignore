@@ -38,12 +38,6 @@ __pycache__/
 .pnpm-store/
 node_modules/
 
-# Go
-go.work
-go.work.sum
-__debug_bin*
-*.test
-
 # Rust
 target/
 

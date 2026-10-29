@@ -5,7 +5,7 @@ add_newline = false
 command_timeout = 1000
 
 # Shown modules
-format = """$directory$git_branch$golang$nodejs$rust${custom.svelte}$character"""
+format = """$directory$git_branch$nodejs$rust${custom.svelte}$character"""
 
 # Prompt arrow
 [character]
@@ -22,10 +22,6 @@ format = '[$symbol$branch(:$remote_branch)]($style) '
 format = '[$symbol(profile: "$profile" )(\(region: $region\) )]($style)'
 style = 'bold blue'
 symbol = "\ue33d "
-
-# Go icon
-[golang]
-format = "[\ue627 ](bold cyan)"
 
 # Node icon
 [nodejs]

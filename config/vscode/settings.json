@@ -396,9 +396,6 @@
   "workbench.tree.enableStickyScroll": false,
 
   // Language Overrides
-  "[go]": {
-    "editor.defaultFormatter": "golang.go"
-  },
   "[html][javascript][json][jsonc][typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },

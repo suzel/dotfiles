@@ -20,7 +20,6 @@
   "permissions": {
     "allow": [
       "Bash(mkdir:*)",
-      "Bash(go:*)",
       "Bash(ls:*)",
       "Bash(git:*)",
       "Bash(mv:*)",
@@ -60,7 +59,6 @@
   "enabledPlugins": {
     "cc-plugin-agents-md@builtin": false,
     "cc-plugin-plugin-authoring@builtin": false,
-    "gopls-lsp@claude-plugins-official": false,
     "rust-analyzer-lsp@claude-plugins-official": false,
     "svelte@svelte": false
   },

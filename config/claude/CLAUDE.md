@@ -9,7 +9,6 @@ already in context.
 - Svelte components: ~/.claude/guides/svelte.md
 - SvelteKit routes, load functions, form actions, hooks: ~/.claude/guides/sveltekit.md
 - HTML, CSS and UI design: ~/.claude/guides/frontend-design.md
-- Go: ~/.claude/guides/go.md
 - Rust (`.rs`, `Cargo.toml`): ~/.claude/guides/rust.md
 - GitHub Actions workflows: ~/.claude/guides/ci.md
 - Dockerfiles: ~/.claude/guides/docker.md
