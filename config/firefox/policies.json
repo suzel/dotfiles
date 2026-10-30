@@ -81,6 +81,10 @@
       "Enabled": false
     },
     "ExtensionSettings": {
+      "clipper@obsidian.md": {
+        "install_url": "https://addons.mozilla.org/firefox/downloads/latest/clipper@obsidian.md/latest.xpi",
+        "installation_mode": "normal_installed"
+      },
       "uBlock0@raymondhill.net": {
         "install_url": "https://addons.mozilla.org/firefox/downloads/latest/uBlock0@raymondhill.net/latest.xpi",
         "installation_mode": "normal_installed",

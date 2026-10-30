@@ -1,44 +1,42 @@
-/* Cursor Dark Midnight colors for empty tabs and about: pages */
+/* Empty tabs and about: pages */
 
-@-moz-document url("about:blank"), url("chrome://browser/content/blanktab.html")
-{
-  /* Only empty pages, so about:blank iframes that sites fill in stay untouched */
+/* Empty tabs only, not filled about:blank iframes */
+@-moz-document url("about:blank"),
+url("chrome://browser/content/blanktab.html") {
   :root:not(:has(body > *)) {
-    background-color: #1e2127 !important;
+    background-color: transparent !important;
   }
 }
 
-/* Settings, about:config and Add-ons */
-@-moz-document url-prefix("about:preferences"), url-prefix("about:settings"),
-url-prefix("about:config"), url-prefix("about:addons") {
+/* Settings, about:config, Add-ons */
+@-moz-document url-prefix("about:preferences"),
+url-prefix("about:settings"),
+url-prefix("about:config"),
+url-prefix("about:addons") {
+
+  /* Glass background */
+  :root,
+  body {
+    background: transparent !important;
+  }
+
   :root {
-    --background-color-canvas: #1e2127 !important;
-    --background-color-box: #191c22 !important;
+    /* Backgrounds */
+    --background-color-canvas: transparent !important;
+    --background-color-box: rgb(25 28 34 / 0.5) !important;
     --background-color-list-item-hover: #272c3699 !important;
-    --table-row-background-color: #1e2127 !important;
-    --table-row-background-color-alternate: #191c22 !important;
+    --table-row-background-color: transparent !important;
+    --table-row-background-color-alternate: rgb(255 255 255 / 0.03) !important;
+
+    /* Text and borders */
     --text-color: #d8dee9 !important;
     --border-color: #272c36 !important;
+
+    /* Accent */
     --color-accent-primary: #88c0d0 !important;
     --color-accent-primary-hover: #8fbcbb !important;
     --color-accent-primary-active: #81a1c1 !important;
     --button-text-color-primary: #191c22 !important;
     --focus-outline-color: #88c0d0 !important;
-  }
-}
-
-/* YouTube sizes the video in JavaScript a moment after the player resizes
-   (e.g. when the sidebar opens), cropping it until then. Keep the video inside
-   the player, so it shrinks with the player right away */
-@-moz-document domain("youtube.com") {
-  #movie_player .html5-video-container {
-    position: absolute !important;
-    inset: 0 !important;
-  }
-
-  #movie_player video {
-    max-width: 100% !important;
-    max-height: 100% !important;
-    object-fit: contain !important;
   }
 }

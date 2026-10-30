@@ -259,20 +259,12 @@ if has_dep @sveltejs/adapter-cloudflare; then
     pnpm pkg set \
       'scripts["db:migrate"]'="wrangler d1 migrations apply DB --local"
   fi
+  # Cache Headers
+  # https://developers.cloudflare.com/workers/static-assets/headers/
+  # [[ -z $is_dynamic ]] && touch static/_headers
   grep -qx '/backups/' .gitignore || echo '/backups/' >>.gitignore
   pnpm -s gen >/dev/null 2>&1 ||
     warn "Generate the Cloudflare types: pnpm gen"
-fi
-
-# Cache Headers
-# https://developers.cloudflare.com/workers/static-assets/headers/
-if [[ -z $is_dynamic ]]; then
-  info "Creating cache headers..."
-  print -r -- '/_app/immutable/*
-  Cache-Control: public, max-age=31536000, immutable
-
-/img/*
-  Cache-Control: public, max-age=86400' >static/_headers
 fi
 
 # Vite

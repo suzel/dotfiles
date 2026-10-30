@@ -49,7 +49,13 @@
   {
     "key": "cmd+enter",
     "command": "workbench.action.terminal.runSelectedText",
-    "when": "editorTextFocus && !notebookEditorFocused"
+    "when": "editorTextFocus && !editorHasSelection && !notebookEditorFocused"
+  },
+  {
+    "key": "cmd+enter",
+    "command": "workbench.action.tasks.runTask",
+    "args": "Terminal: run selection",
+    "when": "editorTextFocus && editorHasSelection && !notebookEditorFocused"
   },
   {
     "key": "cmd+numpad2",

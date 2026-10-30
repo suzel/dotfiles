@@ -46,8 +46,8 @@
       "    name: app-network",
       "    driver: bridge",
       "    external: false",
-      "",
-    ],
+      ""
+    ]
   },
   "Docker Compose for Svelte - Dev": {
     "scope": "dockercompose",
@@ -74,8 +74,8 @@
       "      - ../:/app",
       "      - /app/node_modules",
       "      - /app/.svelte-kit",
-      "",
-    ],
+      ""
+    ]
   },
   "Docker Compose for PostgREST": {
     "scope": "dockercompose",
@@ -133,14 +133,42 @@
       "",
       "volumes:",
       "  postgres-api:",
+      ""
+    ]
+  },
+  "Docker Compose for Postgres": {
+    "scope": "dockercompose",
+    "prefix": "docker::compose.postgres.yaml",
+    "isFileTemplate": true,
+    "include": "compose.yaml",
+    "description": "docker/compose.yaml: local Postgres on 127.0.0.1:5432 matching rust-setup's DATABASE_URL (postgres:postgres, db from the folder name)",
+    "body": [
+      "services:",
+      "  db:",
+      "    image: postgres:18-alpine",
+      "    ports:",
+      "      - \"127.0.0.1:5432:5432\"",
+      "    environment:",
+      "      # Must match DATABASE_URL in .env",
+      "      POSTGRES_PASSWORD: postgres",
+      "      POSTGRES_DB: ${1:${WORKSPACE_NAME/[^A-Za-z0-9_]/_/g}}",
+      "    healthcheck:",
+      "      test: pg_isready -h 127.0.0.1 -U postgres",
+      "      interval: 2s",
+      "      retries: 15",
+      "    volumes:",
+      "      - db-data:/var/lib/postgresql",
       "",
-    ],
+      "volumes:",
+      "  db-data:$0",
+      ""
+    ]
   },
   "Dockerfile for Svelte": {
     "scope": "dockerfile",
     "prefix": "docker::dockerfile",
     "isFileTemplate": true,
-    "include": ["Dockerfile", "*.Dockerfile"],
+    "include": [ "Dockerfile", "*.Dockerfile" ],
     "description": "Dockerfile: multi-stage SvelteKit build with pnpm via corepack",
     "body": [
       "# syntax=docker/dockerfile:1.7",
@@ -176,14 +204,14 @@
       "ENV HOST=0.0.0.0",
       "ENV PORT=3000",
       "CMD [\"build/index.js\"]",
-      "",
-    ],
+      ""
+    ]
   },
   "Docker for BG": {
     "scope": "dockerfile",
     "prefix": "docker::docker-bg",
     "isFileTemplate": true,
-    "include": ["Dockerfile", "*.Dockerfile"],
+    "include": [ "Dockerfile", "*.Dockerfile" ],
     "description": "Dockerfile: Bun and turbo prune build for the @r8y/bg app",
     "body": [
       "FROM oven/bun AS base",
@@ -213,14 +241,14 @@
       "COPY --from=build /app/worker /worker",
       "CMD [\"/worker\"]",
       "",
-      "",
-    ],
+      ""
+    ]
   },
   "Docker for Web": {
     "scope": "dockerfile",
     "prefix": "docker::docker-web",
     "isFileTemplate": true,
-    "include": ["Dockerfile", "*.Dockerfile"],
+    "include": [ "Dockerfile", "*.Dockerfile" ],
     "description": "Dockerfile: Bun and turbo prune build for the @r8y/web app",
     "body": [
       "FROM oven/bun AS base",
@@ -251,14 +279,14 @@
       "EXPOSE 8080",
       "ENV PORT=8080",
       "CMD [\"node\", \"build\"]",
-      "",
-    ],
+      ""
+    ]
   },
   "Dockerfile for Rust": {
     "scope": "dockerfile",
     "prefix": "docker::dockerfile-rust",
     "isFileTemplate": true,
-    "include": ["Dockerfile", "*.Dockerfile"],
+    "include": [ "Dockerfile", "*.Dockerfile" ],
     "description": "Dockerfile: multi-stage Rust build with cargo-chef into distroless nonroot",
     "body": [
       "# syntax=docker/dockerfile:1",
@@ -288,14 +316,14 @@
       "FROM gcr.io/distroless/cc-debian13:nonroot AS runtime",
       "COPY --from=builder /app/target/release/$1 /usr/local/bin/$1",
       "ENTRYPOINT [\"/usr/local/bin/$1\"]$0",
-      "",
-    ],
+      ""
+    ]
   },
   "Docker ignore for Svelte": {
     "scope": "ignore",
     "prefix": "docker::dockerignore",
     "isFileTemplate": true,
-    "include": [".dockerignore", "*.dockerignore"],
+    "include": [ ".dockerignore", "*.dockerignore" ],
     "description": ".dockerignore for a SvelteKit project; docker/Dockerfile.dockerignore when the Dockerfile is in docker/",
     "body": [
       "# Docker",
@@ -349,20 +377,20 @@
       ".svelte-kit",
       ".output",
       "build",
-      "",
-    ],
+      ""
+    ]
   },
   "Docker Setup": {
     "scope": "json",
-    "prefix": ["docker::setup", "setup"],
+    "prefix": [ "docker::setup", "setup" ],
     "include": "**/package.json",
     "description": "Docker scripts in package.json \"scripts\" (docker::compose.yaml, docker::compose.dev.yaml in docker/); needs pnpm add -D @sveltejs/adapter-node + adapter in svelte.config.js",
     "body": [
       "\"docker:dev\": \"docker compose -f docker/compose.yaml -f docker/compose.dev.yaml up --build\",",
       "\"docker:up\": \"docker compose -f docker/compose.yaml up -d --build\",",
       "\"docker:down\": \"docker compose -f docker/compose.yaml down\",",
-      "\"docker:logs\": \"docker compose -f docker/compose.yaml logs -f app\"$0",
-    ],
+      "\"docker:logs\": \"docker compose -f docker/compose.yaml logs -f app\"$0"
+    ]
   },
   "PostgREST init.sql": {
     "scope": "sql",
@@ -391,7 +419,7 @@
       "",
       "insert into api.todos (task) values",
       "  ('finish tutorial 0'), ('pat self on back');",
-      "",
-    ],
-  },
+      ""
+    ]
+  }
 }

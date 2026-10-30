@@ -52,8 +52,8 @@
       "html {",
       "  color-scheme: light;",
       "}",
-      "",
-    ],
+      ""
+    ]
   },
   "Tailwind Header": {
     "scope": "svelte",
@@ -135,8 +135,8 @@
       "\t\t</div>",
       "\t</nav>",
       "</header>",
-      "",
-    ],
+      ""
+    ]
   },
   "Tailwind Header Paste": {
     "scope": "svelte",
@@ -217,8 +217,8 @@
       "\t\t</div>",
       "\t</nav>",
       "</header>",
-      "",
-    ],
+      ""
+    ]
   },
   "Tailwind Footer": {
     "scope": "svelte",
@@ -251,12 +251,12 @@
       "\t\t</nav>",
       "\t</div>",
       "</footer>",
-      "",
-    ],
+      ""
+    ]
   },
   "Tailwind Table": {
     "scope": "svelte",
-    "prefix": ["tw::table", "table"],
+    "prefix": [ "tw::table", "table" ],
     "description": "Shadowed table for a list of rows: header, hover, empty state, actions column",
     "body": [
       "<div class=\"overflow-x-auto rounded-xl bg-white dark:bg-gray-900 shadow-lg ring-1 ring-gray-900/5 dark:ring-white/10\">",
@@ -282,25 +282,25 @@
       "\t\t\t{/each}",
       "\t\t</tbody>",
       "\t</table>",
-      "</div>",
-    ],
+      "</div>"
+    ]
   },
   "Tailwind Card": {
     "scope": "svelte",
-    "prefix": ["tw::card", "card"],
+    "prefix": [ "tw::card", "card" ],
     "description": "Shadowed box (card) with a title, description and content",
     "body": [
       "<section class=\"rounded-xl bg-white dark:bg-gray-900 p-6 shadow-lg ring-1 ring-gray-900/5 dark:ring-white/10\">",
       "\t<h2 class=\"text-base font-semibold text-gray-900 dark:text-white\">${1:Title}</h2>",
       "\t<p class=\"mt-1 text-sm text-gray-500 dark:text-gray-400\">${2:Description}</p>",
       "\t<div class=\"mt-4\">$0</div>",
-      "</section>",
-    ],
+      "</section>"
+    ]
   },
   "Tailwind Theme": {
     "scope": "css,tailwindcss",
     "prefix": "tw::theme",
-    "include": ["layout.css", "app.css"],
+    "include": [ "layout.css", "app.css" ],
     "isFileTemplate": true,
     "description": "Whole src/routes/layout.css: font, brand/accent/status colors, base styles",
     "body": [
@@ -390,12 +390,12 @@
       "\t\t@apply outline-2 outline-offset-2 outline-brand-600;",
       "\t}",
       "}",
-      "",
-    ],
+      ""
+    ]
   },
   "Tailwind Hero": {
     "scope": "svelte",
-    "prefix": ["tw::hero", "hero"],
+    "prefix": [ "tw::hero", "hero" ],
     "description": "Hero section: badge, headline, text, primary + secondary link",
     "body": [
       "<!-- TODO: needs tw::theme in src/routes/layout.css (brand color) and import { resolve } from '\\$app/paths' -->",
@@ -427,12 +427,12 @@
       "\t\t\t${7:Learn more} <span aria-hidden=\"true\">→</span>",
       "\t\t</a>",
       "\t</div>",
-      "</section>",
-    ],
+      "</section>"
+    ]
   },
   "Tailwind Features": {
     "scope": "svelte",
-    "prefix": ["tw::features", "features"],
+    "prefix": [ "tw::features", "features" ],
     "description": "Feature section: heading + three shadowed cards with icons",
     "body": [
       "<!-- TODO: needs tw::theme in src/routes/layout.css (brand color) -->",
@@ -503,12 +503,12 @@
       "\t\t\t<p class=\"mt-2 text-sm text-gray-600 dark:text-gray-400\">${8:No setup, no learning curve.}</p>",
       "\t\t</div>",
       "\t</div>",
-      "</section>",
-    ],
+      "</section>"
+    ]
   },
   "Tailwind FAQ": {
     "scope": "svelte",
-    "prefix": ["tw::faq", "faq"],
+    "prefix": [ "tw::faq", "faq" ],
     "description": "FAQ section: native <details> accordion, one open at a time",
     "body": [
       "<section class=\"mx-auto max-w-3xl py-12\">",
@@ -579,12 +579,12 @@
       "\t\t\t<p class=\"mt-3 text-gray-600 dark:text-gray-400\">${7:Yes, by email. We usually answer within a day.}</p>",
       "\t\t</details>",
       "\t</div>",
-      "</section>",
-    ],
+      "</section>"
+    ]
   },
   "Tailwind CTA": {
     "scope": "svelte",
-    "prefix": ["tw::cta", "cta"],
+    "prefix": [ "tw::cta", "cta" ],
     "description": "Call-to-action band in the brand color with one button",
     "body": [
       "<!-- TODO: needs tw::theme in src/routes/layout.css (brand color) and import { resolve } from '\\$app/paths' -->",
@@ -603,8 +603,8 @@
       "\t\t\t${4:Get started}",
       "\t\t</a>",
       "\t</div>",
-      "</section>",
-    ],
+      "</section>"
+    ]
   },
   "Tailwind Pagination": {
     "scope": "svelte",
@@ -679,12 +679,12 @@
       "\t\t{/if}",
       "\t</nav>",
       "{/if}",
-      "",
-    ],
+      ""
+    ]
   },
   "Tailwind Dialog": {
     "scope": "svelte",
-    "prefix": ["tw::dialog", "dialog"],
+    "prefix": [ "tw::dialog", "dialog" ],
     "description": "Delete button with a native <dialog> confirmation, calls a drizzle::remote command",
     "body": [
       "<button",
@@ -718,8 +718,8 @@
       "\t\t\tDelete",
       "\t\t</button>",
       "\t</form>",
-      "</dialog>$0",
-    ],
+      "</dialog>$0"
+    ]
   },
   "Tailwind Form": {
     "scope": "svelte",
@@ -806,12 +806,12 @@
       "\t\tCreate",
       "\t</button>",
       "</form>",
-      "",
-    ],
+      ""
+    ]
   },
   "Tailwind Empty": {
     "scope": "svelte",
-    "prefix": ["tw::empty", "empty"],
+    "prefix": [ "tw::empty", "empty" ],
     "description": "Empty state: icon, title, text and a create link",
     "body": [
       "<!-- TODO: needs tw::theme in src/routes/layout.css (brand color) and import { resolve } from '\\$app/paths' -->",
@@ -850,20 +850,20 @@
       "\t\t</svg>",
       "\t\t${4:New tag}",
       "\t</a>",
-      "</div>",
-    ],
+      "</div>"
+    ]
   },
   "Tailwind Badge": {
     "scope": "svelte",
-    "prefix": ["tw::badge", "badge"],
+    "prefix": [ "tw::badge", "badge" ],
     "description": "Status badge (pill) in a theme color",
     "body": [
       "<span",
       "\tclass=\"inline-flex items-center rounded-full bg-${1|success,warning,danger,brand,gray|}-50 dark:bg-$1-500/10 px-2 py-0.5 text-xs font-medium text-$1-700 dark:text-$1-400 ring-1 ring-$1-600/20 dark:ring-$1-400/30 ring-inset\"",
       ">",
       "\t${2:Active}",
-      "</span>",
-    ],
+      "</span>"
+    ]
   },
   "Tailwind Pricing": {
     "scope": "svelte",
@@ -972,8 +972,8 @@
       "\t\t{/each}",
       "\t</div>",
       "</section>",
-      "",
-    ],
+      ""
+    ]
   },
   "Tailwind Error": {
     "scope": "svelte",
@@ -1014,12 +1014,12 @@
       "\t\t${5:Back to home}",
       "\t</a>",
       "</section>",
-      "",
-    ],
+      ""
+    ]
   },
   "Tailwind Page Header": {
     "scope": "svelte",
-    "prefix": ["tw::page-header", "page-header"],
+    "prefix": [ "tw::page-header", "page-header" ],
     "description": "Page header: title, description and a New button",
     "body": [
       "<!-- TODO: needs tw::theme in src/routes/layout.css (brand color) and import { resolve } from '\\$app/paths' -->",
@@ -1046,12 +1046,12 @@
       "\t\t</svg>",
       "\t\t${4:New tag}",
       "\t</a>",
-      "</div>",
-    ],
+      "</div>"
+    ]
   },
   "Tailwind Alert": {
     "scope": "svelte",
-    "prefix": ["tw::alert", "alert"],
+    "prefix": [ "tw::alert", "alert" ],
     "description": "Alert box (callout) in a status color",
     "body": [
       "<div",
@@ -1073,12 +1073,12 @@
       "\t\t<p class=\"font-semibold\">${2:Heads up}</p>",
       "\t\t<p class=\"mt-1\">${3:Something needs your attention.}</p>",
       "\t</div>",
-      "</div>$0",
-    ],
+      "</div>$0"
+    ]
   },
   "Tailwind Stats": {
     "scope": "svelte",
-    "prefix": ["tw::stats", "stats"],
+    "prefix": [ "tw::stats", "stats" ],
     "description": "Stats section: three numbers with labels",
     "body": [
       "<section class=\"py-12\">",
@@ -1096,8 +1096,8 @@
       "\t\t\t<dd class=\"text-4xl font-bold tracking-tight text-gray-900 dark:text-white\">${5:40+}</dd>",
       "\t\t</div>",
       "\t</dl>",
-      "</section>",
-    ],
+      "</section>"
+    ]
   },
   "Tailwind Testimonials": {
     "scope": "svelte",
@@ -1146,8 +1146,8 @@
       "\t\t{/each}",
       "\t</div>",
       "</section>",
-      "",
-    ],
+      ""
+    ]
   },
   "Tailwind Logos": {
     "scope": "svelte",
@@ -1179,8 +1179,8 @@
       "\t\t{/each}",
       "\t</ul>",
       "</section>",
-      "",
-    ],
+      ""
+    ]
   },
   "Tailwind Team": {
     "scope": "svelte",
@@ -1225,8 +1225,8 @@
       "\t\t{/each}",
       "\t</ul>",
       "</section>",
-      "",
-    ],
+      ""
+    ]
   },
   "Tailwind Blog Cards": {
     "scope": "svelte",
@@ -1273,8 +1273,8 @@
       "\t\t</li>",
       "\t{/each}",
       "</ul>",
-      "",
-    ],
+      ""
+    ]
   },
   "Tailwind Newsletter": {
     "scope": "svelte",
@@ -1326,8 +1326,8 @@
       "\t\t</div>",
       "\t{/if}",
       "</section>",
-      "",
-    ],
+      ""
+    ]
   },
   "Tailwind Contact": {
     "scope": "svelte",
@@ -1414,12 +1414,12 @@
       "\t\t</form>",
       "\t{/if}",
       "</section>",
-      "",
-    ],
+      ""
+    ]
   },
   "Tailwind Banner": {
     "scope": "svelte",
-    "prefix": ["tw::banner", "banner"],
+    "prefix": [ "tw::banner", "banner" ],
     "include": "+layout.svelte",
     "description": "Announcement strip above the header, with a link",
     "body": [
@@ -1435,8 +1435,8 @@
       "\t\t\t${4:Read more} <span aria-hidden=\"true\">→</span>",
       "\t\t</a>",
       "\t</p>",
-      "</div>",
-    ],
+      "</div>"
+    ]
   },
   "Tailwind Sidebar": {
     "scope": "svelte",
@@ -1519,8 +1519,8 @@
       "\t<main class=\"min-w-0 flex-1 px-4 py-8 lg:px-8\">",
       "\t\t{@render children()}",
       "\t</main>",
-      "</div>",
-    ],
+      "</div>"
+    ]
   },
   "Tailwind Tabs": {
     "scope": "svelte",
@@ -1561,8 +1561,8 @@
       "\t{/each}",
       "</nav>",
       "",
-      "{@render children()}",
-    ],
+      "{@render children()}"
+    ]
   },
   "Tailwind Breadcrumb": {
     "scope": "svelte",
@@ -1612,8 +1612,8 @@
       "\t\t\t</li>",
       "\t\t{/each}",
       "\t</ol>",
-      "</nav>",
-    ],
+      "</nav>"
+    ]
   },
   "Tailwind Search": {
     "scope": "svelte",
@@ -1660,8 +1660,8 @@
       "\t\t\tclass=\"block w-full rounded-lg border-gray-300 dark:border-gray-700 pl-10 shadow-sm focus:border-brand-600 focus:ring-brand-600 dark:bg-gray-800 dark:text-white\"",
       "\t\t/>",
       "\t</label>",
-      "</form>",
-    ],
+      "</form>"
+    ]
   },
   "Tailwind Filters": {
     "scope": "svelte",
@@ -1722,8 +1722,8 @@
       "\t\t\tApply",
       "\t\t</button>",
       "\t</noscript>",
-      "</form>",
-    ],
+      "</form>"
+    ]
   },
   "Tailwind Carousel": {
     "scope": "svelte",
@@ -1839,12 +1839,12 @@
       "\t\t\t</svg>",
       "\t\t</button>",
       "\t</div>",
-      "</section>",
-    ],
+      "</section>"
+    ]
   },
   "Tailwind Dropdown": {
     "scope": "svelte",
-    "prefix": ["tw::dropdown", "dropdown"],
+    "prefix": [ "tw::dropdown", "dropdown" ],
     "description": "Dropdown menu: native popover anchored to its button",
     "body": [
       "<button",
@@ -1879,12 +1879,12 @@
       "\t\t${4:Settings}",
       "\t</a>",
       "\t$0",
-      "</div>",
-    ],
+      "</div>"
+    ]
   },
   "Tailwind Skeleton": {
     "scope": "svelte",
-    "prefix": ["tw::skeleton", "skeleton"],
+    "prefix": [ "tw::skeleton", "skeleton" ],
     "description": "Loading skeleton as the pending snippet of a <svelte:boundary>",
     "body": [
       "{#snippet pending()}",
@@ -1894,13 +1894,13 @@
       "\t\t\t<div class=\"h-${2:12} rounded-lg bg-gray-200 dark:bg-gray-800\"></div>",
       "\t\t{/each}",
       "\t</div>",
-      "{/snippet}$0",
-    ],
+      "{/snippet}$0"
+    ]
   },
   "Tailwind Prose": {
     "scope": "svelte",
     "prefix": "tw::prose",
-    "include": ["**/privacy/+page.svelte", "**/terms/+page.svelte"],
+    "include": [ "**/privacy/+page.svelte", "**/terms/+page.svelte" ],
     "isFileTemplate": true,
     "description": "Text page (privacy, terms) styled with @tailwindcss/typography",
     "body": [
@@ -1916,7 +1916,7 @@
       "\t<p class=\"lead\">${2:Last updated: January 1, 2026}</p>",
       "\t<h2>${3:What we collect}</h2>",
       "\t<p>$0</p>",
-      "</article>",
-    ],
-  },
+      "</article>"
+    ]
+  }
 }

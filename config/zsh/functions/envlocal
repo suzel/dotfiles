@@ -1,5 +1,0 @@
-# Append keys from the iCloud secrets file to .env.local: envlocal NAME...
-local f="$ICLOUD_DIR/Secrets/secrets.env" name
-for name; do
-  print -rl -- ${(M)${(f)"$(<$f)"}:#$name=*}
-done >>|.env.local

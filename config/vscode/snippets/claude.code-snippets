@@ -165,8 +165,8 @@
       "- Don't use more than two font weights in a single view.",
       "- Don't hardcode pixel values where a spacing/rounded token exists.",
       "- Don't add dark-mode styles yet — the app is light-mode only.",
-      "",
-    ],
+      ""
+    ]
   },
   "CLAUDE.md": {
     "scope": "markdown",
@@ -234,8 +234,78 @@
       "## References",
       "",
       "- @DESIGN.md — UI / styling / visual. MUST follow, single source for design rules.",
+      ""
+    ]
+  },
+  "CLAUDE.md Static": {
+    "scope": "markdown",
+    "prefix": "claude::claude.md-static",
+    "isFileTemplate": true,
+    "include": "CLAUDE.md",
+    "description": "CLAUDE.md: tech stack, prerendering rules and conventions for a static SvelteKit site (adapter-static)",
+    "body": [
+      "# Project Configuration",
       "",
-    ],
+      "## Tech Stack",
+      "",
+      "- **Framework**: SvelteKit 2 + Svelte 5 (runes — no legacy stores API)",
+      "- **Language**: TypeScript (Node >=22.16)",
+      "- **Build**: Vite 8",
+      "- **Package Manager**: pnpm (>=10)",
+      "- **Styling**: Tailwind CSS v4",
+      "- **Validation**: Zod 4",
+      "- **Deploy**: adapter-static → every page prerendered to `build/`, no server at runtime",
+      "- **Tooling**: Prettier, ESLint, Husky + lint-staged",
+      "",
+      "## Prerendering",
+      "",
+      "- `export const prerender = true` sits in `src/routes/+layout.ts`; `+server.ts` routes (robots.txt, sitemap.xml) aren't affected by layouts and export their own",
+      "- Nothing that needs a server at runtime: no form actions, cookies, `url.searchParams` in `load`, or `query` / `form` / `command` remote functions (`prerender` only)",
+      "- Env: `\\$env/static/*` only; `\\$env/dynamic/*` throws while prerendering",
+      "- `[param]` routes are found by following links; for pages nothing links to, export `entries()`",
+      "",
+      "## Commands",
+      "",
+      "| Command                          | What it does                         |",
+      "| -------------------------------- | ------------------------------------ |",
+      "| `pnpm dev`                       | Dev server (--open)                  |",
+      "| `pnpm build`                     | Production build (vite)              |",
+      "| `pnpm preview`                   | Preview prod build                   |",
+      "| `pnpm check`                     | svelte-check (types)                 |",
+      "| `pnpm lint`                      | prettier --check + eslint            |",
+      "| `pnpm format`                    | prettier --write                     |",
+      "| `pnpm design:lint`               | Validate .claude/DESIGN.md vs spec   |",
+      "",
+      "## Production Directory Structure",
+      "",
+      "```text",
+      "src/lib/",
+      "├── components/ui/        # Buttons, inputs, cards",
+      "├── components/layout/    # Header, Footer, Sidebar",
+      "├── stores/               # Svelte stores / runes",
+      "├── utils/                # Helper functions",
+      "├── schemas/              # Zod schemas (validation) — type via z.infer",
+      "└── types/                # Pure TS types (no runtime, no validation)",
+      "src/routes/",
+      "├── +layout.ts            # export const prerender = true",
+      "└── (meta)/               # robots.txt, sitemap.xml, rss.xml endpoints",
+      "```",
+      "",
+      "## File & Naming Conventions",
+      "",
+      "| Thing          | Rule                | Example           |",
+      "| -------------- | ------------------- | ----------------- |",
+      "| Component      | PascalCase          | `UserCard.svelte` |",
+      "| Utility        | camelCase           | `formatDate.ts`   |",
+      "| Route          | kebab-case          | `user-settings/`  |",
+      "| Constant       | UPPER_SNAKE         | `MAX_RETRY = 3`   |",
+      "| Type/Interface | PascalCase          | `UserProfile`     |",
+      "",
+      "## References",
+      "",
+      "- @DESIGN.md — UI / styling / visual. MUST follow, single source for design rules.",
+      ""
+    ]
   },
   "MCP JSON Config": {
     "scope": "json",
@@ -275,8 +345,8 @@
       "    }",
       "  }",
       "}",
-      "",
-    ],
+      ""
+    ]
   },
   "LSP Config": {
     "scope": "json",
@@ -306,8 +376,8 @@
       "    \"maxRestarts\": 3",
       "  }",
       "}",
-      "",
-    ],
+      ""
+    ]
   },
   "Settings for Claude": {
     "scope": "jsonc",
@@ -368,8 +438,8 @@
       "  \"terminalProgressBarEnabled\": true,",
       "  \"viewMode\": \"verbose\",",
       "}",
-      "",
-    ],
+      ""
+    ]
   },
   "Claude Project Rules": {
     "scope": "markdown",
@@ -420,8 +490,8 @@
       "- All API endpoints must include input validation",
       "- Error bodies are always `{ status, message }`",
       "- Include OpenAPI documentation comments",
-      "$0",
-    ],
+      "$0"
+    ]
   },
   "Claude Frontend Rules": {
     "scope": "markdown",
@@ -511,7 +581,7 @@
       "- [ ] Responsive: mobile-first, fluid, touch targets ≥ 44px",
       "- [ ] Performance: expensive work in `\\$derived`, keyed lists, deps tree-shaken, polling-safe",
       "- [ ] Design: intentional direction, visual depth, composition, no AI anti-patterns",
-      "$0",
-    ],
-  },
+      "$0"
+    ]
+  }
 }

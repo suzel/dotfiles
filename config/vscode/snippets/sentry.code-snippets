@@ -26,8 +26,8 @@
       "\treplaysOnErrorSampleRate: 1.0",
       "});",
       "",
-      "export const handleError = Sentry.handleErrorWithSentry();$0",
-    ],
+      "export const handleError = Sentry.handleErrorWithSentry();$0"
+    ]
   },
   "Sentry Server": {
     "scope": "typescript",
@@ -49,12 +49,12 @@
       "",
       "\t// 1.0 captures 100% of transactions for tracing; lower it in production",
       "\ttracesSampleRate: ${1:1.0}",
-      "});$0",
-    ],
+      "});$0"
+    ]
   },
   "Sentry Hooks": {
     "scope": "typescript",
-    "prefix": ["sentry::hooks", "hooks"],
+    "prefix": [ "sentry::hooks", "hooks" ],
     "include": "hooks.server.ts",
     "description": "handleError hook with Sentry: errorId is the Sentry event id, details never reach the client",
     "body": [
@@ -70,12 +70,12 @@
       "\tconsole.error(`[\\${errorId}]`, event.request.method, event.url.pathname, error);",
       "\t// status and message stay 500 / 'Internal Error': internal details never reach the client",
       "\treturn { errorId };",
-      "});$0",
-    ],
+      "});$0"
+    ]
   },
   "Sentry Cloudflare": {
     "scope": "typescript",
-    "prefix": ["sentry::cloudflare", "cloudflare"],
+    "prefix": [ "sentry::cloudflare", "cloudflare" ],
     "include": "hooks.server.ts",
     "description": "handle hook: Sentry on adapter-cloudflare (initCloudflareSentryHandle + sentryHandle)",
     "body": [
@@ -90,12 +90,12 @@
       "\t\ttracesSampleRate: ${1:1.0}",
       "\t}),",
       "\tSentry.sentryHandle()",
-      ");$0",
-    ],
+      ");$0"
+    ]
   },
   "Sentry Vite Plugin": {
     "scope": "typescript",
-    "prefix": ["sentry::vite", "vite"],
+    "prefix": [ "sentry::vite", "vite" ],
     "include": "vite.config.ts",
     "description": "sentrySvelteKit() in vite.config.ts plugins: source map upload only with SENTRY_AUTH_TOKEN, no telemetry",
     "body": [
@@ -108,7 +108,7 @@
       "\tauthToken: process.env.SENTRY_AUTH_TOKEN,",
       "\tautoUploadSourceMaps: Boolean(process.env.SENTRY_AUTH_TOKEN),",
       "\ttelemetry: false",
-      "}),$0",
-    ],
-  },
+      "}),$0"
+    ]
+  }
 }

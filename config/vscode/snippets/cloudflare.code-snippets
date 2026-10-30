@@ -27,12 +27,27 @@
       "\t\"r2_buckets\": [{ \"binding\": \"BUCKET\", \"bucket_name\": \"$1\" }],",
       "\t// cf::cron: runs only through worker.ts (wrangler dev worker.ts, wrangler deploy worker.ts)",
       "\t\"triggers\": { \"crons\": [\"0 3 * * *\"] }",
-      "}$0",
-    ],
+      "}$0"
+    ]
+  },
+  "CF Headers": {
+    "scope": "plaintext",
+    "prefix": "cf::headers",
+    "include": "**/static/_headers",
+    "isFileTemplate": true,
+    "description": "static/_headers: cache headers for hashed app assets and images",
+    "body": [
+      "/_app/immutable/*",
+      "\tCache-Control: public, max-age=31536000, immutable",
+      "",
+      "/img/*",
+      "\tCache-Control: public, max-age=86400",
+      ""
+    ]
   },
   "CF KV": {
     "scope": "typescript",
-    "prefix": ["cf::kv", "kv"],
+    "prefix": [ "cf::kv", "kv" ],
     "include": "**/lib/server/**",
     "exclude": "**/lib/server/db/schema/**",
     "description": "cached(): read-through cache in Workers KV with a TTL",
@@ -45,8 +60,8 @@
       "\tconst value = await load();",
       "\tawait env.$1.put(key, JSON.stringify(value), { expirationTtl: Math.max(60, ttl) });",
       "\treturn value;",
-      "}$0",
-    ],
+      "}$0"
+    ]
   },
   "CF D1": {
     "scope": "typescript",
@@ -66,8 +81,8 @@
       "",
       "// the build runs this module to analyse the routes, without Cloudflare's env: no client then",
       "export const db = building ? (undefined as never) : drizzle(env.$1, { schema });",
-      "",
-    ],
+      ""
+    ]
   },
   "CF Cron": {
     "scope": "typescript",
@@ -97,8 +112,8 @@
       "\t\tctx.waitUntil(sveltekit.fetch(request, env, ctx));",
       "\t}",
       "} satisfies ExportedHandler<Env>;",
-      "",
-    ],
+      ""
+    ]
   },
   "CF Cron Job": {
     "scope": "typescript",
@@ -121,8 +136,8 @@
       "\tconsole.info('[cron]', cron, 'done');",
       "\treturn new Response(null, { status: 204 });",
       "};",
-      "",
-    ],
+      ""
+    ]
   },
   "CF Rate Limit": {
     "scope": "typescript",
@@ -145,8 +160,8 @@
       "\t\t);",
       "\t}",
       "\treturn resolve(event);",
-      "};$0",
-    ],
+      "};$0"
+    ]
   },
   "CF Workflow": {
     "scope": "typescript",
@@ -182,8 +197,8 @@
       "}",
       "",
       "export default { fetch: sveltekit.fetch } satisfies ExportedHandler<Env>;",
-      "",
-    ],
+      ""
+    ]
   },
   "CF Workflow Start": {
     "scope": "typescript",
@@ -220,7 +235,7 @@
       "\tconst instance = await env.${TM_DIRECTORY/^.*\\/|(-)|([a-z0-9]+)/${1:+_}${2:/upcase}/g}_WORKFLOW.get(id).catch(() => error(404, 'Not found'));",
       "\treturn Response.json(await instance.status());",
       "};",
-      "",
-    ],
-  },
+      ""
+    ]
+  }
 }

@@ -4,13 +4,18 @@
     "**/config/git/ignore": "ignore",
     "**/config/ghostty/config": "properties",
     "**/config/zsh/functions/*": "shellscript",
+    "**/config/firefox/chrome/*.css": "css",
     "Brewfile": "ruby"
+  },
+  "[css]": {
+    "editor.defaultFormatter": "vscode.css-language-features",
+    "editor.formatOnSave": true
   },
   "[shellscript]": {
     "editor.defaultFormatter": "mkhl.shfmt",
     "editor.formatOnSave": true
   },
-  "[json][jsonc]": {
+  "[json][jsonc][snippets]": {
     "editor.defaultFormatter": "vscode.json-language-features",
     "editor.formatOnSave": true
   }

@@ -1,31 +1,21 @@
 // =============================================================================
 // Firefox user.js
 // =============================================================================
-// Hardened Firefox with LibreWolf's security choices (librewolf.cfg), plus a
-// few arkenfox and Betterfox extras. Firefox applies these prefs on every
-// start, so they override Settings and about:config: change them here, then
-// restart Firefox.
-//
-// Related files in this folder:
-//   policies.json  Policies: extensions, search engine, AI, telemetry
-//   chrome/        Theme for the browser UI (userChrome.css) and for pages
-//                  (userContent.css)
-//
-// Sections: UI, Performance, Tracking protection, Fingerprinting,
-// Permissions, HTTPS and certificates, Safe Browsing, DNS and connections,
-// Storage and shutdown, Passwords and forms, Downloads, Search and address
-// bar, AI, Telemetry, Ads and onboarding, DRM, extensions and devtools
+// Hardened Firefox based on LibreWolf, arkenfox and Betterfox.
+// Applied on every start: edit here, then restart Firefox.
 // =============================================================================
 
 // UI
 user_pref("ui.prefersReducedMotion", 1);
 user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
 user_pref("widget.macos.titlebar-blend-mode.behind-window", true);
+user_pref("browser.tabs.allow_transparent_browser", true);
 user_pref("browser.nova.enabled", false);
 user_pref("browser.uidensity", 1);
 user_pref("full-screen-api.transition-duration.enter", "0 0");
 user_pref("full-screen-api.transition-duration.leave", "0 0");
 user_pref("sidebar.verticalTabs", true);
+user_pref("sidebar.visibility", "expand-on-hover");
 user_pref("browser.toolbars.bookmarks.visibility", "never");
 user_pref("browser.display.background_color.dark", "#1e2127");
 user_pref("general.smoothScroll", false);
@@ -57,14 +47,20 @@ user_pref("media.av1.enabled", false);
 user_pref("browser.contentblocking.category", "strict");
 user_pref("privacy.trackingprotection.allow_list.baseline.enabled", false);
 user_pref("privacy.trackingprotection.allow_list.convenience.enabled", false);
-user_pref("privacy.query_stripping.strip_list", "__hsfp __hssc __hstc __s _bhlid _branch_match_id _branch_referrer _gl _hsenc _openstat at_recipient_id at_recipient_list bbeml bsft_clkid bsft_uid dclid et_rid fb_action_ids fb_comment_id gbraid fbclid gclid guce_referrer guce_referrer_sig hsCtaTracking irclickid mc_eid ml_subscriber ml_subscriber_hash msclkid mtm_cid oft_c oft_ck oft_d oft_id oft_ids oft_k oft_lk oft_sk oly_anon_id oly_enc_id pk_cid rb_clickid s_cid sc_customer sc_eh sc_uid sfmc_activityid sfmc_id sms_click sms_source sms_uph srsltid ss_email_id syclid ttclid twclid unicorn_click_id vero_conv vero_id vgo_ee wbraid wickedid yclid ymclid ysclid");
+user_pref(
+  "privacy.query_stripping.strip_list",
+  "__hsfp __hssc __hstc __s _bhlid _branch_match_id _branch_referrer _gl _hsenc _openstat at_recipient_id at_recipient_list bbeml bsft_clkid bsft_uid dclid et_rid fb_action_ids fb_comment_id gbraid fbclid gclid guce_referrer guce_referrer_sig hsCtaTracking irclickid mc_eid ml_subscriber ml_subscriber_hash msclkid mtm_cid oft_c oft_ck oft_d oft_id oft_ids oft_k oft_lk oft_sk oly_anon_id oly_enc_id pk_cid rb_clickid s_cid sc_customer sc_eh sc_uid sfmc_activityid sfmc_id sms_click sms_source sms_uph srsltid ss_email_id syclid ttclid twclid unicorn_click_id vero_conv vero_id vgo_ee wbraid wickedid yclid ymclid ysclid",
+);
 user_pref("privacy.query_stripping.allow_list", "urldefense.com");
 user_pref("privacy.globalprivacycontrol.enabled", true);
 user_pref("privacy.globalprivacycontrol.pbmode.enabled", true);
 user_pref("dom.private-attribution.submission.enabled", false);
 user_pref("beacon.enabled", false);
 user_pref("network.http.referer.XOriginTrimmingPolicy", 2);
-user_pref("network.http.referer.disallowCrossSiteRelaxingDefault.top_navigation", true);
+user_pref(
+  "network.http.referer.disallowCrossSiteRelaxingDefault.top_navigation",
+  true,
+);
 
 // Fingerprinting
 user_pref("privacy.resistFingerprinting", true);
@@ -127,7 +123,10 @@ user_pref("browser.safebrowsing.phishing.enabled", false);
 user_pref("browser.safebrowsing.blockedURIs.enabled", false);
 user_pref("browser.safebrowsing.downloads.enabled", false);
 user_pref("browser.safebrowsing.downloads.remote.enabled", false);
-user_pref("browser.safebrowsing.downloads.remote.block_potentially_unwanted", false);
+user_pref(
+  "browser.safebrowsing.downloads.remote.block_potentially_unwanted",
+  false,
+);
 user_pref("browser.safebrowsing.downloads.remote.block_uncommon", false);
 user_pref("browser.safebrowsing.downloads.remote.url", "");
 user_pref("browser.safebrowsing.provider.google4.gethashURL", "");
@@ -139,7 +138,10 @@ user_pref("browser.safebrowsing.provider.google.updateURL", "");
 // DNS and connections
 user_pref("network.trr.mode", 5);
 user_pref("network.trr.uri", "https://dns10.quad9.net/dns-query");
-user_pref("network.trr.default_provider_uri", "https://doh.dns4all.eu/dns-query");
+user_pref(
+  "network.trr.default_provider_uri",
+  "https://doh.dns4all.eu/dns-query",
+);
 user_pref("doh-rollout.enabled", false);
 user_pref("network.proxy.socks_remote_dns", true);
 user_pref("network.dns.disablePrefetch", true);
@@ -260,15 +262,30 @@ user_pref("browser.newtabpage.activity-stream.feeds.section.topstories", false);
 user_pref("browser.newtabpage.activity-stream.default.sites", "");
 user_pref("browser.topsites.contile.enabled", false);
 user_pref("browser.topsites.useRemoteSetting", false);
-user_pref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons", false);
-user_pref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features", false);
+user_pref(
+  "browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons",
+  false,
+);
+user_pref(
+  "browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features",
+  false,
+);
 user_pref("extensions.getAddons.showPane", false);
 user_pref("extensions.htmlaboutaddons.recommendations.enabled", false);
 user_pref("extensions.getAddons.cache.enabled", false);
 user_pref("browser.newtabpage.activity-stream.asrouter.providers.cfr", "null");
-user_pref("browser.newtabpage.activity-stream.asrouter.providers.message-groups", "null");
-user_pref("browser.newtabpage.activity-stream.asrouter.providers.messaging-experiments", "null");
-user_pref("browser.newtabpage.activity-stream.asrouter.providers.onboarding", "null");
+user_pref(
+  "browser.newtabpage.activity-stream.asrouter.providers.message-groups",
+  "null",
+);
+user_pref(
+  "browser.newtabpage.activity-stream.asrouter.providers.messaging-experiments",
+  "null",
+);
+user_pref(
+  "browser.newtabpage.activity-stream.asrouter.providers.onboarding",
+  "null",
+);
 user_pref("browser.preferences.moreFromMozilla", false);
 user_pref("browser.vpn_promo.enabled", false);
 user_pref("browser.promo.pin.enabled", false);

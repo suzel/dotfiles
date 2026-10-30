@@ -6,7 +6,7 @@
 # Installs Homebrew and packages, links configs and applies macOS defaults.
 # Usage: curl -fsSL https://git.io/suzel-dotfiles | zsh -s (full install)
 #        ./setup.zsh config packages (single steps)
-# Steps: homebrew repo config packages shell github secrets macos
+# Steps: homebrew repo config packages shell github macos
 # =============================================================================
 
 set -euo pipefail
@@ -27,8 +27,6 @@ readonly BREW_URL="$GH_RAW/Homebrew/install/HEAD/install.sh"
 readonly CODE_USER="$HOME/Library/Application Support/Code/User"
 readonly FIREFOX="$HOME/Library/Application Support/Firefox/Profiles"
 readonly FF_POLICIES=/Library/Preferences/org.mozilla.firefox
-readonly ICLOUD="$HOME/Library/Mobile Documents/com~apple~CloudDocs"
-readonly SECRETS=$ICLOUD/Secrets/secrets.env
 
 links=(
   # Zsh
@@ -108,12 +106,11 @@ config() {
 packages() {
   info "Installing Brewfile packages (quiet, may take a while)..."
   local brewfile="$DOTFILES/config/brew/Brewfile"
-  local rustup=/opt/homebrew/opt/rustup/bin/rustup
   [[ $(mdutil -s /) == *"Indexing enabled"* ]] ||
     export HOMEBREW_BUNDLE_MAS_SKIP="$(awk '/^mas / {print $NF}' "$brewfile")"
-  HOMEBREW_NO_AUTO_UPDATE=1 brew bundle -q --file="$brewfile" ||
+  local -x HOMEBREW_NO_AUTO_UPDATE=1
+  brew bundle -q --file="$brewfile" ||
     warn "Some packages failed, re-run: dotfiles packages"
-  [[ -x $rustup ]] && $rustup -q default stable
   brew cleanup --prune=all >/dev/null
   brew autoupdate delete >/dev/null
   brew autoupdate start 03:00 --upgrade --cleanup --ac-only \
@@ -150,18 +147,6 @@ github() {
   ssh-add --apple-use-keychain ~/.ssh/id_ed25519 </dev/tty
 }
 
-# iCloud secrets file: permissions, one-time reminder
-secrets() {
-  info "Checking iCloud secrets file..."
-  [[ -f $SECRETS ]] || {
-    warn "Missing $SECRETS (wait for iCloud sync, or create it)"
-    return
-  }
-  chmod 600 "$SECRETS"
-  info "Once: Finder > Control-click Secrets > Keep Downloaded"
-  open -R "${SECRETS:h}"
-}
-
 # macOS defaults
 macos() {
   info "Applying macOS settings..."
@@ -170,7 +155,7 @@ macos() {
 
 # Run steps
 main() {
-  (($#)) || set -- homebrew repo config packages shell github secrets macos
+  (($#)) || set -- homebrew repo config packages shell github macos
   local step
   for step; do
     ((${+functions[$step]} == 0)) && error "Unknown step: $step" && exit 1

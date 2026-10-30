@@ -31,6 +31,7 @@
     { "pattern": "**/static/humans.txt", "snippet": "Humans.txt" },
     { "pattern": "**/static/llms.txt", "snippet": "Llms.txt" },
     { "pattern": "**/static/browserconfig.xml", "snippet": "Browser Config File" },
+    { "pattern": "**/static/_headers", "snippet": "CF Headers" },
     { "pattern": "**/Seo.svelte", "snippet": "Kit SEO" },
     { "pattern": "**/Analytics.svelte", "snippet": "Kit Analytics" },
 
@@ -108,9 +109,7 @@
   "editor.matchBrackets": "never",
   "editor.minimap.enabled": false,
   "editor.mouseWheelZoom": true,
-  "editor.pasteAs.preferences": [
-    "text.updateImports"
-  ],
+  "editor.pasteAs.preferences": [ "text.updateImports" ],
   "editor.quickSuggestions": {
     "other": "on",
     "strings": "on",
@@ -148,11 +147,7 @@
       "severity": "off"
     }
   ],
-  "eslint.validate": [
-    "javascript",
-    "typescript",
-    "svelte"
-  ],
+  "eslint.validate": [ "javascript", "typescript", "svelte" ],
 
   // Explorer
   "explorer.compactFolders": false,
@@ -168,6 +163,7 @@
     "*.ts": "${capture}.js",
     "tsconfig.json": "tsconfig.*.json",
     "package.json": ".node-*, pnpm*, .*.json, *.json, *.jsonc, *rc, *.config.js, *.config.ts, *config.json",
+    "Cargo.toml": "Cargo.lock, build.rs, lefthook.yml, *.toml, .*.json",
     "README.md": "LICENSE, CONTRIBUTING*, SECURITY*, CODE_OF_CONDUCT*, CHANGELOG*",
     "+page.svelte": "+page.ts, +page.server.ts",
     "+layout.svelte": "+layout.ts, +layout.server.ts"
@@ -185,10 +181,12 @@
   "files.exclude": {
     "**/.DS_Store": true,
     "**/.git": true,
+    "**/target": true,
     "**/node_modules": true,
     "**/package-lock.json": true,
     "pnpm-lock.yaml": true,
     "**/*.js.map": true,
+    "**/*.lock": true,
     ".eslintcache": true,
     ".svelte-kit": true,
     "build": true,
@@ -258,20 +256,11 @@
         "type": "node",
         "request": "launch",
         "runtimeExecutable": "pnpm",
-        "runtimeArgs": [
-          "exec",
-          "vite",
-          "dev",
-          "--logLevel",
-          "info"
-        ],
+        "runtimeArgs": [ "exec", "vite", "dev", "--logLevel", "info" ],
         "cwd": "${workspaceFolder}",
         "console": "integratedTerminal",
         "autoAttachChildProcesses": true,
-        "skipFiles": [
-          "<node_internals>/**",
-          "**/node_modules/**"
-        ],
+        "skipFiles": [ "<node_internals>/**", "**/node_modules/**" ],
         "sourceMaps": true,
         "resolveSourceMapLocations": [
           "${workspaceFolder}/**",
@@ -319,12 +308,7 @@
   "svelte.plugin.svelte.runesLegacyModeCodeLens.enable": false,
 
   // TailwindCSS
-  "tailwindCSS.experimental.classRegex": [
-    [
-      "clsx\\(([^)]*)\\)",
-      "'([^']*)'"
-    ]
-  ],
+  "tailwindCSS.experimental.classRegex": [ [ "clsx\\(([^)]*)\\)", "'([^']*)'" ] ],
 
   // Tasks
   "task.allowAutomaticTasks": "on",
@@ -345,9 +329,7 @@
   "terminal.integrated.profiles.osx": {
     "zsh": {
       "path": "/opt/homebrew/bin/zsh",
-      "args": [
-        "-l"
-      ]
+      "args": [ "-l" ]
     }
   },
   "terminal.integrated.shellIntegration.history": 100,

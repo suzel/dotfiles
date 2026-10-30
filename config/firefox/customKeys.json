@@ -1,5 +1,8 @@
 {
   "toggleSidebarKb": {
     "keycode": "VK_F16"
+  },
+  "viewBookmarksToolbarKb": {
+    "keycode": "VK_F17"
   }
 }

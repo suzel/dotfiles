@@ -34,8 +34,8 @@
       "\t\t<button onclick={reset}>Retry</button>",
       "\t{/snippet}",
       "</svelte:boundary>",
-      "",
-    ],
+      ""
+    ]
   },
   "Remote Form": {
     "scope": "svelte",
@@ -62,8 +62,8 @@
       "\t{/each}",
       "\t<button>Create</button>",
       "</form>",
-      "",
-    ],
+      ""
+    ]
   },
   "Remote Form From Clipboard": {
     "scope": "svelte",
@@ -97,8 +97,8 @@
       "}${6:+\t<hr />",
       "}/g}\t<button>Create</button>",
       "</form>",
-      "",
-    ],
+      ""
+    ]
   },
   "Remote Edit": {
     "scope": "svelte",
@@ -141,22 +141,22 @@
       "\t\t<button onclick={reset}>Retry</button>",
       "\t{/snippet}",
       "</svelte:boundary>",
-      "",
-    ],
+      ""
+    ]
   },
   "Remote Delete": {
     "scope": "svelte",
-    "prefix": ["remote::delete", "delete"],
+    "prefix": [ "remote::delete", "delete" ],
     "description": "Delete button calling a drizzle::remote command",
     "body": [
-      "<button onclick={() => delete${1/(.*)/${1:/pascalcase}/}(${1:tag}.id)}>Delete</button>$0",
-    ],
+      "<button onclick={() => delete${1/(.*)/${1:/pascalcase}/}(${1:tag}.id)}>Delete</button>$0"
+    ]
   },
   "Remote File": {
     "scope": "typescript",
     "prefix": "remote::file",
     "include": "*.remote.ts",
-    "exclude": ["**/src/**/server/**", "auth.remote.ts", "admin.remote.ts"],
+    "exclude": [ "**/src/**/server/**", "auth.remote.ts", "admin.remote.ts" ],
     "isFileTemplate": true,
     "description": "New remote module header (imports + rules)",
     "body": [
@@ -165,44 +165,44 @@
       "",
       "// TODO: run `pnpm add -D zod` if missing",
       "",
-      "$0",
-    ],
+      "$0"
+    ]
   },
   "Remote Query": {
     "scope": "typescript",
-    "prefix": ["remote::query", "query"],
+    "prefix": [ "remote::query", "query" ],
     "include": "*.remote.ts",
     "exclude": "**/src/**/server/**",
     "description": "query() without arguments",
-    "body": ["export const ${1:getItems} = query(async () => {", "\t$0", "});"],
+    "body": [ "export const ${1:getItems} = query(async () => {", "\t$0", "});" ]
   },
   "Remote Query Arg": {
     "scope": "typescript",
-    "prefix": ["remote::query-arg", "query-arg"],
+    "prefix": [ "remote::query-arg", "query-arg" ],
     "include": "*.remote.ts",
     "exclude": "**/src/**/server/**",
     "description": "query() with a validated argument",
     "body": [
       "export const ${1:getItem} = query(z.${2|number,string|}(), async (${3:id}) => {",
       "\t$0",
-      "});",
-    ],
+      "});"
+    ]
   },
   "Remote Form Function": {
     "scope": "typescript",
-    "prefix": ["remote::form", "form"],
+    "prefix": [ "remote::form", "form" ],
     "include": "*.remote.ts",
     "exclude": "**/src/**/server/**",
     "description": "form() with a zod schema (server side)",
     "body": [
       "export const ${1:save} = form(z.object({ ${2:name}: z.string().min(1) }), async (data) => {",
       "\t$0",
-      "});",
-    ],
+      "});"
+    ]
   },
   "Remote Command": {
     "scope": "typescript",
-    "prefix": ["remote::command", "command"],
+    "prefix": [ "remote::command", "command" ],
     "include": "*.remote.ts",
     "exclude": "**/src/**/server/**",
     "description": "command() that refreshes a query afterwards",
@@ -210,24 +210,24 @@
       "export const ${1:like} = command(z.number(), async (${2:id}) => {",
       "\t$0",
       "\tvoid ${3:getLikes}($2).refresh();",
-      "});",
-    ],
+      "});"
+    ]
   },
   "Remote Prerender": {
     "scope": "typescript",
-    "prefix": ["remote::prerender", "prerender"],
+    "prefix": [ "remote::prerender", "prerender" ],
     "include": "*.remote.ts",
     "exclude": "**/src/**/server/**",
     "description": "prerender() for data fixed at build time",
     "body": [
       "export const ${1:getPages} = prerender(async () => {",
       "\t$0",
-      "});",
-    ],
+      "});"
+    ]
   },
   "Remote Batch": {
     "scope": "typescript",
-    "prefix": ["remote::batch", "batch"],
+    "prefix": [ "remote::batch", "batch" ],
     "include": "*.remote.ts",
     "exclude": "**/src/**/server/**",
     "description": "query.batch() to avoid n+1 queries",
@@ -236,12 +236,12 @@
       "\tconst rows = await db.select().from(${2:user}).where(inArray($2.id, ids));",
       "\tconst byId = new Map(rows.map((row) => [row.id, row]));",
       "\treturn (id) => byId.get(id);",
-      "});$0",
-    ],
+      "});$0"
+    ]
   },
   "Remote Guard": {
     "scope": "typescript",
-    "prefix": ["remote::guard", "guard"],
+    "prefix": [ "remote::guard", "guard" ],
     "include": "*.remote.ts",
     "exclude": "**/src/**/server/**",
     "description": "requireUser() helper for remote functions (401 or redirect)",
@@ -250,8 +250,8 @@
       "\tconst { user } = getRequestEvent().locals;",
       "\tif (!user) ${1|error(401\\, 'Unauthorized'),redirect(303\\, '/login')|};",
       "\treturn user;",
-      "}$0",
-    ],
+      "}$0"
+    ]
   },
   "Remote Detail": {
     "scope": "svelte",
@@ -284,29 +284,27 @@
       "\t\t<button onclick={reset}>Retry</button>",
       "\t{/snippet}",
       "</svelte:boundary>",
-      "",
-    ],
+      ""
+    ]
   },
   "Kit Page": {
     "scope": "svelte",
     "prefix": "kit::page",
     "include": "+page.svelte",
     "isFileTemplate": true,
-    "description": "+page.svelte with typed data and a page title",
+    "description": "+page.svelte with typed data and a heading, the title comes from load",
     "body": [
       "<script lang=\"ts\">",
       "\timport type { PageProps } from './\\$types';",
       "",
+      "\t// TODO: +page.ts: export const load = () => ({ title: '$1' }); the root layout (kit::layout-seo) puts it in <title> and og:title",
+      "",
       "\tlet { data }: PageProps = \\$props();",
       "</script>",
       "",
-      "<svelte:head>",
-      "\t<title>${1:${TM_DIRECTORY_BASE/^(routes)$|(.+)/${1:+Home}${2:/capitalize}/}}</title>",
-      "</svelte:head>",
-      "",
-      "<h1>$1</h1>",
-      "$0",
-    ],
+      "<h1>${1:${TM_DIRECTORY_BASE/^(routes)$|(.+)/${1:+Home}${2:/capitalize}/}}</h1>",
+      "$0"
+    ]
   },
   "Kit Layout": {
     "scope": "svelte",
@@ -322,8 +320,118 @@
       "</script>",
       "",
       "{@render children()}$0",
+      ""
+    ]
+  },
+  "Kit Layout SEO": {
+    "scope": "svelte",
+    "prefix": "kit::layout-seo",
+    "include": "+layout.svelte",
+    "isFileTemplate": true,
+    "description": "+layout.svelte with SEO head (title, description, canonical, Open Graph, Twitter, JSON-LD) and Google Analytics, site values from the project name",
+    "body": [
+      "<script lang=\"ts\">",
+      "\timport { dev } from '\\$app/env';",
+      "\timport { page } from '\\$app/state';",
       "",
-    ],
+      "\timport type { LayoutProps } from './\\$types';",
+      "",
+      "\t// TODO: src/app.d.ts: namespace App { interface PageData { title?: string; description?: string; index?: boolean; ogType?: string; ogImage?: string; jsonld?: Record<string, unknown>[] } }",
+      "\t// TODO: default share image in static/og.png (1200×630)",
+      "",
+      "\tlet { children }: LayoutProps = \\$props();",
+      "",
+      "\tconst siteTitle = '${1:${WORKSPACE_NAME/(^|-)(.)/${1:+ }${2:/upcase}/g}}';",
+      "\tconst siteDescription = '${2:${WORKSPACE_NAME/(^|-)(.)/${1:+ }${2:/upcase}/g}}';",
+      "\tconst siteUrl = '${3:https://${WORKSPACE_NAME}.com}';",
+      "\tconst defaultImage = `\\${siteUrl}/og.png`;",
+      "\tconst gaId = '${4}';",
+      "\t// GA only in production builds and once an ID is set",
+      "\tconst analytics = !dev && Boolean(gaId);",
+      "",
+      "\t\\$effect(() => {",
+      "\t\tif (!analytics) return;",
+      "\t\tconst w: Window & { dataLayer?: unknown[] } = window;",
+      "\t\tconst dataLayer = (w.dataLayer ??= []);",
+      "\t\tconst gtag: (...args: unknown[]) => void = function () {",
+      "\t\t\t// gtag.js needs the arguments object, not an array",
+      "\t\t\tdataLayer.push(arguments);",
+      "\t\t};",
+      "\t\tgtag('js', new Date());",
+      "\t\tgtag('config', gaId);",
+      "\t});",
+      "",
+      "\tconst title = \\$derived(",
+      "\t\tpage.error",
+      "\t\t\t? `\\${page.error.message} — \\${siteTitle}`",
+      "\t\t\t: page.data.title && page.data.title !== siteTitle",
+      "\t\t\t\t? `\\${page.data.title} — \\${siteTitle}`",
+      "\t\t\t\t: siteTitle",
+      "\t);",
+      "\tconst description = \\$derived(page.data.description ?? siteDescription);",
+      "\tconst noindex = \\$derived(Boolean(page.error) || page.data.index === false);",
+      "\tconst ogType = \\$derived(page.data.ogType ?? 'website');",
+      "\tconst image = \\$derived(page.data.ogImage ?? defaultImage);",
+      "\tconst canonical = \\$derived(`\\${siteUrl}\\${page.url.pathname}`);",
+      "\tconst ld = \\$derived(",
+      "\t\tpage.data.jsonld &&",
+      "\t\t\tJSON.stringify({",
+      "\t\t\t\t'@context': 'https://schema.org',",
+      "\t\t\t\t'@graph': page.data.jsonld",
+      "\t\t\t}).replaceAll('<', '\\\\\\\\u003c') // a closing script tag inside a value can't end the tag early",
+      "\t);",
+      "</script>",
+      "",
+      "<svelte:head>",
+      "\t<title>{title}</title>",
+      "\t<meta name=\"description\" content={description} />",
+      "\t<link rel=\"canonical\" href={canonical} />",
+      "\t{#if noindex}",
+      "\t\t<meta name=\"robots\" content=\"noindex\" />",
+      "\t{/if}",
+      "",
+      "\t<!-- Mobile -->",
+      "\t<meta name=\"apple-mobile-web-app-title\" content={siteTitle} />",
+      "",
+      "\t<!-- Open Graph -->",
+      "\t<meta property=\"og:type\" content={ogType} />",
+      "\t<meta property=\"og:site_name\" content={siteTitle} />",
+      "\t<meta property=\"og:title\" content={title} />",
+      "\t<meta property=\"og:url\" content={canonical} />",
+      "\t<meta property=\"og:description\" content={description} />",
+      "\t<meta property=\"og:image\" content={image} />",
+      "\t{#if !page.data.ogImage}",
+      "\t\t<!-- type and size are known only for the default image -->",
+      "\t\t<meta property=\"og:image:type\" content=\"image/png\" />",
+      "\t\t<meta property=\"og:image:width\" content=\"1200\" />",
+      "\t\t<meta property=\"og:image:height\" content=\"630\" />",
+      "\t{/if}",
+      "\t<meta property=\"og:image:alt\" content={title} />",
+      "",
+      "\t<!-- Twitter -->",
+      "\t<meta name=\"twitter:card\" content=\"summary_large_image\" />",
+      "\t<meta name=\"twitter:title\" content={title} />",
+      "\t<meta name=\"twitter:description\" content={description} />",
+      "\t<meta name=\"twitter:image\" content={image} />",
+      "\t<meta name=\"twitter:image:alt\" content={title} />",
+      "",
+      "\t<!-- Google Analytics -->",
+      "\t{#if analytics}",
+      "\t\t<script async src=\"https://www.googletagmanager.com/gtag/js?id={gaId}\"></script>",
+      "\t{/if}",
+      "",
+      "\t<!-- Structured Data -->",
+      "\t{#if ld}",
+      "\t\t<!-- eslint-disable-next-line svelte/no-at-html-tags -->",
+      "\t\t{@html `<script type=\"application/ld+json\">\\${ld}<\\x2fscript>`}",
+      "\t{/if}",
+      "</svelte:head>",
+      "",
+      "<main>",
+      "\t{@render children()}$0",
+      "</main>",
+      ""
+    ]
   },
   "Kit Error": {
     "scope": "svelte",
@@ -346,13 +454,13 @@
       "<h1>{error.status}</h1>",
       "<p>{error.message}</p>",
       "<a href={resolve('/')}>Home</a>",
-      "",
-    ],
+      ""
+    ]
   },
   "Kit Load": {
     "scope": "typescript",
     "prefix": "kit::load",
-    "include": ["+page.server.ts", "+layout.server.ts"],
+    "include": [ "+page.server.ts", "+layout.server.ts" ],
     "isFileTemplate": true,
     "description": "+page.server.ts / +layout.server.ts load: fetch by params, 404 if missing",
     "body": [
@@ -364,14 +472,14 @@
       "\tif (!$1) error(404, 'Not found');",
       "\treturn { $1 };",
       "};",
-      "",
-    ],
+      ""
+    ]
   },
   "Kit Server": {
     "scope": "typescript",
     "prefix": "kit::server",
     "include": "+server.ts",
-    "exclude": ["**/robots.txt/**", "**/api/**"],
+    "exclude": [ "**/robots.txt/**", "**/api/**" ],
     "isFileTemplate": true,
     "description": "+server.ts endpoint",
     "body": [
@@ -381,13 +489,13 @@
       "\t$0",
       "\treturn Response.json({});",
       "};",
-      "",
-    ],
+      ""
+    ]
   },
   "Kit Load Stream": {
     "scope": "typescript",
     "prefix": "kit::load-stream",
-    "include": ["+page.server.ts", "+layout.server.ts"],
+    "include": [ "+page.server.ts", "+layout.server.ts" ],
     "isFileTemplate": true,
     "description": "+page.server.ts / +layout.server.ts load that streams slow data",
     "body": [
@@ -399,13 +507,13 @@
       "\t$1.catch(() => {}); // an unhandled rejection would crash the server",
       "\treturn { $1, ${3:post}: await ${4:getPost(params.id)} };",
       "};",
-      "",
-    ],
+      ""
+    ]
   },
   "Kit Load Fetch": {
     "scope": "typescript",
     "prefix": "kit::load-fetch",
-    "include": ["+page.ts", "+layout.ts"],
+    "include": [ "+page.ts", "+layout.ts" ],
     "isFileTemplate": true,
     "description": "+page.ts / +layout.ts universal load that fetches with load's fetch (own +server.ts or a public API)",
     "body": [
@@ -423,8 +531,8 @@
       "\tconst ${1/(.*)/${1:/camelcase}/}: $1 = await res.json();",
       "\treturn { ${1/(.*)/${1:/camelcase}/} };",
       "};",
-      "",
-    ],
+      ""
+    ]
   },
   "Kit Params": {
     "scope": "typescript",
@@ -444,8 +552,8 @@
       "\t\t.regex(/^[1-9]\\\\d*$/)",
       "\t\t.transform(Number)$0",
       "});",
-      "",
-    ],
+      ""
+    ]
   },
   "Kit Require Login": {
     "scope": "typescript",
@@ -468,12 +576,12 @@
       "\t}",
       "\treturn locals.user;",
       "}",
-      "",
-    ],
+      ""
+    ]
   },
   "Kit Hooks Guard": {
     "scope": "typescript",
-    "prefix": ["kit::hooks-guard", "hooks-guard"],
+    "prefix": [ "kit::hooks-guard", "hooks-guard" ],
     "include": "hooks.server.ts",
     "description": "handle hook that protects a path prefix before any load runs",
     "body": [
@@ -484,8 +592,8 @@
       "\t\tredirect(303, '${2:/login}');",
       "\t}",
       "\treturn resolve(event);",
-      "};$0",
-    ],
+      "};$0"
+    ]
   },
   "Kit Layout Load": {
     "scope": "typescript",
@@ -499,127 +607,59 @@
       "export const load: LayoutServerLoad = ({ locals }) => {",
       "\treturn { user: locals.user ?? null };",
       "};",
-      "",
-    ],
+      ""
+    ]
   },
   "App Html": {
     "scope": "html",
     "prefix": "kit::app.html",
     "isFileTemplate": true,
     "include": "app.html",
-    "description": "src/app.html: base meta, site verification tags and analytics preconnects",
+    "description": "src/app.html: base and theme meta, favicons, manifest/author/sitemap links, optional site verification",
     "body": [
       "<!doctype html>",
       "<html lang=\"en\">",
-      "  <head>",
-      "    <!-- Base -->",
-      "    <meta charset=\"utf-8\" />",
-      "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />",
-      "    <meta name=\"text-scale\" content=\"scale\" />",
+      "\t<head>",
+      "\t\t<!-- Base -->",
+      "\t\t<meta charset=\"utf-8\" />",
+      "\t\t<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />",
+      "\t\t<meta name=\"text-scale\" content=\"scale\" />",
       "",
-      "    <!-- Verifications -->",
-      "    <meta name=\"msvalidate.01\" content=\"\" />",
-      "    <meta name=\"yandex-verification\" content=\"\" />",
-      "    <meta name=\"google-site-verification\" content=\"\" />",
+      "\t\t<!-- Theme -->",
+      "\t\t<meta name=\"color-scheme\" content=\"light\" />",
+      "\t\t<meta name=\"theme-color\" content=\"#ffffff\" />",
       "",
-      "    <!-- Preconnect -->",
-      "    <link rel=\"preconnect\" href=\"https://www.googletagmanager.com\" />",
-      "    <link rel=\"preconnect\" href=\"https://www.google-analytics.com\" />",
-      "    <!-- <link rel=\"preconnect\" href=\"https://cdn.yoursite.com\" crossorigin=\"anonymous\" /> -->",
+      "\t\t<!-- Site verification (Google, Bing, Yandex): fill in and uncomment -->",
+      "\t\t<!-- <meta name=\"google-site-verification\" content=\"\" /> -->",
+      "\t\t<!-- <meta name=\"msvalidate.01\" content=\"\" /> -->",
+      "\t\t<!-- <meta name=\"yandex-verification\" content=\"\" /> -->",
       "",
-      "    <!-- Links -->",
-      "    <link rel=\"sitemap\" href=\"%sveltekit.assets%/sitemap.xml\" />",
-      "    <link rel=\"author\" type=\"text/plain\" href=\"%sveltekit.assets%/humans.txt\" />",
+      "\t\t<!-- Favicons (@vite-pwa/assets-generator, preset minimal-2023) -->",
+      "\t\t<link rel=\"icon\" href=\"%sveltekit.assets%/img/favicons/favicon.ico\" sizes=\"48x48\" />",
+      "\t\t<link",
+      "\t\t\trel=\"icon\"",
+      "\t\t\thref=\"%sveltekit.assets%/img/favicons/favicon.svg\"",
+      "\t\t\tsizes=\"any\"",
+      "\t\t\ttype=\"image/svg+xml\"",
+      "\t\t/>",
+      "\t\t<link",
+      "\t\t\trel=\"apple-touch-icon\"",
+      "\t\t\thref=\"%sveltekit.assets%/img/favicons/apple-touch-icon-180x180.png\"",
+      "\t\t/>",
       "",
-      "    <!-- Web App Manifest (PWA) -->",
-      "    <link rel=\"manifest\" href=\"%sveltekit.assets%/manifest.json\" />",
+      "\t\t<!-- Links -->",
+      "\t\t<link rel=\"manifest\" href=\"%sveltekit.assets%/manifest.json\" />",
+      "\t\t<link rel=\"author\" href=\"%sveltekit.assets%/humans.txt\" type=\"text/plain\" />",
+      "\t\t<link rel=\"sitemap\" href=\"%sveltekit.assets%/sitemap.xml\" type=\"application/xml\" />",
       "",
-      "    <!-- Theme Color (for browser chrome) -->",
-      "    <meta name=\"theme-color\" content=\"#ffffff\" />",
-      "",
-      "    <!-- Mobile -->",
-      "    <meta name=\"mobile-web-app-capable\" content=\"yes\" />",
-      "    <meta name=\"apple-touch-fullscreen\" content=\"yes\" />",
-      "    <meta name=\"apple-mobile-web-app-status-bar-style\" content=\"black-translucent\" />",
-      "",
-      "    <!-- Windows -->",
-      "    <meta name=\"msapplication-TileColor\" content=\"#ffffff\" />",
-      "    <meta name=\"msapplication-config\" content=\"%sveltekit.assets%/browserconfig.xml\" />",
-      "    <meta",
-      "      name=\"msapplication-TileImage\"",
-      "      content=\"%sveltekit.assets%/img/favicons/pwa-192x192.png\"",
-      "    />",
-      "",
-      "    <!-- Favicon (@vite-pwa/assets-generator, preset minimal-2023) -->",
-      "    <link rel=\"icon\" sizes=\"48x48\" href=\"%sveltekit.assets%/img/favicons/favicon.ico\" />",
-      "    <link",
-      "      rel=\"icon\"",
-      "      type=\"image/svg+xml\"",
-      "      sizes=\"any\"",
-      "      href=\"%sveltekit.assets%/img/favicons/favicon.svg\"",
-      "    />",
-      "",
-      "    <!-- Apple Touch Icon (iOS) -->",
-      "    <link",
-      "      rel=\"apple-touch-icon\"",
-      "      sizes=\"180x180\"",
-      "      href=\"%sveltekit.assets%/img/favicons/apple-touch-icon-180x180.png\"",
-      "    />",
-      "",
-      "    %sveltekit.head%",
-      "  </head>",
-      "  <body data-sveltekit-preload-data=\"hover\">",
-      "    <div style=\"display: contents\">%sveltekit.body%</div>",
-      "  </body>",
+      "\t\t%sveltekit.head%",
+      "\t</head>",
+      "\t<body data-sveltekit-preload-data=\"hover\">",
+      "\t\t<div style=\"display: contents\">%sveltekit.body%</div>",
+      "\t</body>",
       "</html>",
-    ],
-  },
-  "App Template": {
-    "scope": "html",
-    "prefix": "kit::app-template-2",
-    "isFileTemplate": true,
-    "include": "app.html",
-    "description": "src/app.html variant: base and theme color meta tags",
-    "body": [
-      "<!doctype html>",
-      "<html lang=\"en\">",
-      "    <head>",
-      "        <!-- Base -->",
-      "        <meta charset=\"utf-8\" />",
-      "        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />",
-      "        <meta name=\"text-scale\" content=\"scale\" />",
-      "",
-      "        <!-- Theme -->",
-      "        <meta name=\"color-scheme\" content=\"light\" />",
-      "        <meta name=\"theme-color\" content=\"#ffffff\" />",
-      "",
-      "        <!-- Favicons -->",
-      "        <link rel=\"icon\" href=\"%sveltekit.assets%/img/favicons/favicon.ico\" sizes=\"48x48\" />",
-      "        <link",
-      "            rel=\"icon\"",
-      "            href=\"%sveltekit.assets%/img/favicons/favicon.svg\"",
-      "            sizes=\"any\"",
-      "            type=\"image/svg+xml\"",
-      "        />",
-      "        <link",
-      "            rel=\"apple-touch-icon\"",
-      "            href=\"%sveltekit.assets%/img/favicons/apple-touch-icon-180x180.png\"",
-      "        />",
-      "",
-      "        <!-- Links -->",
-      "        <link rel=\"manifest\" href=\"%sveltekit.assets%/manifest.json\" />",
-      "        <link rel=\"author\" href=\"%sveltekit.assets%/humans.txt\" type=\"text/plain\" />",
-      "        <link rel=\"robots\" href=\"%sveltekit.assets%/robots.txt\" type=\"text/plain\" />",
-      "        <link rel=\"sitemap\" href=\"%sveltekit.assets%/sitemap.xml\" type=\"application/xml\" />",
-      "",
-      "        %sveltekit.head%",
-      "    </head>",
-      "    <body data-sveltekit-preload-data=\"hover\">",
-      "        <div style=\"display: contents\">%sveltekit.body%</div>",
-      "    </body>",
-      "</html>",
-      "",
-    ],
+      ""
+    ]
   },
   ".env.example": {
     "scope": "dotenv",
@@ -673,8 +713,8 @@
       "# S3_ACCESS_KEY_ID=",
       "# S3_SECRET_ACCESS_KEY=",
       "# S3_PUBLIC_URL=",
-      "",
-    ],
+      ""
+    ]
   },
   ".gitignore": {
     "scope": "ignore",
@@ -722,8 +762,8 @@
       "# Cloudflare",
       ".cloudflare",
       ".wrangler",
-      "",
-    ],
+      ""
+    ]
   },
   "Manifest File": {
     "scope": "json",
@@ -761,8 +801,8 @@
       "\t\t}",
       "\t]",
       "}",
-      "",
-    ],
+      ""
+    ]
   },
   "Browser Config File": {
     "scope": "xml",
@@ -780,8 +820,8 @@
       "    </tile>",
       "  </msapplication>",
       "</browserconfig>",
-      "",
-    ],
+      ""
+    ]
   },
   "Kit Logo": {
     "scope": "xml",
@@ -801,8 +841,8 @@
       "",
       "</path>",
       "\t\t</g>",
-      "</svg>",
-    ],
+      "</svg>"
+    ]
   },
   "Kit SEO": {
     "scope": "svelte",
@@ -871,8 +911,8 @@
       "\t<!-- eslint-disable-next-line svelte/no-at-html-tags -->",
       "\t{@html `<script type=\"application/ld+json\">\\${jsonld}<\\u002fscript>`}",
       "</svelte:head>",
-      "",
-    ],
+      ""
+    ]
   },
   "Kit Robots": {
     "scope": "typescript",
@@ -899,8 +939,8 @@
       "\t\theaders: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'public, max-age=3600' }",
       "\t});",
       "};",
-      "",
-    ],
+      ""
+    ]
   },
   "Kit Sitemap": {
     "scope": "typescript",
@@ -934,8 +974,8 @@
       "\t\theaders: { 'content-type': 'application/xml; charset=utf-8', 'cache-control': 'public, max-age=3600' }",
       "\t});",
       "};",
-      "",
-    ],
+      ""
+    ]
   },
   "Kit RSS": {
     "scope": "typescript",
@@ -987,8 +1027,8 @@
       "\t\theaders: { 'content-type': 'application/rss+xml; charset=utf-8', 'cache-control': 'public, max-age=3600' }",
       "\t});",
       "};",
-      "",
-    ],
+      ""
+    ]
   },
   "Kit Analytics": {
     "scope": "svelte",
@@ -1026,8 +1066,8 @@
       "\t\t<script async src=\"https://www.googletagmanager.com/gtag/js?id={PUBLIC_GA_ID}\"></script>",
       "\t{/if}",
       "</svelte:head>",
-      "",
-    ],
+      ""
+    ]
   },
   "Kit OG Image": {
     "scope": "typescript",
@@ -1082,8 +1122,8 @@
       "\t\theaders: { 'content-type': 'image/png', 'cache-control': 'public, max-age=86400' }",
       "\t});",
       "};",
-      "",
-    ],
+      ""
+    ]
   },
   "Svelte Component": {
     "scope": "svelte",
@@ -1107,7 +1147,7 @@
       "Team.svelte",
       "Testimonials.svelte",
       "Upload.svelte",
-      "*Live*.svelte",
+      "*Live*.svelte"
     ],
     "isFileTemplate": true,
     "description": "Component with typed props, class and children",
@@ -1129,8 +1169,8 @@
       "\t{$1}$0",
       "\t{@render children?.()}",
       "</div>",
-      "",
-    ],
+      ""
+    ]
   },
   "Svelte Wrapper": {
     "scope": "svelte",
@@ -1154,7 +1194,7 @@
       "Team.svelte",
       "Testimonials.svelte",
       "Upload.svelte",
-      "*Live*.svelte",
+      "*Live*.svelte"
     ],
     "isFileTemplate": true,
     "description": "Wrapper around a native element with all its attributes",
@@ -1168,8 +1208,8 @@
       "<$1 {...rest} class={['${TM_FILENAME_BASE/(.*)/${1:/kebabcase}/}', className]}>",
       "\t{@render children?.()}",
       "</$1>",
-      "",
-    ],
+      ""
+    ]
   },
   "Svelte Generic List": {
     "scope": "svelte",
@@ -1193,7 +1233,7 @@
       "Team.svelte",
       "Testimonials.svelte",
       "Upload.svelte",
-      "*Live*.svelte",
+      "*Live*.svelte"
     ],
     "isFileTemplate": true,
     "description": "Typed list component with row and empty snippets",
@@ -1215,8 +1255,8 @@
       "{:else}",
       "\t{@render empty?.()}",
       "{/each}",
-      "",
-    ],
+      ""
+    ]
   },
   "Svelte Input": {
     "scope": "svelte",
@@ -1240,7 +1280,7 @@
       "Team.svelte",
       "Testimonials.svelte",
       "Upload.svelte",
-      "*Live*.svelte",
+      "*Live*.svelte"
     ],
     "isFileTemplate": true,
     "description": "Bindable input with label and accessible error message",
@@ -1268,13 +1308,13 @@
       "{#if error}",
       "\t<p id=\"{id}-error\" class=\"text-danger-600\">{error}</p>",
       "{/if}",
-      "",
-    ],
+      ""
+    ]
   },
   "Svelte Effect": {
     "scope": "svelte,typescript",
-    "prefix": ["sv::effect", "effect"],
-    "include": ["*.svelte", "*.svelte.ts"],
+    "prefix": [ "sv::effect", "effect" ],
+    "include": [ "*.svelte", "*.svelte.ts" ],
     "description": "$effect with cleanup (timers, listeners, external libs)",
     "body": [
       "\\$effect(() => {",
@@ -1282,24 +1322,24 @@
       "\treturn () => {",
       "\t\t// cleanup",
       "\t};",
-      "});",
-    ],
+      "});"
+    ]
   },
   "Svelte Derived By": {
     "scope": "svelte,typescript",
-    "prefix": ["sv::derived-by", "derived-by"],
-    "include": ["*.svelte", "*.svelte.ts"],
+    "prefix": [ "sv::derived-by", "derived-by" ],
+    "include": [ "*.svelte", "*.svelte.ts" ],
     "description": "$derived.by for multi-line computations",
     "body": [
       "let ${1:total} = \\$derived.by(() => {",
       "\t$0",
       "\treturn ${2:0};",
-      "});",
-    ],
+      "});"
+    ]
   },
   "Svelte Boundary": {
     "scope": "svelte",
-    "prefix": ["sv::boundary", "boundary"],
+    "prefix": [ "sv::boundary", "boundary" ],
     "description": "<svelte:boundary> with pending and failed snippets",
     "body": [
       "<svelte:boundary>",
@@ -1313,12 +1353,12 @@
       "\t\t<p>Something went wrong.</p>",
       "\t\t<button onclick={reset}>Retry</button>",
       "\t{/snippet}",
-      "</svelte:boundary>",
-    ],
+      "</svelte:boundary>"
+    ]
   },
   "Svelte Head": {
     "scope": "svelte",
-    "prefix": ["sv::head", "head"],
+    "prefix": [ "sv::head", "head" ],
     "description": "<svelte:head> with title, description, canonical and og tags",
     "body": [
       "<svelte:head>",
@@ -1327,13 +1367,13 @@
       "\t<link rel=\"canonical\" href={page.url.origin + page.url.pathname} />",
       "\t<meta property=\"og:title\" content=\"$1\" />",
       "\t<meta property=\"og:description\" content=\"$2\" />",
-      "</svelte:head>$0",
-    ],
+      "</svelte:head>$0"
+    ]
   },
   "Svelte Attach": {
     "scope": "svelte,typescript",
-    "prefix": ["sv::attach", "attach"],
-    "exclude": ["**/lib/server/**", "*.remote.ts", "*.server.ts", "+server.ts"],
+    "prefix": [ "sv::attach", "attach" ],
+    "exclude": [ "**/lib/server/**", "*.remote.ts", "*.server.ts", "+server.ts" ],
     "description": "Attachment factory, use as {@attach name(arg)}",
     "body": [
       "function ${1:tooltip}(${2:text}: ${3:string}): Attachment<HTMLElement> {",
@@ -1343,8 +1383,8 @@
       "\t\t\t// cleanup",
       "\t\t};",
       "\t};",
-      "}",
-    ],
+      "}"
+    ]
   },
   "Svelte State Class": {
     "scope": "typescript",
@@ -1361,14 +1401,14 @@
       "\t\tthis.$2.push(item);",
       "\t}$0",
       "}",
-      "",
-    ],
+      ""
+    ]
   },
   "Svelte Context": {
     "scope": "typescript",
     "prefix": "sv::context",
     "include": "*.ts",
-    "exclude": ["**/lib/server/**", "*.remote.ts", "*.server.ts", "+server.ts"],
+    "exclude": [ "**/lib/server/**", "*.remote.ts", "*.server.ts", "+server.ts" ],
     "isFileTemplate": true,
     "description": "Typed context with createContext",
     "body": [
@@ -1377,8 +1417,8 @@
       "// TODO: call set${TM_FILENAME_BASE/([^.]*).*/${1:/pascalcase}/}(value) in a parent component's <script>, get${TM_FILENAME_BASE/([^.]*).*/${1:/pascalcase}/}() in its children",
       "",
       "export const [get${TM_FILENAME_BASE/([^.]*).*/${1:/pascalcase}/}, set${TM_FILENAME_BASE/([^.]*).*/${1:/pascalcase}/}] = createContext<${1:${TM_FILENAME_BASE/([^.]*).*/${1:/pascalcase}/}}>();$0",
-      "",
-    ],
+      ""
+    ]
   },
   "API Helpers": {
     "scope": "typescript",
@@ -1419,8 +1459,8 @@
       "\toffset: z.coerce.number().int().min(0).default(0),",
       "\tq: z.string().trim().min(1).optional()",
       "});",
-      "",
-    ],
+      ""
+    ]
   },
   "API DB List": {
     "scope": "typescript",
@@ -1468,8 +1508,8 @@
       "\tconst [row] = await db.insert($1).values(body.data).returning();",
       "\treturn Response.json(row, { status: 201 });",
       "};",
-      "",
-    ],
+      ""
+    ]
   },
   "API DB Item": {
     "scope": "typescript",
@@ -1512,8 +1552,8 @@
       "\tif (!row) error(404, 'Not found');",
       "\treturn new Response(null, { status: 204 });",
       "};",
-      "",
-    ],
+      ""
+    ]
   },
   "API Get": {
     "scope": "typescript",
@@ -1536,8 +1576,8 @@
       "\t$0",
       "\treturn Response.json(query.data);",
       "};",
-      "",
-    ],
+      ""
+    ]
   },
   "API Post": {
     "scope": "typescript",
@@ -1561,8 +1601,8 @@
       "\t$0",
       "\treturn Response.json(body.data, { status: 201 });",
       "};",
-      "",
-    ],
+      ""
+    ]
   },
   "API Webhook": {
     "scope": "typescript",
@@ -1600,8 +1640,8 @@
       "\t$0",
       "\treturn new Response(null, { status: 204 });",
       "};",
-      "",
-    ],
+      ""
+    ]
   },
   "API DB Owned List": {
     "scope": "typescript",
@@ -1652,8 +1692,8 @@
       "\t\t.returning();",
       "\treturn Response.json(row, { status: 201 });",
       "};",
-      "",
-    ],
+      ""
+    ]
   },
   "API DB Owned Item": {
     "scope": "typescript",
@@ -1699,8 +1739,8 @@
       "\tif (!row) error(404, 'Not found');",
       "\treturn new Response(null, { status: 204 });",
       "};",
-      "",
-    ],
+      ""
+    ]
   },
   "Service Class": {
     "scope": "typescript",
@@ -1756,14 +1796,14 @@
       "}",
       "",
       "export const ${TM_FILENAME_BASE/([^.]*).*/${1:/camelcase}/}Service = new ${TM_FILENAME_BASE/([^.]*).*/${1:/pascalcase}/}Service();",
-      "",
-    ],
+      ""
+    ]
   },
   "Service Remote": {
     "scope": "typescript",
     "prefix": "svc::remote",
     "include": "*.remote.ts",
-    "exclude": ["**/src/**/server/**", "auth.remote.ts", "admin.remote.ts"],
+    "exclude": [ "**/src/**/server/**", "auth.remote.ts", "admin.remote.ts" ],
     "isFileTemplate": true,
     "description": "Thin CRUD remote functions (query/form/command) that call a svc::class service",
     "body": [
@@ -1804,12 +1844,12 @@
       "\tawait ${1/(.*)/${1:/camelcase}/}Service.delete(id);",
       "\tvoid get${TM_FILENAME_BASE/([^.]*).*/${1:/pascalcase}/}s().refresh();",
       "});",
-      "",
-    ],
+      ""
+    ]
   },
   "API Rate Limit": {
     "scope": "typescript",
-    "prefix": ["api::rate-limit", "rate-limit"],
+    "prefix": [ "api::rate-limit", "rate-limit" ],
     "include": "hooks.server.ts",
     "description": "handle hook: limit mutating requests per IP (429)",
     "body": [
@@ -1837,8 +1877,8 @@
       "\t\t);",
       "\t}",
       "\treturn resolve(event);",
-      "};$0",
-    ],
+      "};$0"
+    ]
   },
   "API Health": {
     "scope": "typescript",
@@ -1862,19 +1902,19 @@
       "\t\treturn Response.json({ ok: false }, { status: 503 });",
       "\t}",
       "};",
-      "",
-    ],
+      ""
+    ]
   },
   "API Fetch": {
     "scope": "typescript",
-    "prefix": ["api::fetch", "fetch"],
+    "prefix": [ "api::fetch", "fetch" ],
     "include": [
       "*.remote.ts",
       "*.server.ts",
       "+server.ts",
       "+page.ts",
       "+layout.ts",
-      "**/lib/server/**",
+      "**/lib/server/**"
     ],
     "exclude": "**/lib/server/db/schema/**",
     "description": "fetch a URL, error on a failed response, read the JSON",
@@ -1882,8 +1922,8 @@
       "const res = await fetch('${1:https://api.example.com/items}');",
       "if (!res.ok) error(res.status, '${2:Request failed}');",
       "const ${3:data} = await res.json();",
-      "$0",
-    ],
+      "$0"
+    ]
   },
   "API Service": {
     "scope": "typescript",
@@ -1921,12 +1961,12 @@
       "export function get${1/(.*)/${1:/pascalcase}/}(id: number) {",
       "\treturn request(${1}Schema, `/${2:items}/\\${id}`);",
       "}",
-      "",
-    ],
+      ""
+    ]
   },
   "Kit Handle Error": {
     "scope": "typescript",
-    "prefix": ["kit::handle-error", "handle-error"],
+    "prefix": [ "kit::handle-error", "handle-error" ],
     "include": "hooks.server.ts",
     "description": "handleError hook: logs unknown errors with an id, never exposes their details",
     "body": [
@@ -1940,12 +1980,12 @@
       "\tconsole.error(`[\\${errorId}]`, event.request.method, event.url.pathname, error);",
       "\t// status and message stay 500 / 'Internal Error': internal details never reach the client",
       "\treturn { errorId };",
-      "};$0",
-    ],
+      "};$0"
+    ]
   },
   "API CORS": {
     "scope": "typescript",
-    "prefix": ["api::cors", "cors"],
+    "prefix": [ "api::cors", "cors" ],
     "include": "hooks.server.ts",
     "description": "handle hook: CORS for /api/* from allowed origins, preflight included",
     "body": [
@@ -1982,12 +2022,12 @@
       "\t\tstatusText: response.statusText,",
       "\t\theaders",
       "\t});",
-      "};$0",
-    ],
+      "};$0"
+    ]
   },
   "API Service Key": {
     "scope": "typescript",
-    "prefix": ["api::service-key", "service-key"],
+    "prefix": [ "api::service-key", "service-key" ],
     "include": "**/lib/server/**",
     "exclude": "**/lib/server/db/schema/**",
     "description": "requireServiceKey(): x-api-key check for calls from your own services",
@@ -2003,12 +2043,12 @@
       "\tif (!key || !SERVICE_API_KEY || !timingSafeEqual(hash(key), hash(SERVICE_API_KEY))) {",
       "\t\terror(401, 'Unauthorized');",
       "\t}",
-      "}$0",
-    ],
+      "}$0"
+    ]
   },
   "API Require Role": {
     "scope": "typescript",
-    "prefix": ["api::require-role", "require-role"],
+    "prefix": [ "api::require-role", "require-role" ],
     "include": "**/lib/server/**",
     "exclude": "**/lib/server/db/schema/**",
     "description": "requireApiRole('admin'): 403 unless the user has the role (better-auth admin plugin)",
@@ -2020,12 +2060,12 @@
       "\tconst user = requireApiUser();",
       "\tif (!user.role?.split(',').includes(role)) error(403, 'Forbidden');",
       "\treturn user;",
-      "}$0",
-    ],
+      "}$0"
+    ]
   },
   "API Cache": {
     "scope": "typescript",
-    "prefix": ["api::cache", "cache"],
+    "prefix": [ "api::cache", "cache" ],
     "include": "**/lib/server/**",
     "exclude": "**/lib/server/db/schema/**",
     "description": "cachedJson(): JSON with ETag + Cache-Control, SvelteKit answers 304 when unchanged",
@@ -2038,8 +2078,8 @@
       "\treturn new Response(body, {",
       "\t\theaders: { 'content-type': 'application/json', etag, 'cache-control': cacheControl }",
       "\t});",
-      "}$0",
-    ],
+      "}$0"
+    ]
   },
   "API DB Cursor": {
     "scope": "typescript",
@@ -2080,12 +2120,12 @@
       "\tconst next = rows.length > limit ? items[limit - 1].id : null;",
       "\treturn Response.json({ items, next });",
       "};",
-      "",
-    ],
+      ""
+    ]
   },
   "Remote Optimistic Command": {
     "scope": "typescript",
-    "prefix": ["remote::optimistic", "optimistic"],
+    "prefix": [ "remote::optimistic", "optimistic" ],
     "include": "*.remote.ts",
     "exclude": "**/src/**/server/**",
     "description": "command() that refreshes the queries the client asks for (optimistic updates)",
@@ -2095,12 +2135,12 @@
       "\t$0",
       "\t// refresh what the client sent with .updates(); 1 = most refreshes accepted per call",
       "\tawait requested(${3:getLikes}, 1).refreshAll();",
-      "});",
-    ],
+      "});"
+    ]
   },
   "Remote Optimistic Call": {
     "scope": "svelte",
-    "prefix": ["remote::optimistic", "optimistic"],
+    "prefix": [ "remote::optimistic", "optimistic" ],
     "description": "Button that calls a command and shows the new value before the server answers",
     "body": [
       "<button",
@@ -2109,8 +2149,8 @@
       "\t}",
       ">",
       "\t${5:Like}",
-      "</button>$0",
-    ],
+      "</button>$0"
+    ]
   },
   "Remote Live Query": {
     "scope": "typescript",
@@ -2125,8 +2165,8 @@
       "\t\tyield $0;",
       "\t\tawait new Promise((resolve) => setTimeout(resolve, $2));",
       "\t}",
-      "});",
-    ],
+      "});"
+    ]
   },
   "Remote Live Use": {
     "scope": "svelte",
@@ -2145,8 +2185,8 @@
       "{#if !$3.connected}",
       "\t<p role=\"status\">Reconnecting…</p>",
       "{/if}",
-      "",
-    ],
+      ""
+    ]
   },
   "API OpenAPI": {
     "scope": "typescript",
@@ -2198,8 +2238,8 @@
       "\t\t\t}",
       "\t\t}",
       "\t});",
-      "",
-    ],
+      ""
+    ]
   },
   "API Upload": {
     "scope": "typescript",
@@ -2240,8 +2280,8 @@
       "\tawait writeFile(join('$2', name), new Uint8Array(await file.arrayBuffer()));",
       "\treturn Response.json({ name, size: file.size, type: file.type }, { status: 201 });",
       "};",
-      "",
-    ],
+      ""
+    ]
   },
   "API SSE": {
     "scope": "typescript",
@@ -2277,12 +2317,12 @@
       "\t\t}",
       "\t});",
       "};",
-      "",
-    ],
+      ""
+    ]
   },
   "API Idempotency": {
     "scope": "typescript",
-    "prefix": ["api::idempotency", "idempotency"],
+    "prefix": [ "api::idempotency", "idempotency" ],
     "include": "**/lib/server/**",
     "exclude": "**/lib/server/db/schema/**",
     "description": "idempotent(): a retried POST with the same Idempotency-Key gets the first reply",
@@ -2311,13 +2351,13 @@
       "\t}",
       "\tconst { status, body } = await entry.reply;",
       "\treturn new Response(body, { status, headers: { 'content-type': 'application/json' } });",
-      "}$0",
-    ],
+      "}$0"
+    ]
   },
   "API Test": {
     "scope": "typescript",
     "prefix": "test::api",
-    "include": ["*.e2e.ts", "**/e2e/**"],
+    "include": [ "*.e2e.ts", "**/e2e/**" ],
     "isFileTemplate": true,
     "description": "Playwright API tests for a DB list endpoint (200, 400, 401)",
     "body": [
@@ -2343,8 +2383,8 @@
       "\tconst res = await request.post('/api/$1s', { data: { ${2:name}: 'x' } });",
       "\texpect(res.status()).toBe(401);",
       "});",
-      "",
-    ],
+      ""
+    ]
   },
   "Kit Instrumentation": {
     "scope": "typescript",
@@ -2372,17 +2412,17 @@
       "});",
       "",
       "sdk.start();",
-      "",
-    ],
+      ""
+    ]
   },
   "Zod Slug": {
     "scope": "typescript",
-    "prefix": ["zod::slug", "slug"],
+    "prefix": [ "zod::slug", "slug" ],
     "include": "**/lib/server/db/**",
     "description": "Slug check for drizzle-zod refinements (createInsertSchema second argument)",
     "body": [
-      "slug: (s) => s.regex(/^[a-z0-9]+(?:-[a-z0-9]+)*\\$/, '${1:Use lowercase letters, numbers and dashes}')$0",
-    ],
+      "slug: (s) => s.regex(/^[a-z0-9]+(?:-[a-z0-9]+)*\\$/, '${1:Use lowercase letters, numbers and dashes}')$0"
+    ]
   },
   "Email Send": {
     "scope": "typescript",
@@ -2411,12 +2451,12 @@
       "\t\tsignal: AbortSignal.timeout(10_000)",
       "\t}).catch(() => error(504, 'Email service did not respond'));",
       "\tif (!res.ok) error(502, `Email service responded \\${res.status}`);",
-      "}",
-    ],
+      "}"
+    ]
   },
   "Remote Toast": {
     "scope": "svelte",
-    "prefix": ["remote::toast", "toast"],
+    "prefix": [ "remote::toast", "toast" ],
     "description": "Remote form that shows a svelte-sonner toast on success or error",
     "body": [
       "<!-- TODO: import { toast } from 'svelte-sonner'; once in src/routes/+layout.svelte: <Toaster theme=\"system\" richColors /> (import { Toaster } from 'svelte-sonner') -->",
@@ -2433,13 +2473,13 @@
       "\t})}",
       ">",
       "\t$0",
-      "</form>",
-    ],
+      "</form>"
+    ]
   },
   "Kit Service Worker": {
     "scope": "typescript",
     "prefix": "kit::sw",
-    "include": ["service-worker.ts", "**/service-worker/**"],
+    "include": [ "service-worker.ts", "**/service-worker/**" ],
     "isFileTemplate": true,
     "description": "src/service-worker/index.ts: caches build files and static/, network first with offline fallback",
     "body": [
@@ -2506,12 +2546,12 @@
       "",
       "\tevent.respondWith(respond());",
       "});",
-      "",
-    ],
+      ""
+    ]
   },
   "CSP Config": {
     "scope": "typescript",
-    "prefix": ["csp::config", "config"],
+    "prefix": [ "csp::config", "config" ],
     "include": "vite.config.ts",
     "description": "Content Security Policy inside sveltekit({ … }): scripts and requests only from your origin + listed hosts",
     "body": [
@@ -2528,8 +2568,8 @@
       "\t\t'base-uri': ['self'],",
       "\t\t'report-uri': ['/api/csp-report']",
       "\t}",
-      "},$0",
-    ],
+      "},$0"
+    ]
   },
   "CSP Report": {
     "scope": "typescript",
@@ -2549,12 +2589,12 @@
       "\tconsole.warn('[csp]', JSON.stringify(report));",
       "\treturn new Response(null, { status: 204 });",
       "};",
-      "",
-    ],
+      ""
+    ]
   },
   "Kit Shallow Modal": {
     "scope": "svelte",
-    "prefix": ["kit::shallow", "shallow"],
+    "prefix": [ "kit::shallow", "shallow" ],
     "include": "*.svelte",
     "description": "Modal tied to a history entry (goto shallow): the back button closes it",
     "body": [
@@ -2568,12 +2608,12 @@
       "\t\t$0",
       "\t\t<form method=\"dialog\"><button>Close</button></form>",
       "\t</dialog>",
-      "{/if}",
-    ],
+      "{/if}"
+    ]
   },
   "Kit Snapshot": {
     "scope": "svelte",
-    "prefix": ["kit::snapshot", "snapshot"],
+    "prefix": [ "kit::snapshot", "snapshot" ],
     "include": "*.svelte",
     "description": "Keeps a remote form's values on back/forward and reload (snapshot)",
     "body": [
@@ -2581,12 +2621,12 @@
       "snapshot({",
       "\tcapture: () => ${1:createTag}.fields.value(),",
       "\trestore: (value) => $1.fields.set(value)",
-      "});$0",
-    ],
+      "});$0"
+    ]
   },
   "Kit Unsaved": {
     "scope": "svelte",
-    "prefix": ["kit::unsaved", "unsaved"],
+    "prefix": [ "kit::unsaved", "unsaved" ],
     "include": "*.svelte",
     "description": "Asks before leaving a page with unsaved form changes (beforeNavigate)",
     "body": [
@@ -2597,21 +2637,21 @@
       "\tif (!dirty) return;",
       "\t// closing the tab or reloading: cancel() makes the browser show its own dialog",
       "\tif (willUnload || !confirm('${2:You have unsaved changes. Leave this page?}')) cancel();",
-      "});$0",
-    ],
+      "});$0"
+    ]
   },
   "Kit Prerender": {
     "scope": "typescript",
-    "prefix": ["kit::prerender"],
-    "include": ["+page.server.ts", "+page.ts", "+server.ts"],
+    "prefix": [ "kit::prerender" ],
+    "include": [ "+page.server.ts", "+page.ts", "+server.ts" ],
     "description": "Prerender a [param] route: prerender + entries from a drizzle table",
     "body": [
       "// TODO: import type { EntryGenerator } from './\\$types'; the database must be reachable while `pnpm build` runs",
       "// [${1:slug}] values built as HTML at build time; 'auto' still renders rows added later on the server",
       "export const prerender = ${2|'auto',true|};",
       "",
-      "export const entries: EntryGenerator = () => db.select({ $1: ${3:post}.$1 }).from($3);$0",
-    ],
+      "export const entries: EntryGenerator = () => db.select({ $1: ${3:post}.$1 }).from($3);$0"
+    ]
   },
   "Kit Loading Bar": {
     "scope": "svelte",
@@ -2662,14 +2702,14 @@
       "\t\t}",
       "\t}",
       "</style>",
-      "$0",
-    ],
+      "$0"
+    ]
   },
   "Test Unit": {
     "scope": "typescript",
     "prefix": "test::unit",
-    "include": ["*.spec.ts", "*.test.ts"],
-    "exclude": ["*.svelte.spec.ts", "*.svelte.test.ts", "**/e2e/**"],
+    "include": [ "*.spec.ts", "*.test.ts" ],
+    "exclude": [ "*.svelte.spec.ts", "*.svelte.test.ts", "**/e2e/**" ],
     "isFileTemplate": true,
     "description": "Vitest unit test for a function in the file next to it",
     "body": [
@@ -2683,13 +2723,13 @@
       "\t\texpect($1(${4:'Svelte'})).toBe(${5:'Hello, Svelte!'});",
       "\t});",
       "});",
-      "",
-    ],
+      ""
+    ]
   },
   "Test Component": {
     "scope": "typescript",
     "prefix": "test::component",
-    "include": ["*.svelte.spec.ts", "*.svelte.test.ts"],
+    "include": [ "*.svelte.spec.ts", "*.svelte.test.ts" ],
     "isFileTemplate": true,
     "description": "Vitest browser test for the component next to it (vitest-browser-svelte)",
     "body": [
@@ -2710,8 +2750,8 @@
       "\t\tawait expect.element(button).toHaveTextContent('${4:1}');",
       "\t});",
       "});",
-      "",
-    ],
+      ""
+    ]
   },
   "Test E2E": {
     "scope": "typescript",
@@ -2738,12 +2778,12 @@
       "\tawait page.getByRole('link', { name: '${4:About}' }).click();",
       "\tawait expect(page).toHaveURL(/${5:about}/);",
       "});",
-      "",
-    ],
+      ""
+    ]
   },
   "Email Template": {
     "scope": "typescript",
-    "prefix": ["email::template", "template"],
+    "prefix": [ "email::template", "template" ],
     "include": "**/lib/server/**",
     "exclude": "**/lib/server/db/schema/**",
     "description": "actionEmail(): HTML + text email with one button (verify, reset), values escaped",
@@ -2770,8 +2810,8 @@
       "\t</body>",
       "</html>`",
       "\t};",
-      "}$0",
-    ],
+      "}$0"
+    ]
   },
   "File Presign": {
     "scope": "typescript",
@@ -2803,12 +2843,12 @@
       "\tconst signed = await s3.sign(new Request(url, { method, headers }), { aws: { signQuery: true } });",
       "\treturn signed.url;",
       "}",
-      "",
-    ],
+      ""
+    ]
   },
   "File Upload URL": {
     "scope": "typescript",
-    "prefix": ["file::upload-url", "upload-url"],
+    "prefix": [ "file::upload-url", "upload-url" ],
     "include": "*.remote.ts",
     "description": "uploadUrl remote command: checks type/size, returns a presigned PUT URL and the key",
     "body": [
@@ -2825,8 +2865,8 @@
       "\t\tconst key = `${3:uploads}/\\${user.id}/\\${crypto.randomUUID()}`;",
       "\t\treturn { key, url: await presign(key, 'PUT', type) };",
       "\t}",
-      ");$0",
-    ],
+      ");$0"
+    ]
   },
   "File Upload": {
     "scope": "svelte",
@@ -2870,8 +2910,8 @@
       "{:else if status === 'error'}",
       "\t<p role=\"alert\">Upload failed, try another file.</p>",
       "{/if}",
-      "",
-    ],
+      ""
+    ]
   },
   "File R2": {
     "scope": "typescript",
@@ -2904,12 +2944,12 @@
       "\t});",
       "\treturn new Response(null, { status: 204 });",
       "};",
-      "",
-    ],
+      ""
+    ]
   },
   "Anim Flip": {
     "scope": "svelte",
-    "prefix": ["anim::flip", "flip"],
+    "prefix": [ "anim::flip", "flip" ],
     "include": "*.svelte",
     "description": "Keyed each block whose items slide when the list changes (animate:flip), reduced motion aware",
     "body": [
@@ -2922,12 +2962,12 @@
       "\t>",
       "\t\t$0",
       "\t</li>",
-      "{/each}",
-    ],
+      "{/each}"
+    ]
   },
   "Anim Fade": {
     "scope": "svelte",
-    "prefix": ["anim::fade", "fade"],
+    "prefix": [ "anim::fade", "fade" ],
     "include": "*.svelte",
     "description": "{#if} block that slides in and fades out, reduced motion aware",
     "body": [
@@ -2940,25 +2980,25 @@
       "\t>",
       "\t\t$0",
       "\t</div>",
-      "{/if}",
-    ],
+      "{/if}"
+    ]
   },
   "Anim Spring": {
     "scope": "svelte,typescript",
-    "prefix": ["anim::spring", "spring"],
-    "include": ["*.svelte", "*.svelte.ts"],
+    "prefix": [ "anim::spring", "spring" ],
+    "include": [ "*.svelte", "*.svelte.ts" ],
     "description": "Spring.of(): a value that follows another one with a spring motion",
     "body": [
       "// TODO: import { Spring } from 'svelte/motion';",
       "// follows ${2:value} with a springy motion: use ${1:smooth}.current in the markup (style:transform, width, a number…)",
-      "const $1 = Spring.of(() => $2, { stiffness: ${3:0.15}, damping: ${4:0.4} });$0",
-    ],
+      "const $1 = Spring.of(() => $2, { stiffness: ${3:0.15}, damping: ${4:0.4} });$0"
+    ]
   },
   "Util Date": {
     "scope": "typescript",
-    "prefix": ["util::date"],
+    "prefix": [ "util::date" ],
     "include": "**/lib/**",
-    "exclude": ["**/lib/server/db/**"],
+    "exclude": [ "**/lib/server/db/**" ],
     "description": "formatDate() and timeAgo() with Intl, same output on server and browser",
     "body": [
       "// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl",
@@ -2985,14 +3025,14 @@
       "\t\tif (Math.abs(seconds) >= size) return relativeFormat.format(Math.round(seconds / size), unit);",
       "\t}",
       "\treturn relativeFormat.format(0, 'second');",
-      "}$0",
-    ],
+      "}$0"
+    ]
   },
   "Util Money": {
     "scope": "typescript",
-    "prefix": ["util::money", "money"],
+    "prefix": [ "util::money", "money" ],
     "include": "**/lib/**",
-    "exclude": ["**/lib/server/db/**"],
+    "exclude": [ "**/lib/server/db/**" ],
     "description": "formatMoney(): integer cents to a currency string with Intl",
     "body": [
       "// TR: 'tr-TR' + 'TRY' → \"₺1.234,50\"; the same locale formats numbers and metric units: \"1.234,5\", \"%25\" (sign first), \"5 km\", \"21°C\", \"2,5 kg\" ({ style: 'unit', unit: 'kilometer' })",
@@ -3000,14 +3040,14 @@
       "// minor units per currency: 2 for USD/EUR/TRY, 0 for JPY",
       "const minorUnits = 10 ** (moneyFormat.resolvedOptions().maximumFractionDigits ?? 2);",
       "/** Amounts are stored as integers in the smallest unit (cents) to avoid float rounding: formatMoney(1999) → \"\\$19.99\" */",
-      "export const formatMoney = (cents: number) => moneyFormat.format(cents / minorUnits);$0",
-    ],
+      "export const formatMoney = (cents: number) => moneyFormat.format(cents / minorUnits);$0"
+    ]
   },
   "Util Debounce": {
     "scope": "typescript",
-    "prefix": ["util::debounce", "debounce"],
+    "prefix": [ "util::debounce", "debounce" ],
     "include": "**/lib/**",
-    "exclude": ["**/lib/server/db/**"],
+    "exclude": [ "**/lib/server/db/**" ],
     "description": "debounce(): run a function once calls stop (search as you type)",
     "body": [
       "/** Runs fn once the calls stop for ms milliseconds, e.g. search as you type: oninput={debounce((e) => …, ${1:300})} */",
@@ -3017,8 +3057,8 @@
       "\t\tclearTimeout(timer);",
       "\t\ttimer = setTimeout(() => fn(...args), ms);",
       "\t};",
-      "}$0",
-    ],
+      "}$0"
+    ]
   },
   "HTTP API Requests": {
     "scope": "http",
@@ -3098,8 +3138,8 @@
       "Content-Type: application/json",
       "",
       "?? status == 204",
-      "$0",
-    ],
+      "$0"
+    ]
   },
   "HTTP Supabase Requests": {
     "scope": "http",
@@ -3198,7 +3238,7 @@
       "Authorization: Bearer {{login.access_token}}",
       "",
       "?? status == 204",
-      "$0",
-    ],
-  },
+      "$0"
+    ]
+  }
 }

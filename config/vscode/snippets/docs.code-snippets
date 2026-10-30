@@ -115,8 +115,8 @@
       "## License",
       "",
       "By contributing, you agree that your contributions will be licensed under the project's MIT license.",
-      "",
-    ],
+      ""
+    ]
   },
   "Docs README": {
     "scope": "markdown",
@@ -128,8 +128,8 @@
       "# Documentation",
       "",
       "This folder hosts the project's technical documentation. Content is under active development and will be updated over time.",
-      "",
-    ],
+      ""
+    ]
   },
   "Security Policy": {
     "scope": "markdown",
@@ -194,8 +194,8 @@
       "",
       "- Make a good-faith effort to avoid privacy violations, data destruction, and service disruption.",
       "- Report vulnerabilities promptly and do not exploit them beyond what is necessary to demonstrate impact.",
-      "- Give us reasonable time to remediate before public disclosure.",
-    ],
+      "- Give us reasonable time to remediate before public disclosure."
+    ]
   },
   "README for Svelte": {
     "scope": "markdown",
@@ -267,8 +267,74 @@
       "[prettier-icon]: https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square",
       "[prettier-url]: https://github.com/prettier/prettier",
       "[license-icon]: https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square",
-      "[license-url]: LICENSE",
-    ],
+      "[license-url]: LICENSE"
+    ]
+  },
+  "README for Rust": {
+    "scope": "markdown",
+    "prefix": "doc::readme-rust",
+    "isFileTemplate": true,
+    "include": "README.md",
+    "description": "README.md for a Rust project, with badges",
+    "body": [
+      "# ${WORKSPACE_NAME/(^|-)(.)/${1:+ }${2:/upcase}/g}",
+      "",
+      "[![Commit][commit-icon]][commit-url] [![Rust][rust-icon]][rust-url]",
+      "[![License][license-icon]][license-url]",
+      "",
+      "${1:A Rust project.}",
+      "",
+      "## Requirements",
+      "",
+      "- [Rust](https://www.rust-lang.org/tools/install) (v1.99 or later)",
+      "",
+      "## Getting Started",
+      "",
+      "Follow these steps to set up and run the project locally.",
+      "",
+      "### Clone this Repository",
+      "",
+      "Clone the repository to your local machine.",
+      "",
+      "```sh",
+      "git clone https://github.com/suzel/$WORKSPACE_NAME.git",
+      "```",
+      "",
+      "### Development",
+      "",
+      "Build and run the project.",
+      "",
+      "```sh",
+      "cargo run",
+      "```",
+      "",
+      "### Test",
+      "",
+      "Run the tests.",
+      "",
+      "```sh",
+      "cargo test",
+      "```",
+      "",
+      "### Build",
+      "",
+      "Build the project for production.",
+      "",
+      "```sh",
+      "cargo build --release",
+      "```",
+      "",
+      "### Contributors",
+      "",
+      "[Sukru Uzel](http://sukruuzel.com/)",
+      "",
+      "[commit-icon]: https://img.shields.io/github/last-commit/suzel/$WORKSPACE_NAME?style=flat-square",
+      "[commit-url]: https://github.com/suzel/$WORKSPACE_NAME/commits/main",
+      "[rust-icon]: https://img.shields.io/badge/language-rust-%23dea584.svg?style=flat-square",
+      "[rust-url]: https://www.rust-lang.org",
+      "[license-icon]: https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square",
+      "[license-url]: LICENSE"
+    ]
   },
   "LICENSE": {
     "scope": "plaintext",
@@ -297,8 +363,8 @@
       "AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER",
       "LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,",
       "OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE",
-      "SOFTWARE.",
-    ],
+      "SOFTWARE."
+    ]
   },
   ".editorconfig": {
     "scope": "editorconfig",
@@ -325,8 +391,8 @@
       "# trim_trailing_whitespace = true",
       "",
       "# [*.md]",
-      "# trim_trailing_whitespace = false",
-    ],
+      "# trim_trailing_whitespace = false"
+    ]
   },
   "Humans.txt": {
     "scope": "plaintext",
@@ -345,8 +411,8 @@
       "Standards: HTML5, CSS3, JavaScript",
       "Components: SvelteKit, TailwindCSS",
       "Software: Visual Studio Code",
-      "",
-    ],
+      ""
+    ]
   },
   "Llms.txt": {
     "scope": "plaintext",
@@ -372,7 +438,7 @@
       "",
       "## Pages",
       "- /: ${3:Homepage and general introduction}$0",
-      "",
-    ],
-  },
+      ""
+    ]
+  }
 }

@@ -46,8 +46,8 @@
       "});",
       "",
       "export const getUser = query(async () => getRequestEvent().locals.user ?? null);",
-      "",
-    ],
+      ""
+    ]
   },
   "Auth Login": {
     "scope": "svelte",
@@ -78,8 +78,8 @@
       "\t{/each}",
       "\t<button>Log in</button>",
       "</form>",
-      "",
-    ],
+      ""
+    ]
   },
   "Auth Signup": {
     "scope": "svelte",
@@ -114,14 +114,14 @@
       "\t{/each}",
       "\t<button>Sign up</button>",
       "</form>",
-      "",
-    ],
+      ""
+    ]
   },
   "Auth Logout": {
     "scope": "svelte",
-    "prefix": ["auth::logout", "logout"],
+    "prefix": [ "auth::logout", "logout" ],
     "description": "Logout button for remote::auth",
-    "body": ["<form {...logout}>", "\t<button>Log out</button>", "</form>$0"],
+    "body": [ "<form {...logout}>", "\t<button>Log out</button>", "</form>$0" ]
   },
   "Auth Reset Remote": {
     "scope": "typescript",
@@ -147,8 +147,8 @@
       "\t\t}",
       "\t\tredirect(303, '${2:/login}');",
       "\t}",
-      ");$0",
-    ],
+      ");$0"
+    ]
   },
   "Auth Forgot": {
     "scope": "svelte",
@@ -180,8 +180,8 @@
       "\t\t{/each}",
       "\t\t<button>Send reset link</button>",
       "\t</form>",
-      "{/if}",
-    ],
+      "{/if}"
+    ]
   },
   "Auth Reset": {
     "scope": "svelte",
@@ -218,8 +218,8 @@
       "{:else}",
       "\t<p>This link is invalid or has expired.</p>",
       "\t<a href={resolve('${1:forgot-password}')}>Send a new link</a>",
-      "{/if}",
-    ],
+      "{/if}"
+    ]
   },
   "Auth Verify Remote": {
     "scope": "typescript",
@@ -234,8 +234,8 @@
       "export const resendVerification = form(z.object({ email: z.email() }), async ({ email }) => {",
       "\tawait auth.api.sendVerificationEmail({ body: { email, callbackURL: '$1?verified' } });",
       "\treturn { sent: true };",
-      "});$0",
-    ],
+      "});$0"
+    ]
   },
   "Auth Verify": {
     "scope": "svelte",
@@ -283,12 +283,12 @@
       "\t\t\t<button>Send a new link</button>",
       "\t\t</form>",
       "\t{/if}",
-      "{/if}",
-    ],
+      "{/if}"
+    ]
   },
   "Auth Social Remote": {
     "scope": "typescript",
-    "prefix": ["auth::social", "social"],
+    "prefix": [ "auth::social", "social" ],
     "include": "*.remote.ts",
     "exclude": "**/src/**/server/**",
     "description": "socialLogin remote form: GitHub/Google sign-in with better-auth",
@@ -302,19 +302,19 @@
       "\t\t// SvelteKit 3 only redirects to other sites listed in external: the providers' sign-in pages",
       "\t\tif (url) redirect(303, url, { external: ['https://github.com', 'https://accounts.google.com'] });",
       "\t}",
-      ");$0",
-    ],
+      ");$0"
+    ]
   },
   "Auth Social": {
     "scope": "svelte",
-    "prefix": ["auth::social", "social"],
+    "prefix": [ "auth::social", "social" ],
     "description": "GitHub/Google sign-in buttons for auth::social",
     "body": [
       "<form {...socialLogin}>",
       "\t<button {...socialLogin.fields.provider.as('submit', '${1:github}')}>Continue with ${2:GitHub}</button>",
       "\t<button {...socialLogin.fields.provider.as('submit', '${3:google}')}>Continue with ${4:Google}</button>",
-      "</form>$0",
-    ],
+      "</form>$0"
+    ]
   },
   "Auth Profile Remote": {
     "scope": "typescript",
@@ -343,8 +343,8 @@
       "\t\t}",
       "\t\treturn { changed: true };",
       "\t}",
-      ");$0",
-    ],
+      ");$0"
+    ]
   },
   "Auth Profile": {
     "scope": "svelte",
@@ -403,8 +403,8 @@
       "\t{#snippet pending()}",
       "\t\t<p>Loading...</p>",
       "\t{/snippet}",
-      "</svelte:boundary>",
-    ],
+      "</svelte:boundary>"
+    ]
   },
   "Auth Admin Remote": {
     "scope": "typescript",
@@ -468,8 +468,8 @@
       "",
       "export const unbanUser = form(z.object({ userId: z.string() }), async ({ userId }) => {",
       "\tawait auth.api.unbanUser({ body: { userId }, headers: adminHeaders() });",
-      "});",
-    ],
+      "});"
+    ]
   },
   "Auth Admin": {
     "scope": "svelte",
@@ -548,7 +548,7 @@
       "\t{#snippet pending()}",
       "\t\t<p>Loading...</p>",
       "\t{/snippet}",
-      "</svelte:boundary>",
-    ],
-  },
+      "</svelte:boundary>"
+    ]
+  }
 }

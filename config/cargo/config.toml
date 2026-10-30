@@ -1,3 +1,7 @@
-# Reuse compiled dependencies across projects and after `cargo clean`
+# Cache builds across projects
 [build]
 rustc-wrapper = "sccache"
+
+# Less debug info for dependencies
+[profile.dev.package."*"]
+debug = "line-tables-only"

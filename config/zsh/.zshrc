@@ -30,6 +30,7 @@ fpath=(
   "$ZDOTDIR/functions"
   "/opt/homebrew/share/zsh-completions"
   "/opt/homebrew/share/zsh/site-functions"
+  "/opt/homebrew/opt/rustup/share/zsh/site-functions"
   $fpath
 )
 autoload -Uz compinit
@@ -66,15 +67,6 @@ source <(/opt/homebrew/bin/fzf --zsh)
 eval "$(/opt/homebrew/bin/starship init zsh)"
 eval "$(/opt/homebrew/bin/zoxide init zsh)"
 source /opt/homebrew/share/zsh-fast-syntax-highlighting/*.plugin.zsh
-
-# API keys from iCloud Drive (KEY=value lines only, never sourced)
-() {
-  local f="$ICLOUD_DIR/Secrets/secrets.env" line
-  [[ -r $f ]] || return
-  for line in ${(f)"$(<$f)"}; do
-    [[ $line =~ '^[A-Za-z_][A-Za-z0-9_]*=' ]] && export "$line"
-  done
-}
 
 # SSH key passphrase from Keychain into the agent (needed for commit signing)
 ssh-add -l &>/dev/null || ssh-add --apple-load-keychain -q 2>/dev/null

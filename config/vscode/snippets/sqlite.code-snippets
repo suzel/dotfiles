@@ -38,8 +38,8 @@
       "\t.extend({ id: z.number() });",
       "",
       "export type ${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/} = typeof $1.\\$inferSelect;",
-      "",
-    ],
+      ""
+    ]
   },
   "SQLite To Table": {
     "scope": "typescript",
@@ -76,8 +76,8 @@
       "\t.extend({ id: z.number() });",
       "",
       "export type ${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/} = typeof $1.\\$inferSelect;",
-      "",
-    ],
+      ""
+    ]
   },
   "SQLite Columns Paste": {
     "scope": "typescript",
@@ -85,8 +85,8 @@
     "include": "**/lib/server/db/**",
     "description": "Drizzle columns inside sqliteTable from a copied column list, sqlite::to-table notation",
     "body": [
-      "${CLIPBOARD/^(?=[\\s\\S]*[^\\w\\s,:.?!*~>='\"-])[\\s\\S]*|[\\s\\S]*?(\\*)[\\s\\S]*|[\\s\\S]*/${1:+// TODO: add (t) => [}/}${CLIPBOARD/^(?=[\\s\\S]*[^\\w\\s,:.?!*~>='\"-])[\\s\\S]*|(?<=^|[,\\s]|--)(?:(?<=(\\*)[\\s\\S]+)|)(\\w+)(?=[^,\\s=]*\\*)|[\\s\\S]/${1:+, }${2:+index(idx(t.}$2${2:+)).on(t.}$2${2:+)}/g}${CLIPBOARD/^(?=[\\s\\S]*[^\\w\\s,:.?!*~>='\"-])[\\s\\S]*|[\\s\\S]*?(\\*)[\\s\\S]*|[\\s\\S]*/${1:+] as sqliteTable's third argument (sqlite::index, idx from ./common)\n  }/}${CLIPBOARD/^(?=[\\s\\S]*([^\\w\\s,:.?!*~>='\"-]))[\\s\\S]*|[\\s\\S]*/${1:+// TODO: the clipboard is not a column list like title:200!, body?, authorId>user}/}${CLIPBOARD/^(?=[\\s\\S]*[^\\w\\s,:.?!*~>='\"-])[\\s\\S]*|(?:[,\\s]|--)*(?:(?!)(?=(\\w))|)(?:(?=[^,\\s=]*>)(?![^,\\s=]*\\?)(?=(\\w))|)(?:(?=[^,\\s=]*>)(?![^,\\s=]*\\?)(?!)(?=(\\w))|)(?:(?=[^,\\s=]*>)(?=[^,\\s=]*!)(?=(\\w))|)(?:(?=[^,\\s=]*>)(?=[^,\\s=]*!)(?!)(?=(\\w))|)(?:(?=[^,\\s=]*>)(?:(?![^,\\s=]*\\?)|(?=[^,\\s=]*!)|(?=[^,\\s]*=))(?=(\\w))|)(?:(?=[^,\\s=]*>)(?:(?![^,\\s=]*\\?)|(?=[^,\\s=]*!)|(?=[^,\\s]*=))(?!)(?=(\\w))|)(?:(?=[^,\\s=]*>)(?=[^,\\s]*=)(?=(\\w))|)(?:(?=[^,\\s=]*>)(?=[^,\\s]*=)(?!)(?=(\\w))|)(?:(?![^,\\s=]*\\?)(?=(\\w))|)(?:(?=\\w+[?!*~]*>(?!user\\b)\\w)(?=(\\w))|)(?:(?=\\w+[?!*~]*(?![\\w?!*~:]|>(?!user\\b)\\w))(?=(\\w))|)(?:(?=[^,\\s=]*>)(?=[^,\\s=]*(~))|)(?:(?=\\w+[?!*~]*(?::(?:\\d+(?:\\.\\d+)?|text|varchar|uuid|decimal|numeric|dateonly|time)\\b|(?![\\w?!*~:]|>(?!user\\b)\\w))[^,\\s=]*=(?!now(?![^,\\s])|['\"]))(?=(\\w))|(?=[^,\\s=]*=(?!now(?![^,\\s])|['\"]))(?=(\\w))|)(\\w+)(?=[^,\\s=]*(!)|)[?!*~]*(?::(?:(\\d+)\\.(\\d+)|(\\d+)|(int)|(bool(?:ean)?)|(date|timestamp)|(dateonly|time|uuid|varchar)|(jsonb?)|(float|doublePrecision)|(decimal)|(bigint)|(\\w+))\\b)?[?!*~]*(?:>(\\w+))?[?!*~]*(?:=(?:(now)(?![^,\\s])|('[^',\\s]*'|\"[^\",\\s]*\")(?![^,\\s])|([^,\\s]+)))?(?:[,\\s]|--)*(?=(\\w)|)(?:(?<=(?<![^,\\s])(?![^,\\s=]*\\?)[^,\\s=>]*(=)now(?:[,\\s]|--)*)|)(?:(?<=(?<![^,\\s])(?![^,\\s=]*\\?)[^,\\s=>]*(=)now(?:[,\\s]|--)*)(?!)|)(?:(?<=(?<![^,\\s])(?=[^,\\s=]*!)[^,\\s=>]*(=)now(?:[,\\s]|--)*)|)(?:(?<=(?<![^,\\s])(?=[^,\\s=]*!)[^,\\s=>]*(=)now(?:[,\\s]|--)*)(?!)|)(?:(?<=(?<![^,\\s])(?:(?![^,\\s=]*\\?)|(?=[^,\\s=]*!))[^,\\s=>]*(=)now(?:[,\\s]|--)*)|)(?:(?<=(?<![^,\\s])(?:(?![^,\\s=]*\\?)|(?=[^,\\s=]*!))[^,\\s=>]*(=)now(?:[,\\s]|--)*)(?!)|)/$16${16:+: }${18:+numeric}${20:+text}${21:+integer}${22:+integer}${23:+integer}${24:+text}${25:+text}${26:+real}${27:+numeric}${28:+integer}$29${11:+integer}${12:+text}${16:+('}${16:/snakecase}${16:+'}${20:+, { length: }$20${20:+ \\}}${22:+, { mode: 'boolean' \\}}${23:+, { mode: 'timestamp' \\}}${25:+, { mode: 'json' \\}}${16:+)}${25:+.$type<Record<string, unknown>>()}${2:+\n    }${3:+\n      }${35:+\n    }${36:+\n      }${10:+.notNull()}${4:+\n    }${5:+\n      }${37:+\n    }${38:+\n      }${17:+.unique()}${6:+\n    }${7:+\n      }${30:+.references(() => }$30${30:+.id}${13:+, { onDelete: 'cascade' \\}}${30:+)}${8:+\n    }${9:+\n      }${39:+\n    }${40:+\n      }${31:+.default(sql`(unixepoch())`)}${32:+.default(}$32${32:+)}${14:+.default('}${15:+.default(}$33${14:+')}${15:+)}${16:+,}${34:+\n  }/g}$0",
-    ],
+      "${CLIPBOARD/^(?=[\\s\\S]*[^\\w\\s,:.?!*~>='\"-])[\\s\\S]*|[\\s\\S]*?(\\*)[\\s\\S]*|[\\s\\S]*/${1:+// TODO: add (t) => [}/}${CLIPBOARD/^(?=[\\s\\S]*[^\\w\\s,:.?!*~>='\"-])[\\s\\S]*|(?<=^|[,\\s]|--)(?:(?<=(\\*)[\\s\\S]+)|)(\\w+)(?=[^,\\s=]*\\*)|[\\s\\S]/${1:+, }${2:+index(idx(t.}$2${2:+)).on(t.}$2${2:+)}/g}${CLIPBOARD/^(?=[\\s\\S]*[^\\w\\s,:.?!*~>='\"-])[\\s\\S]*|[\\s\\S]*?(\\*)[\\s\\S]*|[\\s\\S]*/${1:+] as sqliteTable's third argument (sqlite::index, idx from ./common)\n  }/}${CLIPBOARD/^(?=[\\s\\S]*([^\\w\\s,:.?!*~>='\"-]))[\\s\\S]*|[\\s\\S]*/${1:+// TODO: the clipboard is not a column list like title:200!, body?, authorId>user}/}${CLIPBOARD/^(?=[\\s\\S]*[^\\w\\s,:.?!*~>='\"-])[\\s\\S]*|(?:[,\\s]|--)*(?:(?!)(?=(\\w))|)(?:(?=[^,\\s=]*>)(?![^,\\s=]*\\?)(?=(\\w))|)(?:(?=[^,\\s=]*>)(?![^,\\s=]*\\?)(?!)(?=(\\w))|)(?:(?=[^,\\s=]*>)(?=[^,\\s=]*!)(?=(\\w))|)(?:(?=[^,\\s=]*>)(?=[^,\\s=]*!)(?!)(?=(\\w))|)(?:(?=[^,\\s=]*>)(?:(?![^,\\s=]*\\?)|(?=[^,\\s=]*!)|(?=[^,\\s]*=))(?=(\\w))|)(?:(?=[^,\\s=]*>)(?:(?![^,\\s=]*\\?)|(?=[^,\\s=]*!)|(?=[^,\\s]*=))(?!)(?=(\\w))|)(?:(?=[^,\\s=]*>)(?=[^,\\s]*=)(?=(\\w))|)(?:(?=[^,\\s=]*>)(?=[^,\\s]*=)(?!)(?=(\\w))|)(?:(?![^,\\s=]*\\?)(?=(\\w))|)(?:(?=\\w+[?!*~]*>(?!user\\b)\\w)(?=(\\w))|)(?:(?=\\w+[?!*~]*(?![\\w?!*~:]|>(?!user\\b)\\w))(?=(\\w))|)(?:(?=[^,\\s=]*>)(?=[^,\\s=]*(~))|)(?:(?=\\w+[?!*~]*(?::(?:\\d+(?:\\.\\d+)?|text|varchar|uuid|decimal|numeric|dateonly|time)\\b|(?![\\w?!*~:]|>(?!user\\b)\\w))[^,\\s=]*=(?!now(?![^,\\s])|['\"]))(?=(\\w))|(?=[^,\\s=]*=(?!now(?![^,\\s])|['\"]))(?=(\\w))|)(\\w+)(?=[^,\\s=]*(!)|)[?!*~]*(?::(?:(\\d+)\\.(\\d+)|(\\d+)|(int)|(bool(?:ean)?)|(date|timestamp)|(dateonly|time|uuid|varchar)|(jsonb?)|(float|doublePrecision)|(decimal)|(bigint)|(\\w+))\\b)?[?!*~]*(?:>(\\w+))?[?!*~]*(?:=(?:(now)(?![^,\\s])|('[^',\\s]*'|\"[^\",\\s]*\")(?![^,\\s])|([^,\\s]+)))?(?:[,\\s]|--)*(?=(\\w)|)(?:(?<=(?<![^,\\s])(?![^,\\s=]*\\?)[^,\\s=>]*(=)now(?:[,\\s]|--)*)|)(?:(?<=(?<![^,\\s])(?![^,\\s=]*\\?)[^,\\s=>]*(=)now(?:[,\\s]|--)*)(?!)|)(?:(?<=(?<![^,\\s])(?=[^,\\s=]*!)[^,\\s=>]*(=)now(?:[,\\s]|--)*)|)(?:(?<=(?<![^,\\s])(?=[^,\\s=]*!)[^,\\s=>]*(=)now(?:[,\\s]|--)*)(?!)|)(?:(?<=(?<![^,\\s])(?:(?![^,\\s=]*\\?)|(?=[^,\\s=]*!))[^,\\s=>]*(=)now(?:[,\\s]|--)*)|)(?:(?<=(?<![^,\\s])(?:(?![^,\\s=]*\\?)|(?=[^,\\s=]*!))[^,\\s=>]*(=)now(?:[,\\s]|--)*)(?!)|)/$16${16:+: }${18:+numeric}${20:+text}${21:+integer}${22:+integer}${23:+integer}${24:+text}${25:+text}${26:+real}${27:+numeric}${28:+integer}$29${11:+integer}${12:+text}${16:+('}${16:/snakecase}${16:+'}${20:+, { length: }$20${20:+ \\}}${22:+, { mode: 'boolean' \\}}${23:+, { mode: 'timestamp' \\}}${25:+, { mode: 'json' \\}}${16:+)}${25:+.$type<Record<string, unknown>>()}${2:+\n    }${3:+\n      }${35:+\n    }${36:+\n      }${10:+.notNull()}${4:+\n    }${5:+\n      }${37:+\n    }${38:+\n      }${17:+.unique()}${6:+\n    }${7:+\n      }${30:+.references(() => }$30${30:+.id}${13:+, { onDelete: 'cascade' \\}}${30:+)}${8:+\n    }${9:+\n      }${39:+\n    }${40:+\n      }${31:+.default(sql`(unixepoch())`)}${32:+.default(}$32${32:+)}${14:+.default('}${15:+.default(}$33${14:+')}${15:+)}${16:+,}${34:+\n  }/g}$0"
+    ]
   },
   "SQLite Common Columns": {
     "scope": "typescript",
@@ -117,15 +117,15 @@
       "export function idx(column: SQLiteColumn): string {",
       "\treturn `\\${getTableName(column.table)}_\\${column.name}_idx`;",
       "}",
-      "",
-    ],
+      ""
+    ]
   },
   "SQLite Column text": {
     "scope": "typescript",
     "prefix": "sqlite::text",
     "include": "**/lib/server/db/**",
     "description": "Text (string) column",
-    "body": ["${1:name}: text('${1/([A-Z])/_${1:/downcase}/g}').notNull(),$0"],
+    "body": [ "${1:name}: text('${1/([A-Z])/_${1:/downcase}/g}').notNull(),$0" ]
   },
   "SQLite Column int": {
     "scope": "typescript",
@@ -133,8 +133,8 @@
     "include": "**/lib/server/db/**",
     "description": "Integer (number) column",
     "body": [
-      "${1:name}: integer('${1/([A-Z])/_${1:/downcase}/g}').notNull(),$0",
-    ],
+      "${1:name}: integer('${1/([A-Z])/_${1:/downcase}/g}').notNull(),$0"
+    ]
   },
   "SQLite Column bool": {
     "scope": "typescript",
@@ -142,8 +142,8 @@
     "include": "**/lib/server/db/**",
     "description": "Boolean column, stored as 0/1",
     "body": [
-      "${1:name}: integer('${1/([A-Z])/_${1:/downcase}/g}', { mode: 'boolean' }).notNull().default(${2|false,true|}),$0",
-    ],
+      "${1:name}: integer('${1/([A-Z])/_${1:/downcase}/g}', { mode: 'boolean' }).notNull().default(${2|false,true|}),$0"
+    ]
   },
   "SQLite Column date": {
     "scope": "typescript",
@@ -151,8 +151,8 @@
     "include": "**/lib/server/db/**",
     "description": "Timestamp (Date) column, stored as Unix seconds; remote forms need a coerced date in the table schemas (see docs)",
     "body": [
-      "${1:name}: integer('${1/([A-Z])/_${1:/downcase}/g}', { mode: 'timestamp' }).notNull(),$0",
-    ],
+      "${1:name}: integer('${1/([A-Z])/_${1:/downcase}/g}', { mode: 'timestamp' }).notNull(),$0"
+    ]
   },
   "SQLite Column json": {
     "scope": "typescript",
@@ -160,8 +160,8 @@
     "include": "**/lib/server/db/**",
     "description": "Typed JSON column, stored as text; remote forms can't send it: .omit it from the form schema",
     "body": [
-      "${1:name}: text('${1/([A-Z])/_${1:/downcase}/g}', { mode: 'json' }).\\$type<${2:Record<string, unknown>}>().notNull(),$0",
-    ],
+      "${1:name}: text('${1/([A-Z])/_${1:/downcase}/g}', { mode: 'json' }).\\$type<${2:Record<string, unknown>}>().notNull(),$0"
+    ]
   },
   "SQLite Column uuid": {
     "scope": "typescript",
@@ -171,15 +171,15 @@
     "body": [
       "${1:name}: text('${1/([A-Z])/_${1:/downcase}/g}')",
       "\t.notNull()",
-      "\t.\\$defaultFn(() => crypto.randomUUID()),$0",
-    ],
+      "\t.\\$defaultFn(() => crypto.randomUUID()),$0"
+    ]
   },
   "SQLite Column float": {
     "scope": "typescript",
     "prefix": "sqlite::float",
     "include": "**/lib/server/db/**",
     "description": "Real (float) column",
-    "body": ["${1:name}: real('${1/([A-Z])/_${1:/downcase}/g}').notNull(),$0"],
+    "body": [ "${1:name}: real('${1/([A-Z])/_${1:/downcase}/g}').notNull(),$0" ]
   },
   "SQLite Column enum": {
     "scope": "typescript",
@@ -187,8 +187,8 @@
     "include": "**/lib/server/db/**",
     "description": "Text column limited to given values",
     "body": [
-      "${1:name}: text('${1/([A-Z])/_${1:/downcase}/g}', { enum: [${2:'a', 'b'}] }).notNull(),$0",
-    ],
+      "${1:name}: text('${1/([A-Z])/_${1:/downcase}/g}', { enum: [${2:'a', 'b'}] }).notNull(),$0"
+    ]
   },
   "SQLite Column fk": {
     "scope": "typescript",
@@ -198,15 +198,15 @@
     "body": [
       "${1:userId}: ${2|integer,text|}('${1/([A-Z])/_${1:/downcase}/g}')",
       "\t.notNull()",
-      "\t.references(() => ${3:user}.id, { onDelete: '${4|cascade,restrict|}' }),$0",
-    ],
+      "\t.references(() => ${3:user}.id, { onDelete: '${4|cascade,restrict|}' }),$0"
+    ]
   },
   "SQLite Column deletedAt": {
     "scope": "typescript",
     "prefix": "sqlite::deleted",
     "include": "**/lib/server/db/**",
     "description": "Nullable deletedAt column for soft delete; .omit it in the table schemas",
-    "body": ["deletedAt: integer('deleted_at', { mode: 'timestamp' }),$0"],
+    "body": [ "deletedAt: integer('deleted_at', { mode: 'timestamp' }),$0" ]
   },
   "SQLite Column owner": {
     "scope": "typescript",
@@ -216,8 +216,8 @@
     "body": [
       "userId: text('user_id')",
       "\t.notNull()",
-      "\t.references(() => ${1:user}.id, { onDelete: 'cascade' }),$0",
-    ],
+      "\t.references(() => ${1:user}.id, { onDelete: 'cascade' }),$0"
+    ]
   },
   "SQLite Many-to-Many": {
     "scope": "typescript",
@@ -252,20 +252,20 @@
       "\t$3: one($3, { fields: [$1.${3}Id], references: [$3.id] }),",
       "\t$4: one($4, { fields: [$1.${4}Id], references: [$4.id] })",
       "}));",
-      "",
-    ],
+      ""
+    ]
   },
   "SQLite Index": {
     "scope": "typescript",
     "prefix": "sqlite::index",
     "include": "**/lib/server/db/**",
     "description": "Index callback for sqliteTable's third argument, named by idx() from sqlite::common",
-    "body": ["(t) => [${1|index,uniqueIndex|}(idx(t.${2:name})).on(t.$2)]$0"],
+    "body": [ "(t) => [${1|index,uniqueIndex|}(idx(t.${2:name})).on(t.$2)]$0" ]
   },
   "SQLite Search": {
     "scope": "typescript",
     "prefix": "sqlite::search",
-    "include": ["*.remote.ts", "*.server.ts", "+server.ts", "**/lib/server/**"],
+    "include": [ "*.remote.ts", "*.server.ts", "+server.ts", "**/lib/server/**" ],
     "exclude": "**/lib/server/db/schema/**",
     "description": "Contains search with like (case-insensitive for ASCII letters only)",
     "body": [
@@ -274,8 +274,8 @@
       "\t.from(${2:table})",
       "\t// SQLite's like ignores case only for ASCII letters: İ/i, Ş/ş, Ö/ö must match exactly",
       "\t.where(like($2.${3:name}, `%\\${${4:q}}%`))",
-      "\t.limit(${5:10});$0",
-    ],
+      "\t.limit(${5:10});$0"
+    ]
   },
   "SQLite Seed": {
     "scope": "typescript",
@@ -486,7 +486,7 @@
       "\t\t});",
       "\t}",
       "}",
-      "",
-    ],
-  },
+      ""
+    ]
+  }
 }
