@@ -85,7 +85,6 @@ repo() {
 config() {
   info "Linking config files and scripts..."
   local i src dst f ff=($FIREFOX/*.default-release(N/))
-  ((${#ff})) || warn "Open Firefox once, then re-run: dotfiles config"
   ((${#ff})) && links+=(
     config/firefox/user.js $ff[1]/user.js
     config/firefox/customKeys.json $ff[1]/customKeys.json
