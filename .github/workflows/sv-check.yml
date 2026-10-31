@@ -1,0 +1,211 @@
+# SvelteKit Project Check, called by each project's check.yml
+# (github::check.yml; github::sv-check.yml is a standalone copy).
+# The project's checks and audit tools, one step per tool. Results land
+# where GitHub shows them: step logs and annotations, the job summary
+# (osv-scanner, knip, gitleaks), PR comments (bundle size, gitleaks) and
+# artifacts (Lighthouse). Scheduled runs also comment their status on the
+# "sv-check report" issue, which GitHub emails to the repo's watchers.
+# Callers need .node-version and packageManager in package.json (sv-setup
+# writes both); the caller sets concurrency.
+name: Check
+
+on:
+  workflow_call:
+    secrets:
+      # orgs only, free at gitleaks.io
+      GITLEAKS_LICENSE:
+        required: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
+    env:
+      CLIENT: .svelte-kit/output/client
+      # not localhost: vite may bind ::1 while Node tools dial 127.0.0.1
+      URL: http://127.0.0.1:4173
+    # Every step runs (!cancelled()); a failing step without
+    # continue-on-error fails the job, the others only warn
+    steps:
+      # Setup
+
+      # Checkout
+      # https://github.com/actions/checkout
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # gitleaks scans the history
+          fetch-depth: 0
+      # Setup pnpm
+      # https://github.com/pnpm/action-setup
+      # version from packageManager
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
+      # Setup Node.js
+      # https://github.com/actions/setup-node
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # sv's playwright add-on puts e2e into the test script
+      - if: hashFiles('playwright.config.*') != ''
+        run: pnpm exec playwright install --with-deps chromium
+      # install-action
+      # https://github.com/taiki-e/install-action
+      - uses: taiki-e/install-action@68a389c788b2cd04016ce8c80ee23b80d2ab3d68 # v2.88.1
+        with:
+          tool: osv-scanner@2.6.0
+
+      # Quality: the project's own scripts, skipped when missing
+
+      - name: Types (svelte-check)
+        if: ${{ !cancelled() }}
+        run: pnpm run --if-present check
+      - name: Lint
+        if: ${{ !cancelled() }}
+        run: pnpm run --if-present lint
+      - name: Tests
+        if: ${{ !cancelled() }}
+        run: pnpm run --if-present test
+      # Oxlint
+      # https://oxc.rs
+      - name: Oxlint
+        if: ${{ !cancelled() }}
+        continue-on-error: true
+        run: pnpm dlx oxlint@1.85.0 --format github --deny-warnings
+      # Svelte MCP
+      # https://github.com/sveltejs/ai-tools
+      # One log group per component
+      - name: Svelte 5 practices (svelte-autofixer)
+        if: ${{ !cancelled() }}
+        continue-on-error: true
+        run: |
+          npm install -g @sveltejs/mcp@0.1.26
+          # shellcheck disable=SC2016
+          find src -name '*.svelte' -print0 | xargs -0 -P 8 -I{} sh -c \
+            'printf "::group::%s\n%s\n::endgroup::\n" "$1" \
+              "$(svelte-mcp svelte-autofixer "$1" 2>&1)"' _ {}
+      # Knip
+      # https://knip.dev
+      - name: Unused files, exports & deps (knip)
+        if: ${{ !cancelled() }}
+        continue-on-error: true
+        run: |
+          pnpm dlx knip@6.38.0 --reporter markdown | tee -a "$GITHUB_STEP_SUMMARY"
+      # jscpd
+      # https://github.com/kucherenko/jscpd
+      - name: Duplicate code (jscpd)
+        if: ${{ !cancelled() }}
+        continue-on-error: true
+        run: pnpm dlx jscpd@5.3.2 src --exit-code
+
+      # Security
+
+      # OSV
+      # https://osv.dev
+      - name: Vulnerabilities (osv-scanner)
+        if: ${{ !cancelled() }}
+        run: |
+          osv-scanner scan -L pnpm-lock.yaml --format markdown \
+            --verbosity error | tee -a "$GITHUB_STEP_SUMMARY"
+      # Gitleaks
+      # https://github.com/gitleaks/gitleaks-action
+      - name: Secrets (gitleaks)
+        if: ${{ !cancelled() }}
+        uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e # v3.0.0
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITLEAKS_VERSION: 8.30.1
+          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
+      - name: Licenses
+        if: ${{ !cancelled() }}
+        run: pnpm licenses list --prod
+      - name: Outdated dependencies
+        if: ${{ !cancelled() }}
+        continue-on-error: true
+        run: pnpm outdated
+      - name: Duplicate dependencies
+        if: ${{ !cancelled() }}
+        continue-on-error: true
+        run: pnpm dedupe --check
+
+      # Performance
+
+      - id: build
+        name: Build
+        if: ${{ !cancelled() }}
+        run: pnpm build
+      # compressed-size-action
+      # https://github.com/preactjs/compressed-size-action
+      # PR comment with the gzip size change per file
+      - name: Bundle size
+        if: ${{ !cancelled() && github.event_name == 'pull_request' }}
+        uses: preactjs/compressed-size-action@f322c295dde06a1cb7ccaef105732dd8a726d1d9 # 2.10.0
+        with:
+          install-script: pnpm install --frozen-lockfile
+          build-script: build
+          pattern: .svelte-kit/output/client/**/*.{js,css}
+      # Retire.js
+      # https://retirejs.github.io/retire.js/
+      - name: Vulnerable libraries in bundle (retire)
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        run: pnpm dlx retire@5.7.0 --path "$CLIENT"
+      # Keeps running for the steps below until the job ends
+      - name: Start vite preview
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        run: |
+          nohup ./node_modules/.bin/vite preview --host 127.0.0.1 --port 4173 \
+            --strictPort >/dev/null 2>&1 &
+          curl -sf --retry 30 --retry-delay 1 --retry-connrefused "$URL" >/dev/null
+      # Lighthouse CI Action
+      # https://github.com/treosh/lighthouse-ci-action
+      # Mobile, simulated throttling; HTML report as an artifact
+      - name: Lighthouse
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        continue-on-error: true
+        uses: treosh/lighthouse-ci-action@3e7e23fb74242897f95c0ba9cabad3d0227b9b18 # 12.6.2
+        with:
+          urls: ${{ env.URL }}
+          runs: 1
+          uploadArtifacts: true
+      # Linkinator
+      # https://github.com/JustinBeckwith/linkinator-action
+      - name: Broken links (linkinator)
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        uses: JustinBeckwith/linkinator-action@12f7a61a56e5e75d659f0dfd6357e2d852ede281 # v2.5.0
+        with:
+          paths: ${{ env.URL }}
+          recurse: true
+          linksToSkip: ^(?!http://127\.0\.0\.1)
+          verbosity: ERROR
+      # html-validate
+      # https://html-validate.org
+      # Prerendered pages
+      - name: HTML validation
+        if: >-
+          ${{ !cancelled() && steps.build.outcome == 'success'
+          && hashFiles('.svelte-kit/output/prerendered/**/*.html') != '' }}
+        continue-on-error: true
+        run: |
+          pnpm dlx html-validate@11.16.0 --preset standard --ext html \
+            .svelte-kit/output/prerendered
+
+      # Scheduled runs: status and run link as a comment; GitHub emails it
+      - name: Weekly status comment
+        if: ${{ always() && github.event_name == 'schedule' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TITLE: sv-check report
+          BODY: >-
+            **${{ job.status }}**: ${{ github.server_url }}/${{
+            github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          n=$(gh issue list --search "\"$TITLE\" in:title" \
+            --json number --jq '.[0].number // empty')
+          [[ -n $n ]] || n=$(gh issue create --title "$TITLE" \
+            --body "Weekly Check results." | sed 's|.*/||')
+          gh issue comment "$n" --body "$BODY"
