@@ -130,10 +130,22 @@ pre-push:
     - run: cargo test' >lefthook.yml
 lefthook install >/dev/null
 
-# VSCode Settings
+# VSCode Tasks & Launch
 # https://code.visualstudio.com
+# Binaries only: Rust: Debug runs Docker: up first, for the web's database
+# Docker: up is hidden globally: its copy is unhidden
 info "Configuring VS Code..."
 mkdir -p .vscode
+if [[ -f src/main.rs ]]; then
+  jsonc $DOTFILES/config/vscode/tasks.json | yq -py -oj '
+    .tasks |= filter(.label == "Docker: up") | del(.tasks[].hide, .inputs)
+  ' >.vscode/tasks.json
+  jsonc $DOTFILES/config/vscode/launch.json | yq -py -oj '
+    .configurations |= filter(.name == "Rust:*")
+  ' >.vscode/launch.json
+fi
+
+# VSCode Settings
 settings=(
   'editor.formatOnSave'
   'files.insertFinalNewline'

@@ -10,7 +10,7 @@
 # of this script is one reviewable commit.
 # Usage: sv-setup.zsh
 # Requires: pnpm, node, git, gh, jq, yq
-# docker for compose projects
+# docker for compose projects, betterleaks for the pre-commit hook
 # =============================================================================
 
 set -euo pipefail
@@ -81,6 +81,13 @@ if [[ -d src/routes/demo ]]; then
   rm -rf src/routes/demo
 fi
 
+# Route Groups
+info "Moving pages into route groups..."
+mkdir -p 'src/routes/(landing)'
+for f in src/routes/{+page.svelte,page.svelte.e2e.ts}(N); do
+  mv $f 'src/routes/(landing)/'
+done
+
 # Update project files
 info "Updating project files..."
 echo ${$(node -v)#v} >.node-version
@@ -147,7 +154,8 @@ echo "$prepush" >.husky/pre-push
 # https://github.com/lint-staged/lint-staged
 info "Configuring lint-staged..."
 pnpm add -s -D lint-staged
-echo 'pnpm exec lint-staged' >.husky/pre-commit
+leaks='betterleaks git --pre-commit --staged --redact --verbose --no-banner'
+print -l $leaks 'pnpm exec lint-staged' >.husky/pre-commit
 echo "/** @type {import('lint-staged').Configuration} */
 export default {
   '*.{js,ts,svelte}': ['eslint --fix', 'prettier --write'],
@@ -302,13 +310,21 @@ fi
 
 # VSCode Tasks
 # https://code.visualstudio.com
+# Hidden globally: the copies are unhidden and their groups made default
+# Docker: up is always copied, the dev and db tasks depend on it
 info "Configuring VS Code..."
-tasks=('SvelteKit:*')
+tasks=('SvelteKit:*' 'Docker:*')
 has_dep @sveltejs/adapter-cloudflare && tasks+=('Cloudflare:*')
-jsonc $DOTFILES/config/vscode/tasks.json | pick_tasks $tasks >.vscode/tasks.json
+has_dep drizzle-kit && tasks+=('Drizzle:*')
+jsonc $DOTFILES/config/vscode/tasks.json | pick_tasks $tasks | yq -py -oj '
+  del(.tasks[].hide) |
+  (.tasks[] | select(has("group")) | .group.isDefault) = true
+' >.vscode/tasks.json
 
 # VSCode Launch
-# TODO: copy $DOTFILES/config/vscode/launch.json to .vscode/launch.json
+jsonc $DOTFILES/config/vscode/launch.json | yq -py -oj '
+  .configurations |= filter(.name == "SvelteKit:*")
+' >.vscode/launch.json
 
 # VSCode Settings
 settings=(
@@ -375,8 +391,11 @@ if [[ -d .claude ]]; then
       svelte: {source: {source: "github", repo: "sveltejs/ai-tools"}}
     }
   }' >.claude/settings.json
-  yq -oj 'del(.mcpServers[] | select(to_json | contains("${")))' \
+  yq -oj 'del(.mcpServers[] | select(to_json | contains("${")))
+    | del(.mcpServers["web-fetch", "web-search"])' \
     $DOTFILES/config/claude/mcp.json >.mcp.json
+  pnpm add -s -D @google/design.md
+  pnpm pkg set 'scripts["design:lint"]'="design.md lint .claude/DESIGN.md"
   echo "/.claude/skills/" >>.prettierignore
   add_vscode_ext anthropic.claude-code
   # LSP plugins don't ship their binaries; each teammate installs them once:
@@ -394,18 +413,33 @@ fi
 info "Creating GitHub workflows..."
 mkdir -p .github/workflows
 touch .github/dependabot.yml \
-  .github/workflows/{ci,deploy,check,release}.yml
+  .github/workflows/{ci,audit,release,pr-title,deploy}.yml
+# CodeQL default setup, once the repo is on GitHub (not with codeql.yml):
+# gh api -X PATCH repos/{owner}/{repo}/code-scanning/default-setup \
+#   -f state=configured
+# TODO: Secret scanning + push protection, once the repo is on GitHub:
+# gh api -X PATCH repos/{owner}/{repo} \
+#   -f 'security_and_analysis[secret_scanning][status]=enabled' \
+#   -f 'security_and_analysis[secret_scanning_push_protection][status]=enabled'
+# gh api repos/{owner}/{repo}/secret-scanning/alerts --jq length
+# TODO: Branch protection for main, once the repo is on GitHub: PRs need
+# the CI check, admins can bypass (release-please PRs don't run CI):
+# gh api -X PUT repos/{owner}/{repo}/branches/main/protection \
+#   -F 'required_status_checks[strict]=false' \
+#   -f 'required_status_checks[contexts][]=verify' \
+#   -F enforce_admins=false -F required_pull_request_reviews=null \
+#   -F restrictions=null
 
 # Last Check
 info "Updating dependencies & formatting..."
 export PNPM_CONFIG_LOGLEVEL=silent
 pnpm up
-pnpm audit --fix=update ||
+pnpm audit --fix=update >/dev/null 2>&1 ||
   warn "Review the remaining vulnerabilities: pnpm audit"
 pnpm format --log-level=warn
 pnpm exec eslint --quiet . || warn "Fix lint errors: pnpm lint"
-pnpm check --threshold error --output human ||
-  warn "Fix type errors: pnpm check"
+out=$(pnpm check 2>&1) ||
+  { print -r -- $out && warn "Fix type errors: pnpm check"; }
 
 # Git
 info "Committing..."
@@ -414,7 +448,7 @@ pnpm pkg set \
   repository.url="git+https://github.com/$GH_USER/$NAME.git" \
   bugs.url="https://github.com/$GH_USER/$NAME/issues"
 git add -A
-git commit -qm "chore: project setup"
+git commit -qnm "chore: project setup"
 git switch -qc dev
 
 success "Completed!"

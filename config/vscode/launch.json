@@ -58,6 +58,18 @@
       "sourceMapPathOverrides": {
         "/@fs/*": "*"
       }
+    },
+    {
+      "name": "Rust: Debug (LLDB)",
+      "type": "lldb",
+      "request": "launch",
+      "cargo": {
+        "args": [
+          "build"
+        ]
+      },
+      "cwd": "${workspaceFolder}",
+      "preLaunchTask": "Docker: up"
     }
   ]
 }

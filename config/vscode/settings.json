@@ -1,60 +1,8 @@
 {
   // Auto Snippets
-  // prettier-ignore
   "auto-snippets.snippets": [
-
-    // SvelteKit
-    { "pattern": "**/+{page,layout,error}.svelte", "commands": [ "workbench.action.populateFileFromSnippet" ] },
-    { "regex": "/lib/components/.*(?<!/Seo|/Analytics)\\.svelte$", "commands": [ "workbench.action.populateFileFromSnippet" ] },
-    { "pattern": "**/+{page,layout}{,.server}.ts", "commands": [ "workbench.action.populateFileFromSnippet" ] },
-    { "pattern": "**/!(robots.txt|sitemap.xml|rss.xml|og.png)/+server.ts", "commands": [ "workbench.action.populateFileFromSnippet" ] },
-    { "pattern": "**/*.remote.ts", "commands": [ "workbench.action.populateFileFromSnippet" ] },
-    { "pattern": "**/*.svelte.ts", "commands": [ "workbench.action.populateFileFromSnippet" ] },
-    { "regex": "/lib/server/(?!db/).*(?<!\\.test|\\.spec|\\.e2e|\\.svelte)\\.ts$", "commands": [ "workbench.action.populateFileFromSnippet" ] },
-    { "pattern": "**/{hooks.client,instrumentation.server}.ts", "commands": [ "workbench.action.populateFileFromSnippet" ] },
-    { "pattern": "**/service-worker.ts", "snippet": "Kit Service Worker" },
-    { "pattern": "**/*.{spec,test,e2e}.ts", "commands": [ "workbench.action.populateFileFromSnippet" ] },
-    { "pattern": "**/*.http", "commands": [ "workbench.action.populateFileFromSnippet" ] },
-
-    // Drizzle
-    { "pattern": "**/db/schema/common.ts", "commands": [ "workbench.action.populateFileFromSnippet" ] },
-    { "regex": "/db/schema/.*(?<!/common)\\.ts$", "commands": [ "workbench.action.populateFileFromSnippet" ] },
-    { "pattern": "**/db/seed.ts", "commands": [ "workbench.action.populateFileFromSnippet" ] },
-    { "pattern": "**/db/rls.ts", "snippet": "Drizzle RLS" },
-
-    // SEO
-    { "pattern": "**/robots.txt/+server.ts", "snippet": "Kit Robots" },
-    { "pattern": "**/sitemap.xml/+server.ts", "snippet": "Kit Sitemap" },
-    { "pattern": "**/rss.xml/+server.ts", "snippet": "Kit RSS" },
-    { "pattern": "**/og.png/+server.ts", "snippet": "Kit OG Image" },
-    { "pattern": "**/static/manifest.json", "snippet": "Manifest File" },
-    { "pattern": "**/static/humans.txt", "snippet": "Humans.txt" },
-    { "pattern": "**/static/llms.txt", "snippet": "Llms.txt" },
-    { "pattern": "**/static/browserconfig.xml", "snippet": "Browser Config File" },
-    { "pattern": "**/static/_headers", "snippet": "CF Headers" },
-    { "pattern": "**/Seo.svelte", "snippet": "Kit SEO" },
-    { "pattern": "**/Analytics.svelte", "snippet": "Kit Analytics" },
-
-    // GitHub
-    { "pattern": "**/.github/workflows/ci.yml", "snippet": "Github Action - CI" },
-    { "pattern": "**/.github/workflows/deploy.yml", "snippet": "Github Action - Deploy" },
-    { "pattern": "**/.github/workflows/check.yml", "snippet": "Github Action - Check" },
-    { "pattern": "**/.github/workflows/sv-check.yml", "snippet": "Github Action - SvelteKit Check" },
-    { "pattern": "**/.github/dependabot.yml", "snippet": "Dependabot for Github Actions" },
-    { "pattern": "**/renovate.json", "snippet": "Renovate for Github Action" },
-
-    // Docker
-    { "pattern": "**/{Dockerfile,*.Dockerfile}", "commands": [ "workbench.action.populateFileFromSnippet" ] },
-    { "pattern": "**/compose.yaml", "commands": [ "workbench.action.populateFileFromSnippet" ] },
-    { "pattern": "**/compose.dev.yaml", "snippet": "Docker Compose for Svelte - Dev" },
-    { "pattern": "**/{.dockerignore,*.dockerignore}", "snippet": "Docker ignore for Svelte" },
-    { "pattern": "**/docker/sql/init.sql", "snippet": "PostgREST init.sql" }
+    { "regex": ".", "commands": [ "workbench.action.populateFileFromSnippet" ] }
   ],
-  // Alternative to the list above: one rule, matching moves to each snippet's include/exclude
-  // "auto-snippets.snippets": [
-  //   // Every new empty file: VS Code offers the templates whose include/exclude match
-  //   { "regex": ".", "commands": ["workbench.action.populateFileFromSnippet"] }
-  // ],
 
   // Breadcrumbs
   "breadcrumbs.enabled": false,
@@ -139,7 +87,6 @@
   "editor.wordBasedSuggestions": "off",
 
   // ESLint
-  // Hide issues that are auto-fixed on save
   "eslint.rules.customizations": [
     {
       "rule": "*",
@@ -234,62 +181,12 @@
   // JSON
   "json.format.keepLines": true,
 
-  // Launch
-  "launch": {
-    "version": "0.2.0",
-    "configurations": [
-      {
-        "name": "SvelteKit: Server (vite dev)",
-        "type": "node-terminal",
-        "request": "launch",
-        "command": "pnpm exec vite dev --logLevel info",
-        "cwd": "${workspaceFolder}",
-        "serverReadyAction": {
-          "pattern": "Local:\\s+(https?://\\S+)",
-          "uriFormat": "%s",
-          "action": "debugWithChrome",
-          "webRoot": "${workspaceFolder}"
-        }
-      },
-      {
-        "name": "SvelteKit: SSR Debug (Node)",
-        "type": "node",
-        "request": "launch",
-        "runtimeExecutable": "pnpm",
-        "runtimeArgs": [ "exec", "vite", "dev", "--logLevel", "info" ],
-        "cwd": "${workspaceFolder}",
-        "console": "integratedTerminal",
-        "autoAttachChildProcesses": true,
-        "skipFiles": [ "<node_internals>/**", "**/node_modules/**" ],
-        "sourceMaps": true,
-        "resolveSourceMapLocations": [
-          "${workspaceFolder}/**",
-          "!**/node_modules/**"
-        ],
-        "serverReadyAction": {
-          "pattern": "Local:\\s+(https?://\\S+)",
-          "uriFormat": "%s",
-          "action": "debugWithChrome",
-          "webRoot": "${workspaceFolder}"
-        }
-      },
-      {
-        "name": "SvelteKit: Browser Only (Chrome attach)",
-        "type": "chrome",
-        "request": "launch",
-        "url": "http://localhost:5173",
-        "webRoot": "${workspaceFolder}",
-        "sourceMaps": true,
-        "sourceMapPathOverrides": {
-          "/@fs/*": "*"
-        }
-      }
-    ]
-  },
-
   // Markdown
   "markdown.preview.fontFamily": "'Figtree'",
   "markdown.preview.fontSize": 15,
+
+  // NPM
+  "npm.scriptExplorerAction": "run",
 
   // Rust Analyzer
   "rust-analyzer.cargo.targetDir": true,
@@ -325,7 +222,7 @@
   "terminal.integrated.cursorStyle": "line",
   "terminal.integrated.fontFamily": "'Ioskeley Mono Term', 'Symbols Nerd Font Mono'",
   "terminal.integrated.fontLigatures.enabled": true,
-  "terminal.integrated.fontSize": 19,
+  "terminal.integrated.fontSize": 14,
   "terminal.integrated.profiles.osx": {
     "zsh": {
       "path": "/opt/homebrew/bin/zsh",
