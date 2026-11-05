@@ -3,7 +3,16 @@
     "3rdparty": {
       "Extensions": {
         "uBlock0@raymondhill.net": {
+          "userSettings": [
+            [
+              "userFiltersTrusted",
+              "true"
+            ]
+          ],
           "toOverwrite": {
+            "filters": [
+              "youtube.com##+js(trusted-set-cookie, PREF, f6=400, , , dontOverwrite, 1, reload, 1)"
+            ],
             "filterLists": [
               "user-filters",
               "ublock-filters",
@@ -49,6 +58,7 @@
         "Value": "blocked"
       }
     },
+    "AppAutoUpdate": true,
     "ContentAnalysis": {
       "Enabled": false,
       "InterceptionPoints": {

@@ -1,19 +1,16 @@
 # Taps
-tap "domt4/autoupdate"
+tap "domt4/autoupdate", trusted: true
 
 # Fonts
 cask "font-atkinson-hyperlegible-next"
 cask "font-figtree"
-cask "font-hack"
+cask "font-geist"
 cask "font-hack-nerd-font"
 cask "font-inter"
 cask "font-iosevka"
 cask "font-ioskeley-mono"
 cask "font-jetbrains-mono"
 cask "font-jetbrains-mono-nerd-font"
-cask "font-readex-pro"
-cask "font-sn-pro"
-cask "font-source-code-pro"
 cask "font-symbols-only-nerd-font"
 
 # System Utilities
@@ -23,9 +20,10 @@ cask "homebrew-app"
 cask "lulu"
 cask "maccy"
 cask "monitorcontrol"
+cask "onyx"
+cask "the-unarchiver"
 
 # CLI
-brew "ast-grep"
 brew "bat"
 brew "bottom"
 brew "duf"
@@ -33,17 +31,11 @@ brew "eza"
 brew "fd"
 brew "ffmpeg"
 brew "fzf"
-brew "htop"
-brew "httpyac"
-brew "hurl"
 brew "jq"
-brew "just"
 brew "mas"
-brew "mkcert"
 brew "mole"
 brew "rclone"
 brew "ripgrep"
-brew "shfmt"
 brew "starship"
 brew "tree"
 brew "wget"
@@ -58,9 +50,7 @@ brew "zsh-fast-syntax-highlighting"
 
 # Productivity
 cask "obsidian"
-cask "onyx"
 cask "sublime-text"
-cask "the-unarchiver"
 
 # Browsers
 cask "firefox"
@@ -68,23 +58,28 @@ cask "google-chrome"
 cask "helium-browser"
 
 # Development
+brew "ast-grep"
 brew "awscli"
+brew "betterleaks"
 brew "bun"
-brew "colima"
 brew "container"
 brew "gh"
 brew "git"
+brew "httpyac"
+brew "hurl"
+brew "just"
 brew "lefthook"
+brew "mkcert"
 brew "node"
 brew "opentofu"
 brew "osv-scanner"
 brew "pi-coding-agent"
 brew "pnpm"
 brew "python"
-brew "redocly-cli"
 brew "rust-analyzer"
 brew "rustup"
 brew "sccache"
+brew "shfmt"
 brew "uv"
 cask "bruno"
 cask "claude-code"
@@ -144,7 +139,9 @@ vscode "mkhl.shfmt"
 vscode "ms-azuretools.vscode-containers"
 vscode "ms-vscode-remote.remote-containers"
 vscode "ms-vscode-remote.remote-ssh"
+vscode "ms-vscode-remote.remote-ssh-edit"
 vscode "ms-vscode.makefile-tools"
+vscode "ms-vscode.remote-explorer"
 vscode "qwtel.sqlite-viewer"
 vscode "rust-lang.rust-analyzer"
 vscode "streetsidesoftware.code-spell-checker"
@@ -155,7 +152,7 @@ vscode "vadimcn.vscode-lldb"
 vscode "yoavbls.pretty-ts-errors"
 
 # App Store Apps
-mas "Xcode", id: 497799835
 mas "Keynote", id: 361285480
 mas "Numbers", id: 361304891
 mas "Pages", id: 361309726
+mas "Xcode", id: 497799835

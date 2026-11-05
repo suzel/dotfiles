@@ -22,7 +22,7 @@ path=(
 
 # History
 HISTFILE="$ZDOTDIR/.zsh_history"
-HISTSIZE=10000
+HISTSIZE=100000
 SAVEHIST=$HISTSIZE
 
 # Completion

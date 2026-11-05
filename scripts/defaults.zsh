@@ -191,6 +191,10 @@ defaults write com.apple.dock launchanim -bool false
 # Make hidden app icons translucent
 defaults write com.apple.dock showhidden -bool true
 
+# Disable bottom-right hot corner (Quick Note by default)
+defaults write com.apple.dock wvous-br-corner -int 1
+defaults write com.apple.dock wvous-br-modifier -int 0
+
 # Apps after macOS's own, with a small gap before Xcode
 dock_app /Applications/Obsidian.app
 dock_app /Applications/Xcode.app spacer

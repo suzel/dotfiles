@@ -5,8 +5,8 @@ font-feature = zero
 
 # Theme
 theme = light:Cursor Light,dark:Cursor Dark Midnight
-background-blur = 10
-background-opacity = 0.95
+background-blur = macos-glass-clear
+background-opacity = 0.85
 
 # Cursor
 cursor-style-blink = true

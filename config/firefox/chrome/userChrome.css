@@ -4,7 +4,7 @@
   --cursor-bg: #191c22;
   --cursor-glass: rgb(25 28 34 / 0.1);
   --cursor-surface: #1e2127;
-  --cursor-field: #272c3655;
+  --cursor-field: #272c3633;
   --cursor-hover: rgb(255 255 255 / 0.05);
   --cursor-selected: rgb(255 255 255 / 0.09);
   --cursor-border: #ffffff0d;
@@ -37,8 +37,9 @@
   --toolbar-field-background-color-focus: var(--cursor-surface) !important;
   --toolbar-field-text-color: var(--cursor-fg) !important;
   --toolbar-field-text-color-focus: var(--cursor-fg) !important;
-  --toolbar-field-border-color: var(--cursor-selected) !important;
-  --toolbar-field-border-color-focus: var(--cursor-selected) !important;
+  --urlbar-height: 28px !important;
+  --toolbar-field-border-color: transparent !important;
+  --toolbar-field-border-color-focus: transparent !important;
   --urlbarview-background-color-hover: var(--cursor-hover) !important;
   --urlbarview-background-color-selected: var(--cursor-selected) !important;
   --urlbarview-text-color-selected: var(--cursor-fg-bright) !important;
@@ -50,6 +51,8 @@
   --tab-text-color: var(--cursor-fg-muted) !important;
   --tab-text-color-hover: var(--cursor-fg) !important;
   --tab-border-radius: 8px !important;
+  /* Same height as the address bar */
+  --tab-min-height: 28px !important;
 
   /* Menus */
   --panel-background-color: var(--cursor-bg) !important;
@@ -73,9 +76,33 @@
   border-bottom-color: transparent !important;
 }
 
-/* Taller toolbar */
+/* Address bar and tabs on one row */
+#navigator-toolbox {
+  flex-flow: row wrap !important;
+}
+
 #nav-bar {
-  min-height: 40px !important;
+  order: -1 !important;
+  flex: 0 0 40% !important;
+  border-top: none !important;
+}
+
+#TabsToolbar {
+  flex: 1 1 0 !important;
+  min-width: 0 !important;
+}
+
+#notifications-toolbar {
+  width: 100% !important;
+}
+
+/* Window buttons move from the tab strip to the address bar */
+#TabsToolbar > .titlebar-buttonbox-container {
+  display: none !important;
+}
+
+:root:not([inFullscreen]) #nav-bar > .titlebar-buttonbox-container {
+  display: flex !important;
 }
 
 /* Bookmarks toolbar hidden, F17 toggles pin */
@@ -89,21 +116,12 @@
     position: fixed !important;
     inset: 0 0 auto 0 !important;
     z-index: 10 !important;
-    background: var(--cursor-bg) !important;
+    background: rgb(from var(--cursor-bg) r g b / 0.7) !important;
 
     &:not(:hover, :focus-within, :has([open])) {
-      transform: translateY(calc(-100% + 10px)) !important;
+      transform: translateY(calc(-100% + 20px)) !important;
       opacity: 0 !important;
     }
-  }
-}
-
-/* Sidebar: opaque when expanded */
-:root[sidebar-expand-on-hover] #sidebar-container {
-  background: transparent !important;
-
-  &:is([sidebar-launcher-expanded], [sidebar-ongoing-animations]) {
-    background: var(--cursor-bg) !important;
   }
 }
 
@@ -116,9 +134,29 @@
   .searchmode-switcher {
     display: none !important;
   }
+
+  /* Star and page actions only on hover */
+  &:not(:hover) #page-action-buttons:not(:has([open])) {
+    display: none !important;
+  }
+}
+
+/* No sidebar button, F16 toggles the sidebar */
+#sidebar-button {
+  display: none !important;
+}
+
+/* Forward button only when it can go forward */
+#forward-button[disabled] {
+  display: none !important;
 }
 
 /* Address bar selection */
 #urlbar-input::selection {
   background-color: var(--cursor-selection) !important;
+}
+
+/* Close button only on hover, selected tab included */
+#tabbrowser-tabs .tabbrowser-tab:not(:hover) .tab-close-button {
+  visibility: collapse !important;
 }

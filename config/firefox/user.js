@@ -11,11 +11,11 @@ user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
 user_pref("widget.macos.titlebar-blend-mode.behind-window", true);
 user_pref("browser.tabs.allow_transparent_browser", true);
 user_pref("browser.nova.enabled", false);
-user_pref("browser.uidensity", 1);
+user_pref("browser.uidensity", 0);
 user_pref("full-screen-api.transition-duration.enter", "0 0");
 user_pref("full-screen-api.transition-duration.leave", "0 0");
-user_pref("sidebar.verticalTabs", true);
-user_pref("sidebar.visibility", "expand-on-hover");
+user_pref("sidebar.verticalTabs", false);
+user_pref("sidebar.visibility", "hide-on-close");
 user_pref("browser.toolbars.bookmarks.visibility", "never");
 user_pref("browser.display.background_color.dark", "#1e2127");
 user_pref("general.smoothScroll", false);
@@ -41,6 +41,7 @@ user_pref("network.http.max-urgent-start-excessive-connections-per-host", 5);
 user_pref("network.http.request.max-start-delay", 5);
 user_pref("content.notify.interval", 100000);
 user_pref("browser.sessionstore.interval", 60000);
+user_pref("browser.sessionstore.restore_pinned_tabs_on_demand", true);
 user_pref("media.av1.enabled", false);
 
 // Tracking protection
