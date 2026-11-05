@@ -1,14 +1,16 @@
-# VS Code snippets
+# VS Code
+
+## Snippets
 
 Snippets live in ~/Library/Application Support/Code/User/snippets/, one file per area.
 
-## Before adding a snippet
+### Before adding a snippet
 
 - Grep the snippets folder for each prefix and the name you plan to use, e.g.
   `grep -rn '"kit::page"' ~/Library/Application\ Support/Code/User/snippets/`. If either is
   taken, pick another.
 
-## Naming
+### Naming
 
 - Prefix: `area::name`, lowercase, e.g. `kit::load`, `github::deploy.yml`. Reuse an existing area
   before adding one. A short alias may follow as a second prefix: `["col::date", "date"]`.
@@ -17,7 +19,7 @@ Snippets live in ~/Library/Application Support/Code/User/snippets/, one file per
 - Snippet names are references: `auto-snippets.snippets` in VS Code settings and
   `insertSnippet` in keybindings.json call them by name. When renaming, update them there too.
 
-## Fields
+### Fields
 
 - Key order: `scope`, `prefix`, the other fields, then `body` last.
 - Always set `scope`. Without it the snippet shows in every language.
@@ -26,7 +28,7 @@ Snippets live in ~/Library/Application Support/Code/User/snippets/, one file per
   e.g. `compose.yaml`, `+page.svelte`. Add `exclude` for paths that must not get the template.
 - A template that should fill new files on its own also goes in `auto-snippets.snippets`.
 
-## Body
+### Body
 
 - Code in a body follows the guide for its language (see the list in CLAUDE.md).
 - Exception: GitHub Actions in snippets stay on version tags (`@v7`), not commit SHAs.
@@ -38,26 +40,26 @@ Snippets live in ~/Library/Application Support/Code/User/snippets/, one file per
 - Escape a literal `$` as `\\$`, e.g. `\\$state`, `\\$lib`, `\\${id}`, or VS Code reads it as a
   variable.
 
-## Placeholders
+### Placeholders
 
 - Number tab stops in the order the user fills them. End with `$0` where the cursor belongs.
 - Offer a known set of values as a choice: `${1|a,b|}`.
 - Derive a repeated name with a transform, e.g. `${1/(.*)/${1:/pascalcase}/}`, instead of asking
   for it twice.
 
-## Comments
+### Comments
 
 - Steps the user must take after inserting go in `TODO:` comments, short and actionable.
 - Other comments explain what the generated code can't say, in one short line.
 - Write comments and descriptions in English.
 
-## After changes
+### After changes
 
 - Check that each changed file still parses: JSON with comments and trailing commas.
 - Confirm every name in `auto-snippets.snippets` and keybindings.json still exists.
 - Update the snippet's row in its doc.
 
-## Documentation
+### Documentation
 
 - Each snippet file has a doc in
   ~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal/Development/Snippets/, e.g.

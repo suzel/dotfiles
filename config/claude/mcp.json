@@ -7,7 +7,7 @@
     },
     "chrome-devtools": {
       "command": "npx",
-      "args": ["chrome-devtools-mcp@latest"]
+      "args": [ "chrome-devtools-mcp@latest" ]
     },
     "context7": {
       "type": "http",
@@ -20,7 +20,7 @@
     },
     "firecrawl": {
       "command": "npx",
-      "args": ["-y", "firecrawl-mcp"],
+      "args": [ "-y", "firecrawl-mcp" ],
       "env": { "FIRECRAWL_API_KEY": "${FIRECRAWL_API_KEY}" }
     },
     "github": {
@@ -38,7 +38,7 @@
     },
     "playwright": {
       "command": "npx",
-      "args": ["@playwright/mcp@latest"]
+      "args": [ "@playwright/mcp@latest" ]
     },
     "Ref": {
       "type": "http",
@@ -47,27 +47,23 @@
     },
     "semble": {
       "command": "uvx",
-      "args": ["--from", "semble[mcp]", "semble"]
+      "args": [ "--from", "semble[mcp]", "semble" ]
     },
     "shadcn": {
       "command": "npx",
-      "args": ["shadcn@latest", "mcp"]
+      "args": [ "shadcn@latest", "mcp" ]
     },
     "stripe": {
       "type": "http",
       "url": "https://mcp.stripe.com/"
     },
-    "svelte-llm": {
-      "type": "http",
-      "url": "https://svelte-llm.stanislav.garden/mcp/mcp"
-    },
     "web-fetch": {
       "command": "npx",
-      "args": ["-y", "fetcher-mcp"]
+      "args": [ "-y", "fetcher-mcp" ]
     },
     "web-search": {
       "command": "npx",
-      "args": ["-y", "open-websearch"],
+      "args": [ "-y", "open-websearch" ],
       "env": {
         "MODE": "stdio",
         "DEFAULT_SEARCH_ENGINE": "duckduckgo",

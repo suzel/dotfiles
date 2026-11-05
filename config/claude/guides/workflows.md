@@ -11,4 +11,8 @@
   them.
 - Write the minimum code that solves the problem: no unrequested features, options or abstractions.
 - Decide up front how you'll check the result is correct, and check it before calling it done.
+- When a test fails after your change, find the root cause before changing code or tests, and
+  assume the code is wrong, not the test. Never weaken an assertion, skip or delete a test, or
+  special-case code for test inputs just to make it pass. Change a test only when the task changes
+  the behavior it checks or it is shown to be wrong, and say why.
 - Create and edit files with Write/Edit, not Bash (`sed -i`, `>`, heredoc).

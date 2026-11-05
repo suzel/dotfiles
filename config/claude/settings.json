@@ -54,7 +54,7 @@
   "disableClaudeAiConnectors": true,
   "disableBundledSkills": true,
   "hooks": {
-    "PreToolUse": []
+    "PreToolUse": [ ]
   },
   "enabledPlugins": {
     "cc-plugin-agents-md@builtin": false,
@@ -71,7 +71,7 @@
       "effortLevel": "high"
     },
     "claude-sonnet-5-5": {
-      "effortLevel": "xhigh"
+      "effortLevel": "high"
     }
   },
   "prefersReducedMotion": true,
