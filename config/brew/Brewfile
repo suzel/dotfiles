@@ -2,12 +2,8 @@
 tap "domt4/autoupdate", trusted: true
 
 # Fonts
-cask "font-atkinson-hyperlegible-next"
 cask "font-figtree"
-cask "font-geist"
-cask "font-hack-nerd-font"
 cask "font-inter"
-cask "font-iosevka"
 cask "font-ioskeley-mono"
 cask "font-jetbrains-mono"
 cask "font-jetbrains-mono-nerd-font"
@@ -109,7 +105,6 @@ npm "yaml"
 cargo "bacon"
 cargo "cargo-audit"
 cargo "cargo-expand"
-cargo "cargo-generate"
 cargo "cargo-nextest"
 cargo "cargo-outdated"
 cargo "sqlx-cli"
