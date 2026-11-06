@@ -9,6 +9,8 @@
 user_pref("ui.prefersReducedMotion", 1);
 user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
 user_pref("widget.macos.titlebar-blend-mode.behind-window", true);
+user_pref("browser.theme.native-theme", true);
+user_pref("browser.tabs.allow_transparent_browser", true);
 user_pref("browser.nova.enabled", false);
 user_pref("browser.uidensity", 0);
 user_pref("full-screen-api.transition-duration.enter", "0 0");
@@ -16,7 +18,7 @@ user_pref("full-screen-api.transition-duration.leave", "0 0");
 user_pref("sidebar.verticalTabs", false);
 user_pref("sidebar.visibility", "hide-on-close");
 user_pref("browser.toolbars.bookmarks.visibility", "never");
-user_pref("browser.display.background_color.dark", "#1e2127");
+user_pref("browser.display.background_color.dark", "#000000");
 user_pref("general.smoothScroll", false);
 user_pref("layout.spellcheckDefault", 0);
 user_pref("browser.warnOnQuitShortcut", false);

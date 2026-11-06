@@ -1,0 +1,7 @@
+/* Transparent new tab page over the native window vibrancy, needs
+   browser.tabs.allow_transparent_browser */
+@-moz-document url("about:home"), url("about:newtab") {
+  body {
+    background-color: transparent !important;
+  }
+}

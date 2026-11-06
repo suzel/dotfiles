@@ -1,64 +1,66 @@
-/* Cursor Dark Midnight */
+/* Black glass, the window background is the native macOS vibrancy from
+   browser.theme.native-theme */
 
 :root {
-  --cursor-bg: #191c22;
-  --cursor-glass: rgb(25 28 34 / 0.1);
-  --cursor-surface: #1e2127;
-  --cursor-field: #272c3633;
-  --cursor-hover: rgb(255 255 255 / 0.05);
-  --cursor-selected: rgb(255 255 255 / 0.09);
-  --cursor-border: #ffffff0d;
-  --cursor-fg: #d8dee9;
-  --cursor-fg-muted: #7c818e;
-  --cursor-fg-bright: #eceff4;
-  --cursor-accent: #88c0d0;
-  --cursor-selection: #434c5e99;
+  --theme-bg: #000;
+  --theme-field: rgb(255 255 255 / 0.05);
+  --theme-hover: rgb(255 255 255 / 0.05);
+  --theme-selected: rgb(255 255 255 / 0.09);
+  --theme-border: #ffffff0d;
+  --theme-fg: #e5e5e5;
+  --theme-fg-muted: #888;
+  --theme-fg-bright: #fff;
+  --theme-selection: rgb(255 255 255 / 0.2);
 
   color-scheme: dark !important;
-  /* Needs widget.macos.titlebar-blend-mode.behind-window */
-  appearance: -moz-sidebar !important;
+
+  /* No backdrop behind pages, transparent ones show the window vibrancy */
+  --tabpanel-background-color: transparent !important;
 
   /* Toolbars */
-  --toolbox-background-color: var(--cursor-glass) !important;
-  --toolbox-background-color-inactive: var(--cursor-glass) !important;
-  --toolbox-text-color: var(--cursor-fg) !important;
-  --toolbox-text-color-inactive: var(--cursor-fg-muted) !important;
+  --toolbox-text-color: var(--theme-fg) !important;
+  --toolbox-text-color-inactive: var(--theme-fg-muted) !important;
   --toolbar-background-color: transparent !important;
-  --toolbar-text-color: var(--cursor-fg) !important;
-  --toolbarbutton-icon-fill: var(--cursor-fg) !important;
-  --toolbarbutton-background-color-hover: var(--cursor-hover) !important;
-  --toolbarbutton-background-color-active: var(--cursor-selected) !important;
-  --chrome-content-separator-color: var(--cursor-border) !important;
-  --tabs-navbar-separator-color: var(--cursor-border) !important;
-  --focus-outline-color: var(--cursor-accent) !important;
+  --toolbar-text-color: var(--theme-fg) !important;
+  --toolbarbutton-icon-fill: var(--theme-fg) !important;
+  --toolbarbutton-background-color-hover: var(--theme-hover) !important;
+  --toolbarbutton-background-color-active: var(--theme-selected) !important;
+  --chrome-content-separator-color: var(--theme-border) !important;
+  --tabs-navbar-separator-color: var(--theme-border) !important;
+  --focus-outline-color: var(--theme-fg) !important;
 
-  /* Address bar */
-  --toolbar-field-background-color: var(--cursor-field) !important;
-  --toolbar-field-background-color-focus: var(--cursor-surface) !important;
-  --toolbar-field-text-color: var(--cursor-fg) !important;
-  --toolbar-field-text-color-focus: var(--cursor-fg) !important;
+  /* Address bar, opaque when focused since the results list uses it */
+  --toolbar-field-background-color: var(--theme-field) !important;
+  --toolbar-field-background-color-focus: var(--theme-bg) !important;
+  --toolbar-field-text-color: var(--theme-fg) !important;
+  --toolbar-field-text-color-focus: var(--theme-fg) !important;
   --urlbar-height: 28px !important;
   --toolbar-field-border-color: transparent !important;
   --toolbar-field-border-color-focus: transparent !important;
-  --urlbarview-background-color-hover: var(--cursor-hover) !important;
-  --urlbarview-background-color-selected: var(--cursor-selected) !important;
-  --urlbarview-text-color-selected: var(--cursor-fg-bright) !important;
+  --urlbarview-background-color-hover: var(--theme-hover) !important;
+  --urlbarview-background-color-selected: var(--theme-selected) !important;
+  --urlbarview-text-color-selected: var(--theme-fg-bright) !important;
 
   /* Tabs */
-  --tab-background-color-selected: var(--cursor-selected) !important;
-  --tab-text-color-selected: var(--cursor-fg-bright) !important;
-  --tab-background-color-hover: var(--cursor-hover) !important;
-  --tab-text-color: var(--cursor-fg-muted) !important;
-  --tab-text-color-hover: var(--cursor-fg) !important;
+  --tab-background-color-selected: var(--theme-selected) !important;
+  --tab-text-color-selected: var(--theme-fg-bright) !important;
+  --tab-background-color-hover: var(--theme-hover) !important;
+  --tab-text-color: var(--theme-fg-muted) !important;
+  --tab-text-color-hover: var(--theme-fg) !important;
   --tab-border-radius: 8px !important;
   /* Same height as the address bar */
   --tab-min-height: 28px !important;
 
   /* Menus */
-  --panel-background-color: var(--cursor-bg) !important;
-  --panel-text-color: var(--cursor-fg) !important;
-  --panel-border-color: var(--cursor-selected) !important;
-  --panel-separator-color: var(--cursor-border) !important;
+  --panel-background-color: var(--theme-bg) !important;
+  --panel-text-color: var(--theme-fg) !important;
+  --panel-border-color: var(--theme-selected) !important;
+  --panel-separator-color: var(--theme-border) !important;
+}
+
+/* Native vibrancy with the sidebar material, more transparent than titlebar */
+:root[customtitlebar]:not([lwtheme], [macOSNativeFullscreen]) body::after {
+  appearance: -moz-sidebar !important;
 }
 
 /* Glass toolbars */
@@ -89,7 +91,7 @@
     flex: 1 1 auto !important;
   }
 
-  #nav-bar-customization-target > toolbarspring {
+  #nav-bar-customization-target>toolbarspring {
     flex: 0 0 8px !important;
   }
 
@@ -109,18 +111,17 @@
   #TabsToolbar {
     position: absolute !important;
     position-anchor: --urlbar-slot;
-    inset: anchor(top) anchor(right) anchor(bottom)
-      calc(anchor(left) + 40vw - 156px) !important;
+    inset: anchor(top) anchor(right) anchor(bottom) calc(anchor(left) + 40vw - 156px) !important;
     z-index: 1 !important;
   }
 }
 
 /* Window buttons move from the tab strip to the address bar */
-#TabsToolbar > .titlebar-buttonbox-container {
+#TabsToolbar>.titlebar-buttonbox-container {
   display: none !important;
 }
 
-:root:not([inFullscreen]) #nav-bar > .titlebar-buttonbox-container {
+:root:not([inFullscreen]) #nav-bar>.titlebar-buttonbox-container {
   display: flex !important;
 }
 
@@ -135,10 +136,14 @@
     position: fixed !important;
     inset: 0 0 auto 0 !important;
     z-index: 10 !important;
-    background: rgb(from var(--cursor-bg) r g b / 0.7) !important;
+    /* Glass over the page, blurred so the bar stays readable */
+    background: rgb(from var(--theme-bg) r g b / 0.4) !important;
+    backdrop-filter: blur(12px) !important;
 
-    /* A focused address bar keeps them open only while typing in it */
-    &:not(:hover, :has([open]), :has(#urlbar[focused][usertyping])) {
+    /* A focused address bar keeps them open only while typing in it. Tabs are
+       skipped since a tab preview that moves to another tab leaves [open] on
+       the first tab */
+    &:not(:hover, :has([open]:not(.tabbrowser-tab)), :has(#urlbar[focused][usertyping])) {
       transform: translateY(calc(-100% + 20px)) !important;
       opacity: 0 !important;
     }
@@ -161,7 +166,7 @@
   }
 }
 
-/* No sidebar button, F16 toggles the sidebar */
+/* No sidebar button */
 #sidebar-button {
   display: none !important;
 }
@@ -173,7 +178,7 @@
 
 /* Address bar selection */
 #urlbar-input::selection {
-  background-color: var(--cursor-selection) !important;
+  background-color: var(--theme-selection) !important;
 }
 
 /* Close button only on hover, selected tab included */

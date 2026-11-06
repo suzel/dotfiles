@@ -3,7 +3,7 @@
 # =============================================================================
 # Dotfiles Setup
 # =============================================================================
-# Installs Homebrew and packages, links configs and applies macOS defaults.
+# Homebrew, packages, configs and macOS defaults.
 # Usage: curl -fsSL https://git.io/suzel-dotfiles | zsh -s (full install)
 #        ./setup.zsh config packages (single steps)
 # Steps: homebrew repo config packages shell github macos
@@ -79,15 +79,16 @@ repo() {
   git clone -q "$REPO_URL" "$DOTFILES"
 }
 
-# Symlink configs
+# Symlink configs, copy userContent.css
 config() {
   info "Linking config files and scripts..."
   local i src dst f ff=($FIREFOX/*.default-release(N/))
   ((${#ff})) && links+=(
     config/firefox/user.js $ff[1]/user.js
     config/firefox/customKeys.json $ff[1]/customKeys.json
-    config/firefox/chrome $ff[1]/chrome
+    config/firefox/chrome/userChrome.css $ff[1]/chrome/userChrome.css
   )
+  ((${#ff})) && [[ -L $ff[1]/chrome ]] && rm $ff[1]/chrome
   plutil -extract policies xml1 -o - $DOTFILES/config/firefox/policies.json |
     sudo defaults import $FF_POLICIES -
   sudo defaults write $FF_POLICIES EnterprisePoliciesEnabled -bool true
@@ -97,6 +98,8 @@ config() {
     [[ -e $dst && ! -L $dst ]] && rm -rf "$dst"
     ln -sfn "$DOTFILES/$src" "$dst"
   done
+  ((${#ff})) &&
+    cp $DOTFILES/config/firefox/chrome/userContent.css $ff[1]/chrome/
   mkdir -p ~/Scripts
   ln -sf $DOTFILES/scripts/*.zsh ~/Scripts/
   rm -f ~/Scripts/*(N-@) ~/.claude/*(N-@)
@@ -130,7 +133,7 @@ shell() {
   [[ $(dscl . -read ~ UserShell) == *$zsh ]] || chsh -s $zsh </dev/tty
 }
 
-# GitHub login, signing, SSH key passphrase in Keychain
+# GitHub login, signing key, Keychain
 github() {
   info "Setting up GitHub (approve in the browser)..."
   local scope=admin:ssh_signing_key
