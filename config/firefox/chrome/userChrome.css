@@ -59,9 +59,6 @@
   --panel-text-color: var(--cursor-fg) !important;
   --panel-border-color: var(--cursor-selected) !important;
   --panel-separator-color: var(--cursor-border) !important;
-
-  /* Transparent empty tabs, needs browser.tabs.allow_transparent_browser */
-  --tabpanel-background-color: transparent !important;
 }
 
 /* Glass toolbars */
@@ -76,24 +73,46 @@
   border-bottom-color: transparent !important;
 }
 
-/* Address bar and tabs on one row */
-#navigator-toolbox {
-  flex-flow: row wrap !important;
-}
+/* Address bar, tabs, then extensions and menu on one row: the address bar
+   container fills the free space and the tabs sit after the address bar */
+:root:not([customizing]) {
+  #navigator-toolbox {
+    position: relative;
+  }
 
-#nav-bar {
-  order: -1 !important;
-  flex: 0 0 40% !important;
-  border-top: none !important;
-}
+  #nav-bar {
+    order: -1 !important;
+    border-top: none !important;
+  }
 
-#TabsToolbar {
-  flex: 1 1 0 !important;
-  min-width: 0 !important;
-}
+  #nav-bar-customization-target {
+    flex: 1 1 auto !important;
+  }
 
-#notifications-toolbar {
-  width: 100% !important;
+  #nav-bar-customization-target > toolbarspring {
+    flex: 0 0 8px !important;
+  }
+
+  /* The container reaches under the tabs, so only the address bar itself
+     blocks window dragging */
+  #urlbar-container {
+    flex: 1 1 0 !important;
+    anchor-name: --urlbar-slot;
+    -moz-window-dragging: default !important;
+  }
+
+  #urlbar {
+    max-width: calc(40vw - 160px) !important;
+    -moz-window-dragging: no-drag !important;
+  }
+
+  #TabsToolbar {
+    position: absolute !important;
+    position-anchor: --urlbar-slot;
+    inset: anchor(top) anchor(right) anchor(bottom)
+      calc(anchor(left) + 40vw - 156px) !important;
+    z-index: 1 !important;
+  }
 }
 
 /* Window buttons move from the tab strip to the address bar */
@@ -118,7 +137,8 @@
     z-index: 10 !important;
     background: rgb(from var(--cursor-bg) r g b / 0.7) !important;
 
-    &:not(:hover, :focus-within, :has([open])) {
+    /* A focused address bar keeps them open only while typing in it */
+    &:not(:hover, :has([open]), :has(#urlbar[focused][usertyping])) {
       transform: translateY(calc(-100% + 20px)) !important;
       opacity: 0 !important;
     }

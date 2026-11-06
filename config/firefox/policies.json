@@ -103,7 +103,7 @@
     },
     "FirefoxHome": {
       "Weather": false,
-      "TopSites": false,
+      "TopSites": true,
       "SponsoredTopSites": false,
       "Highlights": false,
       "Stories": false,

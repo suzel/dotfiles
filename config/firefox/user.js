@@ -9,7 +9,6 @@
 user_pref("ui.prefersReducedMotion", 1);
 user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
 user_pref("widget.macos.titlebar-blend-mode.behind-window", true);
-user_pref("browser.tabs.allow_transparent_browser", true);
 user_pref("browser.nova.enabled", false);
 user_pref("browser.uidensity", 0);
 user_pref("full-screen-api.transition-duration.enter", "0 0");
@@ -22,9 +21,9 @@ user_pref("general.smoothScroll", false);
 user_pref("layout.spellcheckDefault", 0);
 user_pref("browser.warnOnQuitShortcut", false);
 user_pref("browser.translations.automaticallyPopup", false);
-user_pref("browser.startup.page", 0);
-user_pref("browser.startup.homepage", "chrome://browser/content/blanktab.html");
-user_pref("browser.newtabpage.enabled", false);
+user_pref("browser.startup.page", 1);
+user_pref("browser.startup.homepage", "about:home");
+user_pref("browser.newtabpage.enabled", true);
 
 // Performance (Betterfox)
 user_pref("gfx.content.skia-font-cache-size", 20);
