@@ -141,7 +141,7 @@
     "prefix": "docker::compose.postgres.yaml",
     "isFileTemplate": true,
     "include": "compose.yaml",
-    "description": "docker/compose.yaml: local Postgres on 127.0.0.1:5432 matching rust-setup's DATABASE_URL (postgres:postgres, db from the folder name)",
+    "description": "docker/compose.yaml: local Postgres on 127.0.0.1:5432 matching rust-template's DATABASE_URL (postgres:postgres, db from the folder name)",
     "body": [
       "services:",
       "  db:",
