@@ -1,7 +1,14 @@
-# Cache builds across projects
+# Shortcuts
+[alias]
+t = "nextest run --workspace"
+c = "clippy --workspace --all-targets"
+
+# Shared build cache and artifacts
 [build]
 rustc-wrapper = "sccache"
+build-dir = "{cargo-cache-home}/build/{workspace-path-hash}"
 
-# Less debug info for dependencies
+# Lighter, faster dependencies
 [profile.dev.package."*"]
 debug = "line-tables-only"
+opt-level = 2
