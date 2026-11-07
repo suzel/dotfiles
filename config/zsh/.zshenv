@@ -30,3 +30,6 @@ export PNPM_CONFIG_UPDATE_NOTIFIER=false
 
 # GitHub CLI
 export GH_TELEMETRY=false
+
+# Hygen
+export HYGEN_TMPLS="$PROJECTS_DIR/_templates"

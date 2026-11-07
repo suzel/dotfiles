@@ -189,7 +189,7 @@
     "description": "Weekly + PR project audit via suzel/dotfiles sv-audit.yml; report in the job summary",
     "body": [
       "# TODO: needs .node-version and packageManager in package.json",
-      "#   (sv-setup writes both)",
+      "#   (hygen sveltekit new writes both)",
       "# TODO: org repo: add a GITLEAKS_LICENSE secret (free at gitleaks.io)",
       "#   and uncomment secrets: inherit",
       "",
@@ -230,7 +230,7 @@
     "description": "Standalone SvelteKit audit workflow: every tool as a step or action, weekly status comment; no dotfiles dependency",
     "body": [
       "# TODO: needs .node-version and packageManager in package.json",
-      "#   (sv-setup writes both)",
+      "#   (hygen sveltekit new writes both)",
       "# TODO: org repo: add a GITLEAKS_LICENSE secret (free at gitleaks.io)",
       "",
       "# SvelteKit Project Audit, standalone copy of suzel/dotfiles sv-audit.yml",
