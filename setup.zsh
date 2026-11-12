@@ -39,9 +39,6 @@ links=(
   # Git
   config/git ~/.config/git
 
-  # Cargo
-  config/cargo/config.toml ~/.cargo/config.toml
-
   # Terminal
   config/ghostty ~/.config/ghostty
   config/starship/starship.toml ~/.config/starship.toml
