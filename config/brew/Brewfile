@@ -112,7 +112,6 @@ cargo "sqlx-cli"
 
 # VS Code Extensions
 vscode "alexdombroski.snippetstudio"
-vscode "andreasxp.auto-snippets"
 vscode "antfu.iconify"
 vscode "anthropic.claude-code"
 vscode "anweber.vscode-httpyac"

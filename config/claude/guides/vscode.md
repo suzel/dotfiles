@@ -16,8 +16,6 @@ Snippets live in ~/Library/Application Support/Code/User/snippets/, one file per
   before adding one. A short alias may follow as a second prefix: `["col::date", "date"]`.
 - Name: `Area Thing`, e.g. `Kit Load`. A file template may use its file name, e.g. `CLAUDE.md`.
 - Prefixes, aliases included, are unique per scope, and names are unique across files.
-- Snippet names are references: `auto-snippets.snippets` in VS Code settings and
-  `insertSnippet` in keybindings.json call them by name. When renaming, update them there too.
 
 ### Fields
 
@@ -26,7 +24,6 @@ Snippets live in ~/Library/Application Support/Code/User/snippets/, one file per
 - Give every snippet a one-line `description` of what it inserts.
 - A file template for a fixed file name sets `isFileTemplate: true` and `include` to that name,
   e.g. `compose.yaml`, `+page.svelte`. Add `exclude` for paths that must not get the template.
-- A template that should fill new files on its own also goes in `auto-snippets.snippets`.
 
 ### Body
 
@@ -56,7 +53,6 @@ Snippets live in ~/Library/Application Support/Code/User/snippets/, one file per
 ### After changes
 
 - Check that each changed file still parses: JSON with comments and trailing commas.
-- Confirm every name in `auto-snippets.snippets` and keybindings.json still exists.
 - Update the snippet's row in its doc.
 
 ### Documentation

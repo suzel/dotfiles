@@ -1,9 +1,4 @@
 {
-  // Auto Snippets
-  "auto-snippets.snippets": [
-    { "regex": ".", "commands": [ "workbench.action.populateFileFromSnippet" ] }
-  ],
-
   // Breadcrumbs
   "breadcrumbs.enabled": false,
 
@@ -57,7 +52,7 @@
   "editor.matchBrackets": "never",
   "editor.minimap.enabled": false,
   "editor.mouseWheelZoom": true,
-  "editor.pasteAs.preferences": [ "text.updateImports" ],
+  "editor.pasteAs.preferences": ["text.updateImports"],
   "editor.quickSuggestions": {
     "other": "on",
     "strings": "on",
@@ -94,7 +89,7 @@
       "severity": "off"
     }
   ],
-  "eslint.validate": [ "javascript", "typescript", "svelte" ],
+  "eslint.validate": ["javascript", "typescript", "svelte"],
 
   // Explorer
   "explorer.compactFolders": false,
@@ -196,7 +191,7 @@
   "security.promptForLocalFileProtocolHandling": false,
 
   // Snippet Studio
-  "snippetstudio.shell.snippets": [ ],
+  "snippetstudio.shell.snippets": [],
   "snippetstudio.statusBar.showItem": false,
 
   // Svelte
@@ -205,7 +200,7 @@
   "svelte.plugin.svelte.runesLegacyModeCodeLens.enable": false,
 
   // TailwindCSS
-  "tailwindCSS.experimental.classRegex": [ [ "clsx\\(([^)]*)\\)", "'([^']*)'" ] ],
+  "tailwindCSS.experimental.classRegex": [["clsx\\(([^)]*)\\)", "'([^']*)'"]],
 
   // Tasks
   "task.allowAutomaticTasks": "on",
@@ -226,7 +221,7 @@
   "terminal.integrated.profiles.osx": {
     "zsh": {
       "path": "/opt/homebrew/bin/zsh",
-      "args": [ "-l" ]
+      "args": ["-l"]
     }
   },
   "terminal.integrated.shellIntegration.history": 100,
