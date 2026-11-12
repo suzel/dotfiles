@@ -1,5 +1,4 @@
-/* Black glass, the window background is the native macOS vibrancy from
-   browser.theme.native-theme */
+/* Black glass over macOS vibrancy */
 
 :root {
   --theme-bg: #000;
@@ -14,10 +13,8 @@
 
   color-scheme: dark !important;
 
-  /* No backdrop behind pages, transparent ones show the window vibrancy */
   --tabpanel-background-color: transparent !important;
 
-  /* Toolbars */
   --toolbox-text-color: var(--theme-fg) !important;
   --toolbox-text-color-inactive: var(--theme-fg-muted) !important;
   --toolbar-background-color: transparent !important;
@@ -29,7 +26,6 @@
   --tabs-navbar-separator-color: var(--theme-border) !important;
   --focus-outline-color: var(--theme-fg) !important;
 
-  /* Address bar, opaque when focused since the results list uses it */
   --toolbar-field-background-color: var(--theme-field) !important;
   --toolbar-field-background-color-focus: var(--theme-bg) !important;
   --toolbar-field-text-color: var(--theme-fg) !important;
@@ -41,24 +37,21 @@
   --urlbarview-background-color-selected: var(--theme-selected) !important;
   --urlbarview-text-color-selected: var(--theme-fg-bright) !important;
 
-  /* Tabs */
   --tab-background-color-selected: var(--theme-selected) !important;
   --tab-text-color-selected: var(--theme-fg-bright) !important;
   --tab-background-color-hover: var(--theme-hover) !important;
   --tab-text-color: var(--theme-fg-muted) !important;
   --tab-text-color-hover: var(--theme-fg) !important;
   --tab-border-radius: 8px !important;
-  /* Same height as the address bar */
   --tab-min-height: 28px !important;
 
-  /* Menus */
   --panel-background-color: var(--theme-bg) !important;
   --panel-text-color: var(--theme-fg) !important;
   --panel-border-color: var(--theme-selected) !important;
   --panel-separator-color: var(--theme-border) !important;
 }
 
-/* Native vibrancy with the sidebar material, more transparent than titlebar */
+/* More transparent vibrancy */
 :root[customtitlebar]:not([lwtheme], [macOSNativeFullscreen]) body::after {
   appearance: -moz-sidebar !important;
 }
@@ -75,8 +68,7 @@
   border-bottom-color: transparent !important;
 }
 
-/* Address bar, tabs, then extensions and menu on one row: the address bar
-   container fills the free space and the tabs sit after the address bar */
+/* Address bar and tabs on one row */
 :root:not([customizing]) {
   #navigator-toolbox {
     position: relative;
@@ -95,8 +87,6 @@
     flex: 0 0 8px !important;
   }
 
-  /* The container reaches under the tabs, so only the address bar itself
-     blocks window dragging */
   #urlbar-container {
     flex: 1 1 0 !important;
     anchor-name: --urlbar-slot;
@@ -116,7 +106,7 @@
   }
 }
 
-/* Window buttons move from the tab strip to the address bar */
+/* Window buttons in the address bar row */
 #TabsToolbar>.titlebar-buttonbox-container {
   display: none !important;
 }
@@ -136,13 +126,8 @@
     position: fixed !important;
     inset: 0 0 auto 0 !important;
     z-index: 10 !important;
-    /* Glass over the page, blurred so the bar stays readable */
-    background: rgb(from var(--theme-bg) r g b / 0.4) !important;
-    backdrop-filter: blur(12px) !important;
+    background: var(--theme-bg) !important;
 
-    /* A focused address bar keeps them open only while typing in it. Tabs are
-       skipped since a tab preview that moves to another tab leaves [open] on
-       the first tab */
     &:not(:hover, :has([open]:not(.tabbrowser-tab)), :has(#urlbar[focused][usertyping])) {
       transform: translateY(calc(-100% + 20px)) !important;
       opacity: 0 !important;
@@ -152,15 +137,12 @@
 
 /* Address bar */
 #urlbar {
-  /* No focus ring */
   --urlbar-background-outline-focused: none !important;
 
-  /* No search engine switcher */
   .searchmode-switcher {
     display: none !important;
   }
 
-  /* Star and page actions only on hover */
   &:not(:hover) #page-action-buttons:not(:has([open])) {
     display: none !important;
   }
