@@ -54,6 +54,7 @@ cask "google-chrome"
 cask "helium-browser"
 
 # Development
+brew "act"
 brew "ast-grep"
 brew "awscli"
 brew "betterleaks"
