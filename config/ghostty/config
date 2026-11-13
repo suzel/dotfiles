@@ -1,12 +1,14 @@
 # Font
 font-family = Ioskeley Mono Term
+font-style = Medium
+font-style-italic = Medium Italic
 font-size = 14
 font-feature = zero
 
 # Theme
 theme = light:Cursor Light,dark:Cursor Dark Midnight
-background-blur = macos-glass-clear
-background-opacity = 0.85
+background-blur = macos-glass-regular
+background-opacity = 0.88
 
 # Cursor
 cursor-style-blink = true
