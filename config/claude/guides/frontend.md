@@ -7,3 +7,8 @@ Unless the task or the project's design asks for them, don't use these default s
 - Numbered "01/02/03" section labels
 - Monospace labels
 - Pill-shaped buttons
+
+## HTML
+
+- Use the HTML element that fits the content: lists as lists, links to navigate, buttons to
+  act, a label for every form field; generic containers only for layout.
