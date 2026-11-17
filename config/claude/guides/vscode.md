@@ -53,14 +53,3 @@ Snippets live in ~/Library/Application Support/Code/User/snippets/, one file per
 ### After changes
 
 - Check that each changed file still parses: JSON with comments and trailing commas.
-- Update the snippet's row in its doc.
-
-### Documentation
-
-- Each snippet file has a doc in
-  ~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Personal/Development/Snippets/, e.g.
-  `drizzle.code-snippets` → `Drizzle Snippets.md`. A new snippet file gets one in the same format.
-- Format, in English with nothing else: `# <Area> Snippets`, one `##` per prefix area, each with a
-  table: `Snippet | Alias | Language | Where | Template | Description | Requires`.
-- Where comes from `include` / `exclude`, Description from the snippet's `description`. Put code
-  in backticks: a bare `<svelte:head>` renders as HTML.

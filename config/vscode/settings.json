@@ -1,4 +1,7 @@
 {
+  // Accessibility
+  "accessibility.voice.speechLanguage": "tr-TR",
+
   // Breadcrumbs
   "breadcrumbs.enabled": false,
 

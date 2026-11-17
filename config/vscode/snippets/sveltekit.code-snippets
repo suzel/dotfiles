@@ -65,41 +65,6 @@
       ""
     ]
   },
-  "Remote Form From Clipboard": {
-    "scope": "svelte",
-    "prefix": "remote::form-paste",
-    "include": "**/new/+page.svelte",
-    "isFileTemplate": true,
-    "description": "Create form for a drizzle::remote file, one field per column of the list copied for drizzle::to-table",
-    "body": [
-      "<script lang=\"ts\">",
-      "\timport { create${1/(.*)/${1:/pascalcase}/} } from '#lib/remote/${1:tag}.remote.ts';",
-      "",
-      "\t// TODO: >ref columns are skipped (the server sets them); ${1}InsertSchema needs bool: z.boolean().default(false) (unchecked boxes send nothing), date: z.coerce.date<string>()",
-      "",
-      "\tconst {",
-      "${CLIPBOARD/[,\\s]*\\w+[^,\\s]*>[^,\\s]*[,\\s]*|[,\\s]*(?:(?![^,\\s]*:(?:int|bool|date)\\b)(?=(\\w))|)(\\w+)(?::(?:(int)\\b|(bool)\\b|(date)\\b|\\w+))?[^,\\s]*[,\\s]*|[,\\s]*(--)[,\\s]*/${2:+\t\t}$2${2:+,",
-      "}/g}\t} = create${1/(.*)/${1:/pascalcase}/}.fields;",
-      "</script>",
-      "",
-      "<svelte:head>",
-      "\t<title>New $1</title>",
-      "</svelte:head>",
-      "",
-      "<form {...create${1/(.*)/${1:/pascalcase}/}}>",
-      "${CLIPBOARD/[,\\s]*\\w+[^,\\s]*>[^,\\s]*[,\\s]*|[,\\s]*(?:(?![^,\\s]*:(?:int|bool|date)\\b)(?=(\\w))|)(\\w+)(?::(?:(int)\\b|(bool)\\b|(date)\\b|\\w+))?[^,\\s]*[,\\s]*|[,\\s]*(--)[,\\s]*/${2:+\t<label>",
-      "\t\t}${2:/capitalize}${2:+",
-      "\t\t<input {...}$2${2:+.as('}${1:+text}${3:+number}${4:+checkbox}${5:+date}${2:+')\\} />",
-      "\t</label>",
-      "\t{#each }$2${2:+.issues() ?? [] as issue (issue.message)\\}",
-      "\t\t<p class=\"text-danger-600\">{issue.message\\}</p>",
-      "\t{/each\\}",
-      "}${6:+\t<hr />",
-      "}/g}\t<button>Create</button>",
-      "</form>",
-      ""
-    ]
-  },
   "Remote Edit": {
     "scope": "svelte",
     "prefix": "remote::edit",
