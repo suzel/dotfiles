@@ -32,6 +32,31 @@
     "key": "cmd+4",
     "command": "copyRelativeFilePath"
   },
+  // Markdown
+  {
+    "key": "cmd+e",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        "markdown.showSource",
+        "workbench.action.openPreviousRecentlyUsedEditorInGroup",
+        "workbench.action.closeActiveEditor"
+      ]
+    },
+    "when": "activeWebviewPanelId == 'markdown.preview' || activeCustomEditorId == 'vscode.markdown.preview.editor'"
+  },
+  {
+    "key": "cmd+e",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        "markdown.showPreview",
+        "workbench.action.openPreviousRecentlyUsedEditorInGroup",
+        "workbench.action.closeActiveEditor"
+      ]
+    },
+    "when": "editorLangId == markdown && editorTextFocus"
+  },
   // Font Zoom
   {
     "key": "ctrl+shift+up",

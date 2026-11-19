@@ -45,6 +45,7 @@ brew "zsh-completions"
 brew "zsh-fast-syntax-highlighting"
 
 # Productivity
+cask "handy"
 cask "obsidian"
 cask "sublime-text"
 

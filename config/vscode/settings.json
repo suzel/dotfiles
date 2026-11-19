@@ -1,7 +1,4 @@
 {
-  // Accessibility
-  "accessibility.voice.speechLanguage": "tr-TR",
-
   // Breadcrumbs
   "breadcrumbs.enabled": false,
 
@@ -115,6 +112,8 @@
   },
 
   // Extensions
+  "extensions.autoRestart": true,
+  "extensions.autoUpdateDelay": 0,
   "extensions.ignoreRecommendations": true,
 
   // Files
@@ -182,6 +181,9 @@
   // Markdown
   "markdown.preview.fontFamily": "'Figtree'",
   "markdown.preview.fontSize": 15,
+  "workbench.editorAssociations": {
+    "*.md": "vscode.markdown.preview.editor"
+  },
 
   // NPM
   "npm.scriptExplorerAction": "run",
@@ -237,11 +239,9 @@
 
   // Window
   "window.autoDetectColorScheme": true,
-  "window.density.layout": "compact",
 
   // Workbench
   "workbench.activityBar.compact": true,
-  "workbench.activityBar.location": "top",
   "workbench.browser.openLocalhostLinks": true,
   "workbench.browser.showInTitleBar": true,
   "workbench.colorCustomizations": {
@@ -282,6 +282,9 @@
   "[html][javascript][json][jsonc][typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
+  "[jsonc]": {
+    "prettier.trailingComma": "none"
+  },
   "[markdown]": {
     "diffEditor.ignoreTrimWhitespace": false,
     "editor.codeActionsOnSave": {
@@ -314,5 +317,7 @@
   },
   "[toml]": {
     "editor.defaultFormatter": "tamasfe.even-better-toml"
-  }
+  },
+  "workbench.activityBar.location": "top",
+  "window.density.layout": "compact"
 }
