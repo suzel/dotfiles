@@ -2,13 +2,15 @@
 
 ## Snippets
 
-Snippets live in ~/Library/Application Support/Code/User/snippets/, one file per area.
+Snippets live in the generators of ~/Projects/hygen-templates, one `*.code-snippets.ejs.t`
+template per area, and are written into each project's .vscode/. The global snippets folder
+(~/Library/Application Support/Code/User/snippets/) stays empty.
 
 ### Before adding a snippet
 
-- Grep the snippets folder for each prefix and the name you plan to use, e.g.
-  `grep -rn '"kit::page"' ~/Library/Application\ Support/Code/User/snippets/`. If either is
-  taken, pick another.
+- Grep the snippet templates for each prefix and the name you plan to use, e.g.
+  `grep -rn '"kit::page"' ~/Projects/hygen-templates --include='*.code-snippets.ejs.t'`. If either
+  is taken, pick another.
 
 ### Naming
 
