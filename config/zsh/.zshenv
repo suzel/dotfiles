@@ -32,4 +32,7 @@ export PNPM_CONFIG_UPDATE_NOTIFIER=false
 export GH_TELEMETRY=false
 
 # Hygen
-export HYGEN_TMPLS="$PROJECTS_DIR/hygen_templates"
+export HYGEN_TMPLS="$PROJECTS_DIR/hygen-templates"
+
+# Secrets (iCloud)
+set -a; source "$ICLOUD_DIR/Secrets/secrets.env" 2>/dev/null; set +a
