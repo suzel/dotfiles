@@ -55,7 +55,6 @@ links=(
   config/vscode/settings.json $CODE_USER/settings.json
   config/vscode/keybindings.json $CODE_USER/keybindings.json
   config/vscode/tasks.json $CODE_USER/tasks.json
-  config/vscode/snippets $CODE_USER/snippets
 )
 
 # Homebrew + CLT
