@@ -2,16 +2,17 @@
   "env": {
     "CLAUDE_CODE_DISABLE_AUTO_MEMORY": "true",
     "CLAUDE_CODE_DISABLE_GIT_INSTRUCTIONS": "true",
-    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "true",
     "CLAUDE_CODE_ENABLE_TASKS": "true",
+    "CLAUDE_CODE_EXPERIMENTAL_CODE_MODE": "true",
     "CLAUDE_CODE_NO_FLICKER": "true",
     "DISABLE_COMPACT": "false",
+    "DISABLE_ERROR_REPORTING": "true",
     "DISABLE_INSTALLATION_CHECKS": "true",
     "ENABLE_LSP_TOOL": "true",
     "ENABLE_TOOL_SEARCH": "true",
     "FORCE_AUTOUPDATE_PLUGINS": "true",
     "MAX_MCP_OUTPUT_TOKENS": "19999",
-    "USE_BUILTIN_RIPGREP": "0"
+    "USE_BUILTIN_RIPGREP": "false"
   },
   "attribution": {
     "commit": "",
@@ -60,7 +61,17 @@
     "cc-plugin-agents-md@builtin": false,
     "cc-plugin-plugin-authoring@builtin": false,
     "rust-analyzer-lsp@claude-plugins-official": false,
-    "svelte@svelte": false
+    "svelte@svelte": false,
+    "humanizer@humanizer": true,
+    "typescript-lsp@claude-plugins-official": true
+  },
+  "extraKnownMarketplaces": {
+    "humanizer": {
+      "source": {
+        "source": "github",
+        "repo": "blader/humanizer"
+      }
+    }
   },
   "outputStyle": "default",
   "viewMode": "default",
